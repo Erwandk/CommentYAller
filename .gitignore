@@ -1,2 +1,6 @@
 # clés API
 user_api.py
+
+# logs et caches inutiles
+.idea/
+__pycache__/
