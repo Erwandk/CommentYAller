@@ -3,7 +3,7 @@
 
 __author__ = 'eke, gab, axel'
 
-import user_api
+from user_api import *
 import requests
 
 
@@ -44,7 +44,7 @@ class API:
         elif self.nom == "citymapper":
             if user_id not in dic_user_key_citymapper:
                 print("Le user_id {} n'est pas présent dans dic_user_key_citymapper".format(user_id))
-            key = dic_user_key_citymapper[user_d]
+            key = dic_user_key_citymapper[user_id]
         else:
             print("Je ne trouve pas le nom de l'API")
         return key
@@ -72,9 +72,9 @@ class API:
 
 if __name__ == '__main__':
 
-    url = "https://developer.citymapper.com"
+    url_citymapper = "https://developer.citymapper.com"
 
-    CityMapper = API(url)
+    CityMapper = API(url_citymapper)
 
     startcoord = "51.525246%2C0.084672"
     endcoord = "51.559098%2C0.074503"
