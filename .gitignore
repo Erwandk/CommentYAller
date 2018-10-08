@@ -4,3 +4,4 @@ user_api.py
 # logs et caches inutiles
 .idea/
 __pycache__/
+nohup.out
