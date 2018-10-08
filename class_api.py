@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
     path = "/api/1/traveltime/?startcoord={}&endcoord={}&time={}&time_type={}&key={}".format(startcoord, endcoord, time, time_type, key)
 
-    data = CityMapper.get_infos(path)
+    data = CityMapper.get_infos(path, user_id=user_id)
 
     for item in data:
         print(item)
