@@ -59,6 +59,10 @@ class API:
     def _get_key_by_id(self, user_id):
 
         key = ""
+        if user_id == 9:
+            print("user_id par défaut renseigné, pas de clé d'API correspondante.")
+            return key
+
         if user_id not in (0, 1, 2):
             raise ValueError("Le user_id renseigné pour récupérer les clés n'est pas correct : {}".format(user_id))
 
