@@ -11,13 +11,12 @@ class Trip:
     Cette classe représente le trajet dans son ensemble avec toutes les données correspondantes.
     """
 
-    def __init__(self, form):
+    def __init__(self, pos_init, pos_final):
         """
-        Le constructeur de cette classe prend en entrée le formulaire entré par l'utilisateur
+        Le constructeur de cette classe prend en entrée les données de position de départ et d'arrivée
         """
-        self.__pos_init = form.get('pos_init', '')
-        self.__pos_final = form.get('pos_final', '')
-        self.__check_data = self.__check_form_data()
+        self.__pos_init = pos_init
+        self.__pos_final = pos_final
 
         self.__gps_init = {'lat': 0, 'lng': 0}
         self.__gps_final = {'lat': 0, 'lng': 0}
@@ -27,25 +26,7 @@ class Trip:
         self.__trip_car = Car()
         self.__trip_transit = Transit()
 
-    def __check_form_data(self):
-        """
-        Cette fonction checke les données envoyées via le formulaire par l'utilisateur
-        """
-        if self.pos_init == "" or self.pos_final == "":
-            return False
-        else:
-            return True
-
     # Définition des getters, setters des attributs de notre classe
-    @property
-    def check_data(self):
-        return self.__check_data
-
-    @check_data.setter
-    def check_data(self, valeur):
-        print("Reflechir à l'autorisation ou non de la modification de check_data")
-        self.__check_data = valeur
-
     @property
     def pos_init(self):
         return self.__pos_init
