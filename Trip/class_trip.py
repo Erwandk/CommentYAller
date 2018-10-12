@@ -68,11 +68,11 @@ class Trip:
         print("You are not allowed to modify trip_foot by {} !".format(valeur))
 
     @property
-    def trip_bicyle(self):
+    def trip_bicycle(self):
         return self.__trip_bicycle
 
-    @trip_bicyle.setter
-    def trip_bicyle(self, valeur):
+    @trip_bicycle.setter
+    def trip_bicycle(self, valeur):
         print("You are not allowed to modify trip_bicyle by {} !".format(valeur))
 
     @property

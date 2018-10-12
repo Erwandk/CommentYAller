@@ -1,0 +1,51 @@
+{% extends "squelette_getzere.html" %}
+
+{% block header %}
+{{ super() }}
+<link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+{% block corps %}
+<h3>Coordonnées GPS :</h3>
+<p>départ : lat : {{ trip.gps_init['lat'] }}, long : {{ trip.gps_init['lng'] }}</p>
+<p>arrivée : lat : {{ trip.gps_final['lat'] }}, long : {{ trip.gps_final['lng'] }}</p>
+<p>Pour aller de <strong>{{ trip.pos_init }}</strong> à <strong>{{ trip.pos_final}}</strong>, voici nos analyses :</p>
+<div id="foot">
+    <h3>A pied :</h3>
+    <ul>
+        <li>duree : {{ trip.trip_foot.duree_tot }}</li>
+        <li>distance : {{ trip.trip_foot.distance_tot }}</li>
+        <li>etapes : {{ trip.trip_foot.etapes }}</li>
+    </ul>
+</div>
+<div id="bicycle">
+    <h3>A vélo :</h3>
+    <ul>
+        <li>duree : {{ trip.trip_bicycle.duree_tot }}</li>
+        <li>distance : {{ trip.trip_bicycle.distance_tot }}</li>
+        <li>etapes : {{ trip.trip_bicycle.etapes }}</li>
+    </ul>
+</div>
+<div id="car">
+    <h3>En voiture :</h3>
+    <ul>
+        <li>duree : {{ trip.trip_car.duree_tot }}</li>
+        <li>distance : {{ trip.trip_car.distance_tot }}</li>
+        <li>etapes : {{ trip.trip_car.etapes }}</li>
+    </ul>
+</div>
+<div id="transit">
+    <h3>En transport en commun :</h3>
+    <ul>
+        <li>duree : {{ trip.trip_transit.duree_tot }}</li>
+        <li>distance : {{ trip.trip_transit.distance_tot }}</li>
+        <li>nombre d'étapes : {{ trip.trip_transit.nb_etapes }}</li>
+        <li>etapes : {{ trip.trip_transit.etapes }}</li>
+    </ul>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<footer>Copyright getzere.fr 2018</footer>
+{% endblock %}
