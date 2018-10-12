@@ -59,15 +59,11 @@
     {% set max_long = 2.35 %}
     {% set max_lat = 48.9 %}
 
-
-    <p>https://www.openstreetmap.org/export/embed.html?bbox={{ min_long }}%2C{{ min_lat }}%2C{{ max_long }}%2C{{ max_lat }}&layer=mapnik"</p>
-    <p>https://www.openstreetmap.org/export/embed.html?bbox=2.3%2C48.8%2C2.35%2C48.9&layer=mapnik</p>
-
     <iframe id="map"
             title="Votre trajet"
             width="300"
             height="200"
-            src="https://www.openstreetmap.org/export/embed.html?bbox={{ min_long }}%2C{{ min_lat }}%2C{{ max_long }}%2C{{ max_lat }}&layer=mapnik"">
+            src="https://www.openstreetmap.org/export/embed.html?bbox={{ min_long }}%2C{{ min_lat }}%2C{{ max_long }}%2C{{ max_lat }}&layer=mapnik">
     </iframe>
 </div>
 {% endblock %}

@@ -4,13 +4,14 @@ body {
     grid-template-rows:repeat(3, auto);
     grid-gap:5px;
 
-    font-family: 'Roboto';
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
 }
 
 #bandeau_lat {
     grid-column: 1 / 2;
     grid-row: 1 / 4;
     text-align: center;
+    border-right:1px dashed red;
 }
 
 #bandeau_hor {
@@ -35,6 +36,10 @@ img {
 #name {
     font-size: 20pt;
 
+}
+
+#ville {
+    font-size: 20pt;
 }
 
 .autor {
