@@ -1,15 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     {% block header %}
     <meta charset="UTF-8">
     <title>{% block title %}Get'zere{% endblock %}</title>
+    <link href="{{ url_for('static', filename='main_getzere.css') }}" rel="stylesheet" type="text/css"/>
     {% endblock %}
 </head>
 
 <body>
-    {% block corps %}{% endblock %}
+    <div id="bandeau_lat">
 
-    {% block footer %}{% endblock %}
+        <p id="ville">
+            Paris
+            <img id="tour_eiffel" src="{{ url_for('static', filename='images/tour_eiffel.png') }}" alt="logo de la tour eiffel" width="100" height="100"/>
+        </p>
+
+        <p id="name">Get'zere</p>
+        <img id="logo" src="{{ url_for('static', filename='images/logo_temp.png') }}" alt="logo Get'zere temporaire" width="100" height="100"/>
+
+        <div class="autor">
+            <p><i>Erwan de Kergaradec</i></p>
+            <p><i>Axel Compain</i></p>
+            <p><i>Gabrielle Didelot</i></p>
+        </div>
+    </div>
+
+    <div id="bandeau_hor">
+        <h1>Get'zere : la nouvelle application qui facilite vos trajets</h1>
+    </div>
+
+    <div id="corps">
+        {% block corps %}
+        {% endblock %}
+    </div>
+
+    <footer>Copyright getzere.fr 2018</footer>
+
 </body>
 </html>

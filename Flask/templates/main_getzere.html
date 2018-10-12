@@ -2,21 +2,22 @@
 
 {% block header %}
 {{ super() }}
-<link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet" type="text/css"/>
 {% endblock %}
 
 {% block corps %}
-<h1>Get'zere : la nouvelle application qui facilite vos trajets !</h1>
-<h2>Formulaire</h2>
-<form class= "form" action="" method="post">
-    <label for="pos_init">Votre position</label><br/>
-    <input type="text" id="pos_init" name="pos_init"/><br/>
-    <label for="pos_final">Votre destination</label><br/>
-    <input type="text" id="pos_final" name="pos_final"/><br/>
-    <input type="submit" value="C'est parti">
-</form>
-{% endblock %}
+<div id="recherche">
+    <h2>Trouver mon itinéraire : </h2>
+    <form class= "form" action="" method="post">
+        <label for="pos_init">De :</label>
+        <input id="pos_init" type="text" name="pos_init" value="Ma position"/>
+        <label for="pos_final">A :</label>
+        <input id="pos_final" type="text" name="pos_final"/><br/>
 
-{% block footer %}
-<footer>Copyright getzere.fr 2018</footer>
+        <input id="submit" type="submit" value="C'est parti">
+    </form>
+</div>
+
+<div id="infos">
+    <p>On peut afficher d'autres infos ici...</p>
+</div>
 {% endblock %}

@@ -2,50 +2,73 @@
 
 {% block header %}
 {{ super() }}
-<link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet" type="text/css"/>
 {% endblock %}
 
 {% block corps %}
-<h3>Coordonnées GPS :</h3>
-<p>départ : lat : {{ trip.gps_init['lat'] }}, long : {{ trip.gps_init['lng'] }}</p>
-<p>arrivée : lat : {{ trip.gps_final['lat'] }}, long : {{ trip.gps_final['lng'] }}</p>
-<p>Pour aller de <strong>{{ trip.pos_init }}</strong> à <strong>{{ trip.pos_final}}</strong>, voici nos analyses :</p>
-<div id="foot">
-    <h3>A pied :</h3>
-    <ul>
-        <li>duree : {{ trip.trip_foot.duree_tot }}</li>
-        <li>distance : {{ trip.trip_foot.distance_tot }}</li>
-        <li>etapes : {{ trip.trip_foot.etapes }}</li>
-    </ul>
-</div>
-<div id="bicycle">
-    <h3>A vélo :</h3>
-    <ul>
-        <li>duree : {{ trip.trip_bicycle.duree_tot }}</li>
-        <li>distance : {{ trip.trip_bicycle.distance_tot }}</li>
-        <li>etapes : {{ trip.trip_bicycle.etapes }}</li>
-    </ul>
-</div>
-<div id="car">
-    <h3>En voiture :</h3>
-    <ul>
-        <li>duree : {{ trip.trip_car.duree_tot }}</li>
-        <li>distance : {{ trip.trip_car.distance_tot }}</li>
-        <li>etapes : {{ trip.trip_car.etapes }}</li>
-    </ul>
-</div>
-<div id="transit">
-    <h3>En transport en commun :</h3>
-    <ul>
-        <li>duree : {{ trip.trip_transit.duree_tot }}</li>
-        <li>distance : {{ trip.trip_transit.distance_tot }}</li>
-        <li>nombre d'étapes : {{ trip.trip_transit.nb_etapes }}</li>
-        <li>etapes : {{ trip.trip_transit.etapes }}</li>
-    </ul>
+<a href="{{ url_for('index') }}">Faire une nouvelle recherche</a>
+<div class="donnees">
+    <h3>Coordonnées GPS :</h3>
+    <p>départ : lat : {{ trip.gps_init['lat'] }}, long : {{ trip.gps_init['lng'] }}</p>
+    <p>arrivée : lat : {{ trip.gps_final['lat'] }}, long : {{ trip.gps_final['lng'] }}</p>
+    <p>Pour aller de <strong>{{ trip.pos_init }}</strong> à <strong>{{ trip.pos_final}}</strong>, voici nos analyses :</p>
+    <div id="foot">
+        <h3>A pied :</h3>
+        <ul>
+            <li>duree : {{ trip.trip_foot.duree_tot }}</li>
+            <li>distance : {{ trip.trip_foot.distance_tot }}</li>
+            <li>etapes : {{ trip.trip_foot.etapes }}</li>
+        </ul>
+    </div>
+    <div id="bicycle">
+        <h3>A vélo :</h3>
+        <ul>
+            <li>duree : {{ trip.trip_bicycle.duree_tot }}</li>
+            <li>distance : {{ trip.trip_bicycle.distance_tot }}</li>
+            <li>etapes : {{ trip.trip_bicycle.etapes }}</li>
+        </ul>
+    </div>
+    <div id="car">
+        <h3>En voiture :</h3>
+        <ul>
+            <li>duree : {{ trip.trip_car.duree_tot }}</li>
+            <li>distance : {{ trip.trip_car.distance_tot }}</li>
+            <li>etapes : {{ trip.trip_car.etapes }}</li>
+        </ul>
+    </div>
+    <div id="transit">
+        <h3>En transport en commun :</h3>
+        <ul>
+            <li>duree : {{ trip.trip_transit.duree_tot }}</li>
+            <li>distance : {{ trip.trip_transit.distance_tot }}</li>
+            <li>nombre d'étapes : {{ trip.trip_transit.nb_etapes }}</li>
+            <li>etapes : {{ trip.trip_transit.etapes }}</li>
+        </ul>
+    </div>
 </div>
 
+<div class="carte">
+
+    {% set min_lat = [trip.gps_init['lat'], trip.gps_final['lat']] | min %}
+    {% set max_lat = [trip.gps_init['lat'], trip.gps_final['lat']] | max %}
+    {% set min_long = [trip.gps_init['lng'], trip.gps_final['lng']] | min %}
+    {% set max_lat = [trip.gps_init['lng'], trip.gps_final['lng']] | max %}
+
+    <!-- valeurs à remplacer une fois les bonnes coordonnées récupérées -->
+    {% set min_long = 2.3 %}
+    {% set min_lat = 48.8 %}
+    {% set max_long = 2.35 %}
+    {% set max_lat = 48.9 %}
+
+
+    <p>https://www.openstreetmap.org/export/embed.html?bbox={{ min_long }}%2C{{ min_lat }}%2C{{ max_long }}%2C{{ max_lat }}&layer=mapnik"</p>
+    <p>https://www.openstreetmap.org/export/embed.html?bbox=2.3%2C48.8%2C2.35%2C48.9&layer=mapnik</p>
+
+    <iframe id="map"
+            title="Votre trajet"
+            width="300"
+            height="200"
+            src="https://www.openstreetmap.org/export/embed.html?bbox={{ min_long }}%2C{{ min_lat }}%2C{{ max_long }}%2C{{ max_lat }}&layer=mapnik"">
+    </iframe>
+</div>
 {% endblock %}
 
-{% block footer %}
-<footer>Copyright getzere.fr 2018</footer>
-{% endblock %}
