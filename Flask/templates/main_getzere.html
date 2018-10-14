@@ -6,18 +6,25 @@
 
 {% block corps %}
 <div id="recherche">
-    <h2>Trouver mon itinéraire : </h2>
+    <div class="content">
+        <p class="subtitle">Trouver mon itinéraire : </p>
+    </div>
     <form class= "form" action="" method="post">
-        <label for="pos_init">De :</label>
-        <input id="pos_init" type="text" name="pos_init" value="Ma position"/>
-        <label for="pos_final">A :</label>
-        <input id="pos_final" type="text" name="pos_final"/><br/>
+        <div class="field">
+            <label class="label">De :</label>
+            <div class="control">
+                <input id="pos_init" name="pos_init" class="input is-rounded" type="text" value="Ma position" autocomplete="on">
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">A :</label>
+            <div class="control">
+                <input id="pos_final" name="pos_final" class="input is-rounded" type="text" placeholder="Destination..." autocomplete="on">
+            </div>
+        </div>
 
-        <input id="submit" type="submit" value="C'est parti">
+        <input id="submit" type="submit" class="button" value="C'est parti">
     </form>
 </div>
 
-<div id="infos">
-    <p>On peut afficher d'autres infos ici...</p>
-</div>
 {% endblock %}

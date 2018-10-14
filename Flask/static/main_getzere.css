@@ -1,49 +1,11 @@
-body {
-    display: grid;
-    grid-template-columns:repeat(2, auto);
-    grid-template-rows:repeat(3, auto);
-    grid-gap:5px;
-
-    font-family: "Comic Sans MS", "Comic Sans", cursive;
+.contenant_ville {
+    text-align : center;
 }
 
-#bandeau_lat {
-    grid-column: 1 / 2;
-    grid-row: 1 / 4;
-    text-align: center;
-    border-right:1px dashed red;
+.contenant_logo {
+    text-align : center;
 }
 
-#bandeau_hor {
-    grid-column: 2 / 3;
-    grid-row: 1 / 2;
+.is-centered {
+    justify-content : center;
 }
-
-#corps {
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
-}
-
-footer {
-    grid-column: 2 / 3;
-    grid-row: 3 / 4;
-}
-
-img {
-    vertical-align: middle;
-}
-
-#name {
-    font-size: 20pt;
-
-}
-
-#ville {
-    font-size: 20pt;
-}
-
-.autor {
-    text-align: left;
-}
-
-
