@@ -15,8 +15,8 @@ class Formulary:
         """
         self.__pos_init = form.get('pos_init', '')
         self.__pos_final = form.get('pos_final', '')
-        self.__bagage = form.get('bagage', False)
-        self.__elevation = form.get('elevation', False)
+        self.__bagage = form.get('bagage', 'off')
+        self.__elevation = form.get('elevation', 'off')
 
         self.__check_data = self.__check_form_data()
 

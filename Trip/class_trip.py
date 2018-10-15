@@ -20,6 +20,8 @@ class Trip:
         self.__bagage = bagage
         self.__elevation = elevation
 
+        print(type(bagage))
+
         self.__gps_init = {'lat': 0, 'lng': 0}
         self.__gps_final = {'lat': 0, 'lng': 0}
 
