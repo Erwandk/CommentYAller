@@ -15,6 +15,9 @@ class Formulary:
         """
         self.__pos_init = form.get('pos_init', '')
         self.__pos_final = form.get('pos_final', '')
+        self.__bagage = form.get('bagage', False)
+        self.__elevation = form.get('elevation', False)
+
         self.__check_data = self.__check_form_data()
 
     def __check_form_data(self):
@@ -51,3 +54,21 @@ class Formulary:
     def check_data(self, valeur):
         print("Reflechir à l'autorisation ou non de la modification de check_data")
         self.__check_data = valeur
+
+    @property
+    def bagage(self):
+        return self.__bagage
+
+    @bagage.setter
+    def bagage(self, valeur):
+        print("Reflechir à l'autorisation ou non de la modification de bagage")
+        self.__bagage = valeur
+
+    @property
+    def elevation(self):
+        return self.__elevation
+
+    @elevation.setter
+    def elevation(self, valeur):
+        print("Reflechir à l'autorisation ou non de la modification de elevation")
+        self.__elevation = valeur

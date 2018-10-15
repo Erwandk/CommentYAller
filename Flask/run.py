@@ -23,7 +23,8 @@ def index():
         if not form.check_data:
             flash(u'Les données envoyées sont incorrectes', 'error')
             return render_template('main_getzere.html')
-        return redirect(url_for('trajet', pos_init=form.pos_init, pos_final=form.pos_final))
+        return redirect(url_for('trajet', pos_init=form.pos_init, pos_final=form.pos_final,
+                                bagage=form.bagage, elevation=form.elevation))
 
     elif request.method == 'GET':
         return render_template('main_getzere.html')
@@ -32,12 +33,12 @@ def index():
         return "Cette methode n'est pas implémentée..."
 
 
-@app.route('/trajet?<pos_init>&<pos_final>')
-def trajet(pos_init, pos_final):
+@app.route('/trajet?<pos_init>&<pos_final>&<bagage>&<elevation>')
+def trajet(pos_init, pos_final, bagage, elevation):
     """
     page des résultats
     """
-    trip = Trip(pos_init, pos_final)
+    trip = Trip(pos_init, pos_final, bagage, elevation)
     return render_template('trajet_getzere.html', trip=trip)
 
 

@@ -11,12 +11,14 @@ class Trip:
     Cette classe représente le trajet dans son ensemble avec toutes les données correspondantes.
     """
 
-    def __init__(self, pos_init, pos_final):
+    def __init__(self, pos_init, pos_final, bagage, elevation):
         """
         Le constructeur de cette classe prend en entrée les données de position de départ et d'arrivée
         """
         self.__pos_init = pos_init
         self.__pos_final = pos_final
+        self.__bagage = bagage
+        self.__elevation = elevation
 
         self.__gps_init = {'lat': 0, 'lng': 0}
         self.__gps_final = {'lat': 0, 'lng': 0}
@@ -90,3 +92,19 @@ class Trip:
     @trip_transit.setter
     def trip_transit(self, valeur):
         print("You are not allowed to modify trip_transit by {} !".format(valeur))
+
+    @property
+    def bagage(self):
+        return self.__bagage
+
+    @bagage.setter
+    def bagage(self, valeur):
+        print("You are not allowed to modify bagage by {} !".format(valeur))
+
+    @property
+    def elevation(self):
+        return self.__elevation
+
+    @elevation.setter
+    def elevation(self, valeur):
+        print("You are not allowed to modify elevation by {} !".format(valeur))
