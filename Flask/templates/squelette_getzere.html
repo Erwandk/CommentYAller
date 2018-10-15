@@ -5,27 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Get'zere{% endblock %}</title>
-    <link href="{{ url_for('static', filename='main_bulma.css') }}" rel="stylesheet" type="text/css"/>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <link href="{{ url_for('static', filename='bulma.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet" type="text/css"/>
     {% endblock %}
 </head>
 
 <body>
     <div class="columns">
-        <div class="column is-one-fifth is-0" id="bandeau_lat">
+        <div class="column is-one-fifth is-0 bandeau_lat">
             <div class="contenant_ville">
-                <p id="ville">Paris</p>
-                <figure class="image is-64x64">
-                    <img id="tour_eiffel" src="{{ url_for('static', filename='images/tour_eiffel.png') }}" alt="logo de la tour eiffel"/>
-                </figure>
+                <h2 id="ville">Paris</h2>
+                <img id="tour_eiffel" src="{{ url_for('static', filename='images/tour_eiffel.png') }}" alt="logo de la tour eiffel"/>
             </div>
             <div class="contenant_logo">
-                <p id="name">Get'zere</p>
-                <figure class="image is-128x128">
-                    <img id="logo" src="{{ url_for('static', filename='images/logo_temp.png') }}" alt="logo Get'zere temporaire"/>
-                </figure>
+                <h2 id="name">Get'zere</h2>
+                <img id="logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="logo Get'zere temporaire"/>
             </div>
 
             <p class="autor"><i>
