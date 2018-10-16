@@ -68,7 +68,7 @@ class GoogleMaps(API):
         paramètres de classes :
         - user_id : correspond à l'id du user permettant de se connecter à l'API
         """
-    def __init__(self, user_id=9):
+    def __init__(self, user_id=0):
         API.__init__(self, nom="googlemaps", url="https://maps.googleapis.com/maps/api/directions/", user_id=user_id)
         self.__json = dict()
 
@@ -176,7 +176,7 @@ if __name__ == '__main__':
 
     # coord_depart = "48.8341102%2C2.2962797000000137"
     coord_depart = "8+rue+des+morillons+Paris"
-    coord_fin = "6+rue+des+marronniers+Paris"
+    coord_fin = "6+rue+des+maronniers+Paris"
     driving_mode_front = "bicycling"
     transit_mode_front = ""
     waypoints_front = ""

@@ -14,7 +14,7 @@ class API:
     - user_id : correspond a l'id du user pour recuperer la cle de l'API correspondante
     """
 
-    def __init__(self, url, nom="", user_id=9):
+    def __init__(self, url, nom="", user_id=0):
         self._url = url
         self.__nom = nom
         self._user_id = user_id
@@ -62,10 +62,6 @@ class API:
         """
 
         key = ""
-        if user_id == 9:
-            print("user_id par défaut renseigné, pas de clé d'API correspondante.")
-            return key
-
         if user_id not in (0, 1, 2):
             raise ValueError("Le user_id renseigné pour récupérer les clés n'est pas correct : {}".format(user_id))
 
@@ -78,5 +74,5 @@ class API:
                 print("Le user_id {} n'est pas présent dans dic_user_key_citymapper".format(user_id))
             key = dic_user_key_citymapper[user_id]
         else:
-            print("Je ne trouve pas le nom de l'API")
+            print("Je ne trouve pas le nom de l'API pour l'user_id {}".format(user_id))
         return key

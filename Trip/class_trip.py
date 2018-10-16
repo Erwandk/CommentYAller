@@ -12,36 +12,56 @@ class Trip:
     Cette classe représente le trajet dans son ensemble avec toutes les données correspondantes.
     """
 
-    def __init__(self, pos_init, pos_final, bagage, elevation):
+    def __init__(self, pos_init, pos_final, bagage, elevation, user_id=0):
         """
         Le constructeur de cette classe prend en entrée les données de position de départ et d'arrivée
         """
-        self.__pos_init = pos_init
-        self.__pos_final = pos_final
-        self.__bagage = bagage
-        self.__elevation = elevation
+        self.__user_id = user_id
+        self.__pos_init = self.clean_str(pos_init)
+        self.__pos_final = self.clean_str(pos_final)
+        self.__bagage = True if bagage == "on" else False
+        self.__elevation = True if elevation == "on" else False
 
         self.__meteo = Meteo()
 
-        self.__gps_init = {'lat': 0, 'lng': 0}   # à instancier à l'aide des itinéraires ci-dessous pour éviter
-        self.__gps_final = {'lat': 0, 'lng': 0}  # d'appeler de nouveau l'API
-
-        self.__trip_foot = Foot()
-        self.__trip_bicycle = Bicycle()
-        self.__trip_car = Car()
+        self.__trip_foot = Foot(self.__user_id, self.__pos_init, self.pos_final)
+        self.__trip_bicycle = Bicycle(self.__user_id, self.__pos_init, self.pos_final)
+        self.__trip_car = Car(self.__user_id, self.__pos_init, self.pos_final)
         self.__trip_transit = Transit()
+
+        self.__gps_init = self.__trip_foot.etapes[0][2]
+        self.__gps_final = self.__trip_foot.etapes[len(self.__trip_foot.etapes)-1][3]
 
         # True si nous recommandons le trajet, False sinon
         self.__recommandation = {"foot": True, "bicycle": True, "car": True, "transit": True}
 
+    @staticmethod
+    def clean_str(chaine):
+        """
+         Méthode statique qui transforme une chaine de caractère aux contraintes de l'API GoogleMaps
+        """
+        __new_chaine = chaine.lower().replace(" ", "+").replace(",", "+")
+        if "paris" not in __new_chaine:
+            __new_chaine += "+paris"
+        return __new_chaine
+
     def analyse(self):
+        """
+        Méthode qui calcule nos recommandations en fonction des paramètres du trajet
+        """
         if self.__bagage == "on":
             self.__recommandation["transit"] = False
-        if not self.__meteo.pluie:
-            self.__recommandation["foot"] = False
-            self.__recommandation["bicycle"] = False
+        # TODO : introduire les recommandations météos et autres
 
     # Définition des getters, setters des attributs de notre classe
+    @property
+    def user_id(self):
+        return self.__user_id
+
+    @user_id.setter
+    def user_id(self, valeur):
+        print("You are not allowed to modify user_id by {} !".format(valeur))
+
     @property
     def pos_init(self):
         return self.__pos_init
@@ -64,7 +84,7 @@ class Trip:
 
     @gps_init.setter
     def gps_init(self, valeur):
-        print("You are not allowed to modify duree_tot by {} !".format(valeur))
+        print("You are not allowed to modify gps_init by {} !".format(valeur))
 
     @property
     def gps_final(self):

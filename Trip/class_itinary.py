@@ -8,10 +8,23 @@ from APIs.class_googlesmaps import GoogleMaps
 
 class Foot:
 
-    def __init__(self):
-        self.__duree_tot = 0
-        self.__distance_tot = 0
-        self.__etapes = [()]
+    def __init__(self, user_id, pos_init, pos_final):
+        print("pos_init {}, pos_final {}, user_id {}".format(pos_init, pos_final, user_id))
+        self.__etapes = GoogleMaps(user_id).get_etape(pos_init, pos_final, driving_mode="walking")
+        self.__duree_tot = self.compute_duree_tot()
+        self.__distance_tot = self.compute_distance_tot()
+
+    def compute_distance_tot(self):
+        __distance_tot = 0
+        for step in self.etapes:
+            __distance_tot += step[0]
+        return __distance_tot
+
+    def compute_duree_tot(self):
+        __duree_tot = 0
+        for step in self.etapes:
+            __duree_tot += step[1]
+        return __duree_tot
 
     @property
     def duree_tot(self):
@@ -40,10 +53,22 @@ class Foot:
 
 class Bicycle:
 
-    def __init__(self):
-        self.__duree_tot = 0
-        self.__distance_tot = 0
-        self.__etapes = [()]
+    def __init__(self, user_id, pos_init, pos_final):
+        self.__etapes = [()]  # GoogleMaps(user_id).get_etape(pos_init, pos_final, driving_mode="bicycling")
+        self.__duree_tot = 0  # self.compute_duree_tot()
+        self.__distance_tot = 0  # self.compute_distance_tot()
+
+    def compute_distance_tot(self):
+        __distance_tot = 0
+        for step in self.etapes:
+            self.duree_tot += step[0]
+        return __distance_tot
+
+    def compute_duree_tot(self):
+        __duree_tot = 0
+        for step in self.etapes:
+            __duree_tot += step[1]
+        return __duree_tot
 
     @property
     def duree_tot(self):
@@ -72,10 +97,22 @@ class Bicycle:
 
 class Car:
 
-    def __init__(self):
+    def __init__(self, user_id, pos_init, pos_final):
+        self.__etapes = [()]  # GoogleMaps(user_id).get_etape(pos_init, pos_final, driving_mode="driving")
         self.__duree_tot = 0
-        self.__distance_tot = 0
-        self.__etapes = [()]
+        self.__distance_tot = 0  # self.compute_distance_tot()
+
+    def compute_distance_tot(self):
+        __distance_tot = 0
+        for step in self.etapes:
+            self.duree_tot += step[0]
+        return __distance_tot
+
+    def compute_duree_tot(self):
+        __duree_tot = 0
+        for step in self.etapes:
+            __duree_tot += step[1]
+        return __duree_tot
 
     @property
     def duree_tot(self):
