@@ -54,14 +54,14 @@ class Foot:
 class Bicycle:
 
     def __init__(self, user_id, pos_init, pos_final):
-        self.__etapes = [()]  # GoogleMaps(user_id).get_etape(pos_init, pos_final, driving_mode="bicycling")
-        self.__duree_tot = 0  # self.compute_duree_tot()
-        self.__distance_tot = 0  # self.compute_distance_tot()
+        self.__etapes = GoogleMaps(user_id).get_etape(pos_init, pos_final, driving_mode="bicycling")
+        self.__duree_tot = self.compute_duree_tot()
+        self.__distance_tot = self.compute_distance_tot()
 
     def compute_distance_tot(self):
         __distance_tot = 0
         for step in self.etapes:
-            self.duree_tot += step[0]
+            __distance_tot += step[0]
         return __distance_tot
 
     def compute_duree_tot(self):
@@ -98,14 +98,14 @@ class Bicycle:
 class Car:
 
     def __init__(self, user_id, pos_init, pos_final):
-        self.__etapes = [()]  # GoogleMaps(user_id).get_etape(pos_init, pos_final, driving_mode="driving")
-        self.__duree_tot = 0
-        self.__distance_tot = 0  # self.compute_distance_tot()
+        self.__etapes = GoogleMaps(user_id).get_etape(pos_init, pos_final, driving_mode="driving")
+        self.__duree_tot = self.compute_duree_tot()
+        self.__distance_tot = self.compute_distance_tot()
 
     def compute_distance_tot(self):
         __distance_tot = 0
         for step in self.etapes:
-            self.duree_tot += step[0]
+            __distance_tot += step[0]
         return __distance_tot
 
     def compute_duree_tot(self):
