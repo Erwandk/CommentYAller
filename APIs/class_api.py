@@ -74,5 +74,5 @@ class API:
                 print("Le user_id {} n'est pas présent dans dic_user_key_citymapper".format(user_id))
             key = dic_user_key_citymapper[user_id]
         else:
-            print("Je ne trouve pas le nom de l'API pour l'user_id {}".format(user_id))
+            print("Je ne trouve pas le nom de l'API {} pour l'user_id {}".format(self.nom, user_id))
         return key
