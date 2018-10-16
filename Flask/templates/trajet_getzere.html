@@ -17,6 +17,13 @@
         <p>arrivée : lat : {{ trip.gps_final['lat'] }}, long : {{ trip.gps_final['lng'] }}</p>
         <p>l'option bagage a pour valeur : {{ trip.bagage }}</p>
         <p>l'option elevation a pour valeur : {{ trip.elevation }}</p>
+        <p>Voici le bulletin météo :</p>
+        <ul>
+            <li>pluie : {{ trip.meteo.rain }}</li>
+            <li>temperature : {{ trip.meteo.temperature }}</li>
+            <li>neige : {{ trip.meteo.snow }}</li>
+            <li>convective : {{ trip.meteo.convective_rain }}</li>
+        </ul>
         <p>Pour aller de <strong>{{ trip.pos_init }}</strong> à <strong>{{ trip.pos_final}}</strong>, voici nos analyses :</p>
         <div id="foot">
             <h3>A pied :</h3>
