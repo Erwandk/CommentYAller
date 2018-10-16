@@ -70,8 +70,9 @@ class GoogleMaps(API):
         """
     def __init__(self, user_id=9):
         API.__init__(self, nom="googlemaps", url="https://maps.googleapis.com/maps/api/directions/", user_id=user_id)
+        self.__json = dict()
 
-    def get_json(self, startcoord, endcoord, driving_mode="", transit_mode="", waypoints=""):
+    def __get_json(self, startcoord, endcoord, driving_mode="", transit_mode="", waypoints=""):
         """
                         Methode permettant de récupérer le travel_time de l'API de citymapper
                         :param startcoord : coordonnées GPS de la position de départ
@@ -94,16 +95,16 @@ class GoogleMaps(API):
         if resp.status_code != 200:
             raise NotImplementedError("Erreur {} : vous n'avez pas réussi à vous connecter à "
                                       "l'url {}.".format(resp.status_code, __new_url))
-        json_data = {}
+        __json_data = {}
         try:
-            json_data = resp.json()
+            __json_data = resp.json()
         except Exception as e:
             print("Les données reçues ne sont pas reçues par la méthode json()")
             print(str(e))
         print("appel")
-        return json_data
+        return __json_data
 
-    def get_etape_without_transit(self, startcoord, endcoord, driving_mode="", waypoints="", k=0):
+    def get_etape_without_transit(self, obj, param, k=0):
         """
                 Methode permettant de récupérer le travel_time de l'API de citymapper
                 :param startcoord : coordonnées GPS de la position de départ
@@ -114,15 +115,16 @@ class GoogleMaps(API):
                 :return: Une liste d'étape qui contient plusieurs paramètres
                 """
 
-        assert driving_mode != "transit"
-        etapes_description_itineraires = self.get_json(startcoord, endcoord, driving_mode, waypoints=waypoints)
-        etapes_description_itineraires = etapes_description_itineraires["routes"][0]["legs"][k]
+        assert param[2] != "transit"
+        __etapes_description_itineraires = obj["routes"][0]["legs"][0]
+
         # On met le [0] car liste contenant un seul élément pour l'instant,
         # Plus le cas si on utlise plusieurs itinéraires ou waypoints
 
-        return steps_no_transit(etapes_description_itineraires)
+        return steps_no_transit(__etapes_description_itineraires)
 
-    def get_etape_with_transit(self, startcoord, endcoord, driving_mode="transit", transit_mode="", waypoints="", k=0):
+    @staticmethod
+    def get_etape_with_transit(obj, param, k=0):
         """
                     Methode permettant de récupérer le travel_time de l'API de citymapper
                     :param startcoord : coordonnées GPS de la position de départ
@@ -134,35 +136,36 @@ class GoogleMaps(API):
                     :return: Une liste d'étape qui contient plusieurs paramètres
                 """
 
-        assert driving_mode == "transit"
-        etapes_description_itineraires = self.get_json(startcoord, endcoord, driving_mode, transit_mode, waypoints)
-        etapes_description_itineraires = etapes_description_itineraires["routes"][0]["legs"][k]
-        return steps(etapes_description_itineraires)
+        assert param[2] == "transit"
+        __etapes_description_itineraires = obj
+        __etapes_description_itineraires = __etapes_description_itineraires["routes"][0]["legs"][k]
+        return steps(__etapes_description_itineraires)
 
-    def get_etape_without_waypoints(self, startcoord, endcoord, driving_mode="", transit_mode="", waypoints="", k=0):
+    def get_etape_without_waypoints(self, obj="", param="", k=0):
 
-        if driving_mode == "transit":
-            return self.get_etape_with_transit(startcoord, endcoord, driving_mode, transit_mode, waypoints, k)
+        if param[2] == "transit":
+            return self.get_etape_with_transit(obj, param,k=k)
         else:
-            return self.get_etape_without_transit(startcoord, endcoord, driving_mode, waypoints, k)
+            return self.get_etape_without_transit(obj, param, k=k)
 
-    def get_etape_with_waypoints(self, startcoord, endcoord, driving_mode="", transit_mode="", waypoints=""):
+    def get_etape_with_waypoints(self, obj = "", param=""):
 
-        assert waypoints != ""
-        n = len(self.get_json(startcoord, endcoord, driving_mode, transit_mode, waypoints)["geocoded_waypoints"]) - 1
+        assert param[4] != ""
+        n = len(obj["geocoded_waypoints"]) - 1
         etape_waypoints = []
         for i in range(n):
-            obj = self.get_etape_without_waypoints(startcoord, endcoord, driving_mode, transit_mode, waypoints, i)
-            for k in range(len(obj)):
-                etape_waypoints.append(self.get_etape_without_waypoints(startcoord, endcoord, driving_mode, transit_mode,
-                                                                        waypoints, i)[k])
+            e = self.get_etape_without_waypoints(obj, param, k=i)
+            for k in range(len(e)):
+                etape_waypoints.append(self.get_etape_without_waypoints(obj, param, k=i)[k])
         return etape_waypoints
 
     def get_etape(self, startcoord, endcoord, driving_mode="", transit_mode="", waypoints=""):
+        jason = (self.__get_json(startcoord, endcoord, driving_mode=driving_mode, transit_mode= transit_mode, waypoints = waypoints),
+                 (startcoord,endcoord,driving_mode,transit_mode,waypoints))
         if waypoints == "":
-            return self.get_etape_without_waypoints(startcoord, endcoord, driving_mode, transit_mode, waypoints)
+            return self.get_etape_without_waypoints(obj = jason[0],param = jason [1])
         else:
-            return self.get_etape_with_waypoints(startcoord, endcoord, driving_mode, transit_mode, waypoints)
+            return self.get_etape_with_waypoints(obj = jason[0],param = jason[1])
 
 
 if __name__ == '__main__':
@@ -176,7 +179,7 @@ if __name__ == '__main__':
     coord_fin = "6+rue+des+marronniers+Paris"
     driving_mode_front = "bicycling"
     transit_mode_front = ""
-    waypoints_front = "12+avenue+de+versailles"
+    waypoints_front = ""
 
     requete = API_GoogleMaps.get_etape(startcoord=coord_depart, endcoord=coord_fin,
                                        driving_mode=driving_mode_front, transit_mode=transit_mode_front,
