@@ -4,6 +4,7 @@
 __author__ = 'eke, gab, axel'
 
 from Trip.class_itinary import Foot, Bicycle, Car, Transit
+from APIs.class_meteo import Meteo
 
 
 class Trip:
@@ -20,15 +21,25 @@ class Trip:
         self.__bagage = bagage
         self.__elevation = elevation
 
-        print(type(bagage))
+        self.__meteo = Meteo()
 
-        self.__gps_init = {'lat': 0, 'lng': 0}
-        self.__gps_final = {'lat': 0, 'lng': 0}
+        self.__gps_init = {'lat': 0, 'lng': 0}   # à instancier à l'aide des itinéraires ci-dessous pour éviter
+        self.__gps_final = {'lat': 0, 'lng': 0}  # d'appeler de nouveau l'API
 
         self.__trip_foot = Foot()
         self.__trip_bicycle = Bicycle()
         self.__trip_car = Car()
         self.__trip_transit = Transit()
+
+        # True si nous recommandons le trajet, False sinon
+        self.__recommandation = {"foot": True, "bicycle": True, "car": True, "transit": True}
+
+    def analyse(self):
+        if self.__bagage == "on":
+            self.__recommandation["transit"] = False
+        if not self.__meteo.pluie:
+            self.__recommandation["foot"] = False
+            self.__recommandation["bicycle"] = False
 
     # Définition des getters, setters des attributs de notre classe
     @property
@@ -110,3 +121,19 @@ class Trip:
     @elevation.setter
     def elevation(self, valeur):
         print("You are not allowed to modify elevation by {} !".format(valeur))
+
+    @property
+    def meteo(self):
+        return self.__meteo
+
+    @meteo.setter
+    def meteo(self, valeur):
+        print("You are not allowed to modify meteo by {} !".format(valeur))
+
+    @property
+    def recommandation(self):
+        return self.__recommandation
+
+    @recommandation.setter
+    def recommandation(self, valeur):
+        print("You are not allowed to modify recommandation by {} !".format(valeur))

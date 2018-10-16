@@ -1,4 +1,4 @@
-#!usr/bin/env/python3
+#!usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 __author__ = 'eke, gab, axel'
@@ -16,7 +16,7 @@ class API:
 
     def __init__(self, url, nom="", user_id=9):
         self._url = url
-        self._nom = nom
+        self.__nom = nom
         self._user_id = user_id
         self._key = self._get_key_by_id(self._user_id)
 
@@ -31,12 +31,12 @@ class API:
 
     @property
     def nom(self):
-        return self._nom
+        return self.__nom
 
     @nom.setter
     def nom(self, valeur):
         print("A reflechir : donnez l'accès ou non à la modification du nom")
-        self._nom = valeur
+        self.__nom = valeur
 
     @property
     def user_id(self):
@@ -57,6 +57,9 @@ class API:
         self._key = valeur
 
     def _get_key_by_id(self, user_id):
+        """
+         Methode permettant de récupérer la clé de chaque API en fonction du user_id et de son nom
+        """
 
         key = ""
         if user_id == 9:
