@@ -1,17 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     {% block header %}
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Get'zere{% endblock %}</title>
+
+    <link href="{{ url_for('static', filename='bulma.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet" type="text/css"/>
     {% endblock %}
 </head>
 
 <body>
-    <h1>Get'zere : la nouvelle application qui facilite vos trajets !</h1>
+    <div class="columns">
+        <div class="column is-one-fifth is-0 bandeau_lat">
+            <div class="contenant_ville">
+                <h2 id="ville">Paris</h2>
+                <img id="tour_eiffel" src="{{ url_for('static', filename='images/tour_eiffel.png') }}" alt="logo de la tour eiffel"/>
+            </div>
+            <div class="contenant_logo">
+                <h2 id="name">Get'zere</h2>
+                <img id="logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="logo Get'zere temporaire"/>
+            </div>
 
-    {% block corps %}{% endblock %}
+            <p class="autor"><i>
+                Erwan de Kergaradec <br>
+                Axel Compain <br>
+                Gabrielle Didelot <br>
+            </i></p>
+        </div>
 
-    {% block footer %}{% endblock %}
+        <div class="column is-four-fifth is-0">
+            <nav class="level">
+                <p class="title">Get'zere : la nouvelle application qui facilite vos trajets</p>
+            </nav>
+
+            <div id="corps">
+                {% block corps %}
+                {% endblock %}
+            </div>
+
+            <footer class="footer">Copyright getzere.fr 2018</footer>
+        </div>
+    </div>
+
 </body>
 </html>

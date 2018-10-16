@@ -2,20 +2,49 @@
 
 {% block header %}
 {{ super() }}
-<link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet" type="text/css"/>
+<!--script-- type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=keyAPI"></--script-->
+<!--script type="text/javascript" src="autocomplete.js"></script-->
 {% endblock %}
 
 {% block corps %}
-<h2>Formulaire</h2>
-<form class= "form" action="" method="post">
-    <label for="pos_init">Votre position</label><br/>
-    <input type="text" id="pos_init" name="pos_init"/><br/>
-    <label for="pos_final">Votre destination</label><br/>
-    <input type="text" id="pos_final" name="pos_final"/><br/>
-    <input type="submit" value="C'est parti">
-</form>
-{% endblock %}
+<div id="recherche">
+    <div class="content">
+        <p class="subtitle">Trouver mon itinéraire : </p>
+    </div>
+    <form class= "form" action="" method="post">
+        <div class="field">
+            <label class="label">De :</label>
+            <div class="control">
+                <input id="pos_init" name="pos_init" class="input is-rounded" type="text" value="Ma position" autocomplete="on">
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">A :</label>
+            <div class="control">
+                <input id="pos_final" name="pos_final" class="input is-rounded" type="text" placeholder="Destination..." autocomplete="on">
+            </div>
+        </div>
 
-{% block footer %}
-<footer>Copyright getzere.fr 2018</footer>
+        <div class="field">
+            <div class="control">
+                <label class="checkbox">
+                <input id="bagage" name="bagage" type="checkbox">
+                Je suis chargé (bagages...)
+                </label>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <label class="checkbox">
+                <input id="elevation" name="elevation" type="checkbox">
+                Je souhaite tenir compte de l'élévation du terrain
+                </label>
+            </div>
+        </div>
+
+        <input id="submit" type="submit" class="button" value="C'est parti">
+    </form>
+</div>
+
 {% endblock %}
