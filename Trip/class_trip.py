@@ -27,7 +27,7 @@ class Trip:
         self.__trip_foot = Foot(self.__user_id, self.__pos_init, self.pos_final)
         self.__trip_bicycle = Bicycle(self.__user_id, self.__pos_init, self.pos_final)
         self.__trip_car = Car(self.__user_id, self.__pos_init, self.pos_final)
-        self.__trip_transit = Transit()
+        self.__trip_transit = Transit(self.__user_id, self.__pos_init, self.pos_final)
 
         self.__gps_init = self.__trip_foot.etapes[0][2]
         self.__gps_final = self.__trip_foot.etapes[len(self.__trip_foot.etapes)-1][3]
