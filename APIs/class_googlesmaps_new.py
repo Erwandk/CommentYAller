@@ -58,9 +58,10 @@ class GoogleMaps(API):
         return etapes
 
     def get_etape(self):
+        self.get_json()
         assert self._driving_mode != "transit"
         itineraire = self._json["routes"][0]["legs"][0]
-        return GoogleMaps.get_etapes(itineraire[:])
+        return GoogleMaps.get_etapes(itineraire)
 
     @property
     def json(self):
@@ -140,7 +141,7 @@ class GoogleMapsTransit(GoogleMaps):
         return s
 
     def get_etape(self):
-
+        self.get_json()
         assert self._driving_mode == "transit"
         itineraire = self._json["routes"][0]["legs"][0]["steps"]
         nb_etape = len(itineraire)
@@ -166,9 +167,10 @@ if __name__ == '__main__':
     identifiant = 0
     coord_depart = "8+rue+des+morillons+Paris"
     coord_fin = "6+rue+des+marronniers+Paris"
-    driving_mode_front = "transit"
+    driving_mode_front = "bicycling"
     transit_mode_front = ""
     waypoints_front = ""
+
     if driving_mode_front == "transit":
         requete = GoogleMapsTransit(user_id=identifiant, startcoord=coord_depart, endcoord=coord_fin,
                                     driving_mode=driving_mode_front, transit_mode=transit_mode_front,
@@ -178,7 +180,7 @@ if __name__ == '__main__':
                              driving_mode=driving_mode_front, transit_mode=transit_mode_front,
                              waypoints=waypoints_front)
 
-    requete.get_json()
+
 
     requete = requete.get_etape()
     for x in requete:
