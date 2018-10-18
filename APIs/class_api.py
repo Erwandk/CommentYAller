@@ -62,17 +62,24 @@ class API:
         """
 
         key = ""
-        if user_id not in (0, 1, 2):
+        if user_id not in (0, 1, 2, 9):
             raise ValueError("Le user_id renseigné pour récupérer les clés n'est pas correct : {}".format(user_id))
 
         if self.nom == "googlemaps":
             if user_id not in dic_user_key_googlemaps:
                 print("Le user_id {} n'est pas présent dans dic_user_key_googlemaps".format(user_id))
-            key = dic_user_key_googlemaps[user_id]
+            else:
+                key = dic_user_key_googlemaps[user_id]
         elif self.nom == "citymapper":
             if user_id not in dic_user_key_citymapper:
                 print("Le user_id {} n'est pas présent dans dic_user_key_citymapper".format(user_id))
-            key = dic_user_key_citymapper[user_id]
+            else:
+                key = dic_user_key_citymapper[user_id]
+        elif self.nom == "ipstack":
+            if user_id not in dic_user_key_apistack:
+                print("Le user_id {} n'est pas présent dans dic_user_key_apistack".format(user_id))
+            else:
+                key = dic_user_key_apistack[user_id]
         else:
             print("Je ne trouve pas le nom de l'API {} pour l'user_id {}".format(self.nom, user_id))
         return key

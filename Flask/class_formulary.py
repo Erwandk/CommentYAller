@@ -3,13 +3,15 @@
 
 __author__ = 'eke, gab, axel'
 
+from APIs.class_InfoUser import InfoUser
+
 
 class Formulary:
     """
     Cette classe représente le formulaire rentré par l'utilisateur
     """
 
-    def __init__(self, form):
+    def __init__(self, form, info_user):
         """
         Le constructeur de cette classe prend en entrée le formulaire entré par l'utilisateur
         """
@@ -18,16 +20,25 @@ class Formulary:
         self.__bagage = form.get('bagage', 'off')
         self.__elevation = form.get('elevation', 'off')
 
+        self.__compute_info(info_user)
         self.__check_data = self.__check_form_data()
 
     def __check_form_data(self):
         """
         Cette fonction checke les données envoyées via le formulaire par l'utilisateur
         """
-        if self.pos_init == "" or self.pos_final == "":
+        if self.pos_init == "" or self.pos_init == "None%C2None" or self.pos_final == "":
             return False
         else:
             return True
+
+    def __compute_info(self, info):
+        """
+        Cette fonction permet de récupérer les coordonnées GPS de l'utilisateur dans le cas où le départ
+        s'effectue depuis sa propre position
+        """
+        if self.__pos_init == "Ma position":
+            self.__pos_init = str(info.long) + "%C2" + str(info.lat)
 
     # Définition des getters, setters des attributs de notre classe
     @property
