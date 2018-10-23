@@ -3,7 +3,7 @@
 
 __author__ = 'eke, gab, axel'
 
-from APIs.class_googlesmaps_new import GoogleMaps, GoogleMapsTransit
+from APIs.class_googlesmaps import GoogleMaps, GoogleMapsTransit
 
 
 class Foot:
