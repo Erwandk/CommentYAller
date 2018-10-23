@@ -20,7 +20,6 @@ class Foot(Thread):
         self.__distance_tot = 0
 
     def run(self):
-        print("Foot is running as one thread")
         self.__etapes = GoogleMaps(user_id=self.__user_id, startcoord=self.__pos_init, endcoord=self.__pos_final,
                                    driving_mode="walking", transit_mode="",
                                    waypoints="").get_etape()
@@ -97,7 +96,6 @@ class Bicycle(Thread):
         self.__distance_tot = 0
 
     def run(self):
-        print("Bicycle is running as one thread")
         self.__etapes = GoogleMaps(user_id=self.__user_id, startcoord=self.__pos_init, endcoord=self.__pos_final,
                                    driving_mode="bicycling", transit_mode="",
                                    waypoints="").get_etape()

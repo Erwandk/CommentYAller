@@ -152,7 +152,6 @@ class GoogleMapsTransit(GoogleMaps):
                     etape.append(j)
             elif itineraire[k]["travel_mode"] == "TRANSIT":
                 etape.append(GoogleMapsTransit.get_with_transit(itineraire[k]))
-            print(k, etape)
         return etape
 
 

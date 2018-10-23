@@ -4,25 +4,35 @@
 __author__ = 'eke, gab, axel'
 
 import requests
-from APIs.class_api import API
 import time
+from threading import Thread
+from APIs.class_api import API
 
 
-class Meteo(API):
+class Meteo(API, Thread):
 
     def __init__(self):
+        Thread.__init__(self)
         API.__init__(self,
                      url='http://www.infoclimat.fr/public-api/gfs/json?_ll=48.85341,2.3488&_auth=CBIAFwN9BiRRfFtsA3ULIgBoBTBdK1dwA38CYVs%2BB3pWPVAxVDRTNVY4VyoFKlVjWXQFZl5lUmIBagZ%2BCHpXNghiAGwDaAZhUT5bPgMsCyAALgVkXX1XcANhAmZbPgd6VjRQPVQyUy9WO1cxBTdVf1loBWdeYFJ1AX0GYAhgVzcIYwBjA2MGZVE9WzADMgsgACwFYF0wVz0DZwJnW2IHY1ZjUDdUMlMxVjtXZwUwVX9ZYwVkXmBSaAFrBmQIZ1c1CHQAewMZBhdRI1t5A3ELagB1BXhdN1cxAzQ%3D&_c=cc703eb909f9f00058063c7c570f6a45',
                      nom='meteo')
-        self.__time = self._set_time()
-        self.__data = self._get_json()
+        self.__time = ''
+        self.__data = dict()
+        self.temperature = 0
+        self.rain = 0
+        self.convective_rain = 0
+        self.snow = ""
+
+    def run(self):
+        self.__time = self.__set_time()
+        self.__data = self.__get_json()
         self.temperature = round(self.__data['temperature']['sol']-273, 2)
         self.rain = self.__data['pluie']
         self.convective_rain = self.__data['pluie_convective']
         self.snow = self.__data['risque_neige']
 
     @staticmethod
-    def _set_time():
+    def __set_time():
         t = time.localtime()
         # Date
         _date = time.strftime('20%y-%m-%d', t)
@@ -51,7 +61,7 @@ class Meteo(API):
         _dateheure = _date + ' ' + _heure
         return _dateheure
 
-    def _get_json(self):
+    def __get_json(self):
         # Connexion à l'API
         resp = requests.get(self.url)
         if resp.status_code != 200:
