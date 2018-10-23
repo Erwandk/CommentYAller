@@ -25,10 +25,23 @@ class Trip:
 
         self.__meteo = Meteo()
 
+        # Définition des différents trajets (1 thread = 1 appel à une API)
         self.__trip_foot = Foot(self.__user_id, self.__pos_init, self.pos_final)
         self.__trip_bicycle = Bicycle(self.__user_id, self.__pos_init, self.pos_final)
         self.__trip_car = Car(self.__user_id, self.__pos_init, self.pos_final)
         self.__trip_transit = Transit(self.__user_id, self.__pos_init, self.pos_final)
+
+        # Lancement des threads
+        self.__trip_foot.start()
+        self.__trip_bicycle.start()
+        self.__trip_car.start()
+        self.__trip_transit.start()
+
+        # Attente de la fin des threads
+        self.__trip_foot.join()
+        self.__trip_bicycle.join()
+        self.__trip_car.join()
+        self.__trip_transit.join()
 
         self.__gps_init = self.__trip_foot.etapes[0][2]
         self.__gps_final = self.__trip_foot.etapes[len(self.__trip_foot.etapes)-1][3]
