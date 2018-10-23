@@ -49,18 +49,18 @@ class GoogleMaps(API):
 
     @staticmethod
     def get_etapes(itineraire):
-        __itineraire = itineraire["steps"]
-        __nb_etape = len(itineraire)
-        __etapes = []
-        for k in range(__nb_etape):
-            __distance = __itineraire[k]["distance"]["value"]
-            __duration = __itineraire[k]["duration"]["value"]
-            __s_coord = __itineraire[k]["start_location"]
-            __e_coord = __itineraire[k]["end_location"]
-            __travel_mode = __itineraire[k]["travel_mode"]
+        itineraire = itineraire["steps"]
+        nb_etape = len(itineraire)
+        etapes = []
+        for k in range(nb_etape):
+            __distance = itineraire[k]["distance"]["value"]
+            __duration = itineraire[k]["duration"]["value"]
+            __s_coord = itineraire[k]["start_location"]
+            __e_coord = itineraire[k]["end_location"]
+            __travel_mode = itineraire[k]["travel_mode"]
             __transit_details = "No transit"
-            __etapes.append((__distance, __duration, __s_coord, __e_coord, __travel_mode, __transit_details))
-        return __etapes
+            etapes.append((__distance, __duration, __s_coord, __e_coord, __travel_mode, __transit_details))
+        return etapes
 
     def get_etape(self):
         self.get_json()
@@ -142,7 +142,7 @@ class GoogleMapsTransit(GoogleMaps):
         __short = itineraire["transit_details"]["line"]["short_name"]
         __nb_stations = itineraire["transit_details"]["num_stops"]
         __s = (__distance, __duration, __s_coord, __e_coord, __travel_mode,
-             (__departure_stop, __arrival_stop, __vehicle, __short, __nb_stations))
+               (__departure_stop, __arrival_stop, __vehicle, __short, __nb_stations))
         return __s
 
     def get_etape(self):
