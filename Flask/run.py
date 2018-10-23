@@ -10,6 +10,9 @@ from Flask.class_formulary import Formulary
 from Trip.class_trip import Trip
 from APIs.class_InfoUser import InfoUser
 
+from Trip.class_carte import Carte
+
+
 app = Flask(__name__)
 app.secret_key = secret_key
 
@@ -19,6 +22,7 @@ def index():
     """
     racine de notre site web
     """
+
     if request.method == 'POST':
         info_user = InfoUser()
         form = Formulary(request.form, info_user)
@@ -44,7 +48,8 @@ def trajet(pos_init, pos_final, bagage, elevation):
     page des résultats
     """
     trip = Trip(pos_init, pos_final, bagage, elevation)
-    return render_template('trajet_getzere.html', trip=trip)
+    carte = Carte(trip)
+    return render_template('trajet_getzere.html', trip=trip, carte=carte)
 
 
 if __name__ == '__main__':

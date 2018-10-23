@@ -63,11 +63,6 @@
 
     <div class="column" id="carte">
 
-        {% set min_lat = [trip.gps_init['lat'], trip.gps_final['lat']] | min - 0.00025 %}
-        {% set max_lat = [trip.gps_init['lat'], trip.gps_final['lat']] | max + 0.00025 %}
-        {% set min_long = [trip.gps_init['lng'], trip.gps_final['lng']] | min - 0.0025 %}
-        {% set max_long = [trip.gps_init['lng'], trip.gps_final['lng']] | max + 0.0025 %}
-
         <!-- valeurs à remplacer une fois les bonnes coordonnées récupérées -->
 
         <figure class="image">
@@ -75,7 +70,7 @@
                     title="Votre trajet"
                     width="550"
                     height="450"
-                    src="https://www.openstreetmap.org/export/embed.html?bbox={{ min_long }}%2C{{ min_lat }}%2C{{ max_long }}%2C{{ max_lat }}&layer=mapnik">
+                    src="https://www.openstreetmap.org/export/embed.html?bbox={{ carte.min_lon }}%2C{{ carte.min_lat }}%2C{{ carte.max_lon }}%2C{{ carte.max_lat }}&layer=mapnik">
             </iframe>
         </figure>
     </div>

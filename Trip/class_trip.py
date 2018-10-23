@@ -6,7 +6,7 @@ __author__ = 'eke, gab, axel'
 from Trip.class_itinary import Foot, Bicycle, Car, Transit
 from APIs.class_meteo import Meteo
 import re
-
+from operator import itemgetter
 
 class Trip:
     """
@@ -34,7 +34,7 @@ class Trip:
         self.__gps_final = self.__trip_foot.etapes[len(self.__trip_foot.etapes)-1][3]
 
         # True si nous recommandons le trajet, False sinon
-        self.__recommandation = {"foot": True, "bicycle": True, "car": True, "transit": True}
+        self.__recommandation = ""
         self.analyse()
 
     @staticmethod
@@ -54,9 +54,20 @@ class Trip:
         """
         Méthode qui calcule nos recommandations en fonction des paramètres du trajet
         """
+        X = {"trip_bicycle": self.__trip_bicycle.duree_tot,"trip_car": self.__trip_car.duree_tot,"trip_foot":
+            self.__trip_foot.duree_tot,"trip_transit": self.__trip_transit.duree_tot}
         if self.__bagage == "on":
-            self.__recommandation["transit"] = False
-        # TODO : introduire les recommandations météos et autres
+            del X["trip_transit"]
+        if self.__meteo.snow == "oui" or self.__meteo.rain > 21:
+            del X["trip_walking"]
+        min_time = min(y for y in X.values())
+
+        for i,j in X.items():
+            print(i, "est et vaut", j)
+            if j == min_time:
+                self.__recommandation = i
+                break
+
 
     # Définition des getters, setters des attributs de notre classe
     @property
