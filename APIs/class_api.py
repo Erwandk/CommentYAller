@@ -81,5 +81,6 @@ class API:
             else:
                 key = dic_user_key_apistack[user_id]
         else:
-            print("Je ne trouve pas le nom de l'API {} pour l'user_id {}".format(self.nom, user_id))
+            if user_id != 9:
+                print("Je ne trouve pas le nom de l'API {} pour l'user_id {}".format(self.nom, user_id))
         return key

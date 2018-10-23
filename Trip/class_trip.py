@@ -17,19 +17,35 @@ class Trip:
         """
         Le constructeur de cette classe prend en entrée les données de position de départ et d'arrivée
         """
+        # Définitions des attributs de la classe
         self.__user_id = user_id
         self.__pos_init = self.clean_str(pos_init)
         self.__pos_final = self.clean_str(pos_final)
         self.__bagage = True if bagage == "on" else False
         self.__elevation = True if elevation == "on" else False
 
+        # Définition des différents trajets (1 thread = 1 appel à une API)
         self.__meteo = Meteo()
-
         self.__trip_foot = Foot(self.__user_id, self.__pos_init, self.pos_final)
         self.__trip_bicycle = Bicycle(self.__user_id, self.__pos_init, self.pos_final)
         self.__trip_car = Car(self.__user_id, self.__pos_init, self.pos_final)
         self.__trip_transit = Transit(self.__user_id, self.__pos_init, self.pos_final)
 
+        # Lancement des threads
+        self.__meteo.start()
+        self.__trip_foot.start()
+        self.__trip_bicycle.start()
+        self.__trip_car.start()
+        self.__trip_transit.start()
+
+        # Attente de la fin des threads
+        self.__meteo.join()
+        self.__trip_foot.join()
+        self.__trip_bicycle.join()
+        self.__trip_car.join()
+        self.__trip_transit.join()
+
+        # Calcul des positions GPS initiale et finale de l'utilisateur
         self.__gps_init = self.__trip_foot.etapes[0][2]
         self.__gps_final = self.__trip_foot.etapes[len(self.__trip_foot.etapes)-1][3]
 
@@ -47,7 +63,6 @@ class Trip:
         if not re.match(pattern, __new_chaine):
             if "paris" not in __new_chaine:
                 __new_chaine += "+paris"
-        print("chaine is GPS coordonates")
         return __new_chaine
 
     def analyse(self):

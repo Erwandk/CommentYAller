@@ -3,30 +3,63 @@
 
 __author__ = 'eke, gab, axel'
 
-from APIs.class_googlesmaps_new import GoogleMaps, GoogleMapsTransit
+from APIs.class_googlesmaps import GoogleMaps, GoogleMapsTransit
+from threading import Thread
 
 
-class Foot:
+class Foot(Thread):
+    """
+    Classe représentant le trajet à pied
+    """
 
     def __init__(self, user_id, pos_init, pos_final):
-        print("pos_init {}, pos_final {}, user_id {}".format(pos_init, pos_final, user_id))
-        self.__etapes = GoogleMaps(user_id=user_id, startcoord=pos_init, endcoord=pos_final,
+        Thread.__init__(self)
+        self.__user_id = user_id
+        self.__pos_init = pos_init
+        self.__pos_final = pos_final
+
+        self.__etapes = []
+        self.__duree_tot = 0
+        self.__distance_tot = 0
+
+    def run(self):
+        self.__etapes = GoogleMaps(user_id=self.__user_id, startcoord=self.__pos_init, endcoord=self.__pos_final,
                                    driving_mode="walking", transit_mode="",
                                    waypoints="").get_etape()
-        self.__duree_tot = self.compute_duree_tot()
-        self.__distance_tot = self.compute_distance_tot()
+        self.__compute_duree_tot()
+        self.__compute_distance_tot()
 
-    def compute_distance_tot(self):
-        __distance_tot = 0
+    def __compute_distance_tot(self):
         for step in self.etapes:
-            __distance_tot += step[0]
-        return __distance_tot
+            self.__distance_tot += step[0]
 
-    def compute_duree_tot(self):
-        __duree_tot = 0
+    def __compute_duree_tot(self):
         for step in self.etapes:
-            __duree_tot += step[1]
-        return __duree_tot
+            self.__duree_tot += step[1]
+
+    @property
+    def user_id(self):
+        return self.__user_id
+
+    @user_id.setter
+    def user_id(self, valeur):
+        print("You are not allowed to modify user_id by {}".format(valeur))
+
+    @property
+    def pos_init(self):
+        return self.__pos_init
+
+    @pos_init.setter
+    def pos_init(self, valeur):
+        print("You are not allowed to modify pos_init by {}".format(valeur))
+
+    @property
+    def pos_final(self):
+        return self.__pos_final
+
+    @pos_final.setter
+    def pos_final(self, valeur):
+        print("You are not allowed to modify pos_final by {}".format(valeur))
 
     @property
     def duree_tot(self):
@@ -53,26 +86,59 @@ class Foot:
         print("You are not allowed to modify etapes by {}".format(valeur))
 
 
-class Bicycle:
+class Bicycle(Thread):
+    """
+    Classe représentant le trajet en vélo
+    """
 
     def __init__(self, user_id, pos_init, pos_final):
-        self.__etapes = GoogleMaps(user_id=user_id, startcoord=pos_init, endcoord=pos_final,
+        Thread.__init__(self)
+        self.__user_id = user_id
+        self.__pos_init = pos_init
+        self.__pos_final = pos_final
+
+        self.__etapes = []
+        self.__duree_tot = 0
+        self.__distance_tot = 0
+
+    def run(self):
+        self.__etapes = GoogleMaps(user_id=self.__user_id, startcoord=self.__pos_init, endcoord=self.__pos_final,
                                    driving_mode="bicycling", transit_mode="",
                                    waypoints="").get_etape()
-        self.__duree_tot = self.compute_duree_tot()
-        self.__distance_tot = self.compute_distance_tot()
+        self.__compute_duree_tot()
+        self.__compute_distance_tot()
 
-    def compute_distance_tot(self):
-        __distance_tot = 0
+    def __compute_distance_tot(self):
         for step in self.etapes:
-            __distance_tot += step[0]
-        return __distance_tot
+            self.__distance_tot += step[0]
 
-    def compute_duree_tot(self):
-        __duree_tot = 0
+    def __compute_duree_tot(self):
         for step in self.etapes:
-            __duree_tot += step[1]
-        return __duree_tot
+            self.__duree_tot += step[1]
+
+    @property
+    def user_id(self):
+        return self.__user_id
+
+    @user_id.setter
+    def user_id(self, valeur):
+        print("You are not allowed to modify user_id by {}".format(valeur))
+
+    @property
+    def pos_init(self):
+        return self.__pos_init
+
+    @pos_init.setter
+    def pos_init(self, valeur):
+        print("You are not allowed to modify pos_init by {}".format(valeur))
+
+    @property
+    def pos_final(self):
+        return self.__pos_final
+
+    @pos_final.setter
+    def pos_final(self, valeur):
+        print("You are not allowed to modify pos_final by {}".format(valeur))
 
     @property
     def duree_tot(self):
@@ -99,26 +165,59 @@ class Bicycle:
         print("You are not allowed to modify etapes by {}".format(valeur))
 
 
-class Car:
+class Car(Thread):
+    """
+    Classe représentant le trajet en voiture
+    """
 
     def __init__(self, user_id, pos_init, pos_final):
-        self.__etapes = GoogleMaps(user_id=user_id, startcoord=pos_init, endcoord=pos_final,
+        Thread.__init__(self)
+        self.__user_id = user_id
+        self.__pos_init = pos_init
+        self.__pos_final = pos_final
+
+        self.__etapes = []
+        self.__duree_tot = 0
+        self.__distance_tot = 0
+
+    def run(self):
+        self.__etapes = GoogleMaps(user_id=self.__user_id, startcoord=self.__pos_init, endcoord=self.__pos_final,
                                    driving_mode="driving", transit_mode="",
                                    waypoints="").get_etape()
-        self.__duree_tot = self.compute_duree_tot()
-        self.__distance_tot = self.compute_distance_tot()
+        self.__compute_duree_tot()
+        self.__compute_distance_tot()
 
-    def compute_distance_tot(self):
-        __distance_tot = 0
+    def __compute_distance_tot(self):
         for step in self.etapes:
-            __distance_tot += step[0]
-        return __distance_tot
+            self.__distance_tot += step[0]
 
-    def compute_duree_tot(self):
-        __duree_tot = 0
+    def __compute_duree_tot(self):
         for step in self.etapes:
-            __duree_tot += step[1]
-        return __duree_tot
+            self.__duree_tot += step[1]
+
+    @property
+    def user_id(self):
+        return self.__user_id
+
+    @user_id.setter
+    def user_id(self, valeur):
+        print("You are not allowed to modify user_id by {}".format(valeur))
+
+    @property
+    def pos_init(self):
+        return self.__pos_init
+
+    @pos_init.setter
+    def pos_init(self, valeur):
+        print("You are not allowed to modify pos_init by {}".format(valeur))
+
+    @property
+    def pos_final(self):
+        return self.__pos_final
+
+    @pos_final.setter
+    def pos_final(self, valeur):
+        print("You are not allowed to modify pos_final by {}".format(valeur))
 
     @property
     def duree_tot(self):
@@ -145,36 +244,68 @@ class Car:
         print("You are not allowed to modify etapes by {}".format(valeur))
 
 
-class Transit:
+class Transit(Thread):
+    """
+    Classe représentant le trajet en transport en commun
+    """
 
-    def __init__(self,user_id, pos_init, pos_final):
-        self.__etapes = GoogleMapsTransit(user_id=user_id, startcoord=pos_init, endcoord=pos_final,
+    def __init__(self, user_id, pos_init, pos_final):
+        Thread.__init__(self)
+        self.__user_id = user_id
+        self.__pos_init = pos_init
+        self.__pos_final = pos_final
+        self.__etapes = []
+
+        self.__distance_tot = 0
+        self.__duree_tot = 0
+        self.__nb_etapes = 1
+
+    def run(self):
+        self.__etapes = GoogleMapsTransit(user_id=self.__user_id, startcoord=self.__pos_init, endcoord=self.__pos_final,
                                           driving_mode="transit", transit_mode="",
                                           waypoints="").get_etape()
-        self.__distance_tot = self.compute_distance_tot()
-        self.__duree_tot = self.compute_duree_tot()
-        self.__nb_etapes = self.compute_nb_etape()
+        self.__compute_distance_tot()
+        self.__compute_duree_tot()
+        self.__compute_nb_etape()
 
-    def compute_distance_tot(self):
-        __distance_tot = 0
+    def __compute_distance_tot(self):
         for step in self.etapes:
-            __distance_tot += step[0]
-        return __distance_tot
+            self.__distance_tot += step[0]
 
-    def compute_duree_tot(self):
-        __duree_tot = 0
+    def __compute_duree_tot(self):
         for step in self.etapes:
-            __duree_tot += step[1]
-        return __duree_tot
+            self.__duree_tot += step[1]
 
-    def compute_nb_etape(self):
-        __nb_etape = 1
-        n = len(self.etapes)
-        #Is the walking for changing transit mode a step?
-        for x in range(0,n-1):
-            if self.etapes[x][5] != self.etapes[x+1][5]:
-                __nb_etape += 1
-        return __nb_etape
+    def __compute_nb_etape(self):
+        n = len(self.__etapes)
+        # Is the walking for changing transit mode a step?
+        for x in range(0, n-1):
+            if self.__etapes[x][5] != self.__etapes[x+1][5]:
+                self.__nb_etapes += 1
+
+    @property
+    def user_id(self):
+        return self.__user_id
+
+    @user_id.setter
+    def user_id(self, valeur):
+        print("You are not allowed to modify user_id by {}".format(valeur))
+
+    @property
+    def pos_init(self):
+        return self.__pos_init
+
+    @pos_init.setter
+    def pos_init(self, valeur):
+        print("You are not allowed to modify pos_init by {}".format(valeur))
+
+    @property
+    def pos_final(self):
+        return self.__pos_final
+
+    @pos_final.setter
+    def pos_final(self, valeur):
+        print("You are not allowed to modify pos_final by {}".format(valeur))
 
     @property
     def duree_tot(self):

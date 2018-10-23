@@ -5,11 +5,16 @@ import requests
 
 class GoogleMaps(API):
     """
-        Class GoogleMaps héritant de la classe mère API
-        paramètres de classes :
-        - user_id : correspond à l'id du user permettant de se connecter à l'API
-        -
-        """
+    Class GoogleMaps héritant de la classe mère API
+    paramètres de classes :
+    - user_id : correspond à l'id du user permettant de se connecter à l'API
+    - startcoord : coordonnées du point de départ (GPS ou adresse)
+    - endcoord : coordonnées du point d'arrivée (GPS ou adresse)
+    - driving_mode : mode de déplacement (walking, driving...)
+    - transit_mode :
+    - waypoints :
+    """
+
     def __init__(self,  startcoord, endcoord, driving_mode, transit_mode, waypoints, user_id=9):
         API.__init__(self, nom="googlemaps", url="https://maps.googleapis.com/maps/api/directions/", user_id=user_id)
         self.__startcoord = startcoord
@@ -44,24 +49,24 @@ class GoogleMaps(API):
 
     @staticmethod
     def get_etapes(itineraire):
-        itineraire = itineraire["steps"]
-        nb_etape = len(itineraire)
-        etapes = []
-        for k in range(nb_etape):
-            distance = itineraire[k]["distance"]["value"]
-            duration = itineraire[k]["duration"]["value"]
-            s_coord = itineraire[k]["start_location"]
-            e_coord = itineraire[k]["end_location"]
-            travel_mode = itineraire[k]["travel_mode"]
-            transit_details = "No transit"
-            etapes.append((distance, duration, s_coord, e_coord, travel_mode, transit_details))
-        return etapes
+        __itineraire = itineraire["steps"]
+        __nb_etape = len(itineraire)
+        __etapes = []
+        for k in range(__nb_etape):
+            __distance = __itineraire[k]["distance"]["value"]
+            __duration = __itineraire[k]["duration"]["value"]
+            __s_coord = __itineraire[k]["start_location"]
+            __e_coord = __itineraire[k]["end_location"]
+            __travel_mode = __itineraire[k]["travel_mode"]
+            __transit_details = "No transit"
+            __etapes.append((__distance, __duration, __s_coord, __e_coord, __travel_mode, __transit_details))
+        return __etapes
 
     def get_etape(self):
         self.get_json()
         assert self._driving_mode != "transit"
-        itineraire = self._json["routes"][0]["legs"][0]
-        return GoogleMaps.get_etapes(itineraire)
+        __itineraire = self._json["routes"][0]["legs"][0]
+        return GoogleMaps.get_etapes(__itineraire)
 
     @property
     def json(self):
@@ -126,34 +131,33 @@ class GoogleMapsTransit(GoogleMaps):
 
     @staticmethod
     def get_with_transit(itineraire):
-        distance = itineraire["distance"]["value"]
-        duration = itineraire["duration"]["value"]
-        s_coord = itineraire["start_location"]
-        e_coord = itineraire["end_location"]
-        travel_mode = itineraire["travel_mode"]
-        departure_stop = itineraire["transit_details"]["departure_stop"]["name"]
-        arrival_stop = itineraire["transit_details"]["arrival_stop"]["name"]
-        vehicle = itineraire["transit_details"]["line"]["vehicle"]["type"]
-        short = itineraire["transit_details"]["line"]["short_name"]
-        nb_stations = itineraire["transit_details"]["num_stops"]
-        s = (distance, duration, s_coord, e_coord, travel_mode,
-             (departure_stop, arrival_stop, vehicle, short, nb_stations))
-        return s
+        __distance = itineraire["distance"]["value"]
+        __duration = itineraire["duration"]["value"]
+        __s_coord = itineraire["start_location"]
+        __e_coord = itineraire["end_location"]
+        __travel_mode = itineraire["travel_mode"]
+        __departure_stop = itineraire["transit_details"]["departure_stop"]["name"]
+        __arrival_stop = itineraire["transit_details"]["arrival_stop"]["name"]
+        __vehicle = itineraire["transit_details"]["line"]["vehicle"]["type"]
+        __short = itineraire["transit_details"]["line"]["short_name"]
+        __nb_stations = itineraire["transit_details"]["num_stops"]
+        __s = (__distance, __duration, __s_coord, __e_coord, __travel_mode,
+             (__departure_stop, __arrival_stop, __vehicle, __short, __nb_stations))
+        return __s
 
     def get_etape(self):
         self.get_json()
         assert self._driving_mode == "transit"
-        itineraire = self._json["routes"][0]["legs"][0]["steps"]
-        nb_etape = len(itineraire)
-        etape = []
-        for k in range(nb_etape):
-            if itineraire[k]["travel_mode"] != "TRANSIT":
-                for j in GoogleMaps.get_etapes(itineraire[k]):
-                    etape.append(j)
-            elif itineraire[k]["travel_mode"] == "TRANSIT":
-                etape.append(GoogleMapsTransit.get_with_transit(itineraire[k]))
-            print(k, etape)
-        return etape
+        __itineraire = self._json["routes"][0]["legs"][0]["steps"]
+        __nb_etape = len(__itineraire)
+        __etape = []
+        for k in range(__nb_etape):
+            if __itineraire[k]["travel_mode"] != "TRANSIT":
+                for j in GoogleMaps.get_etapes(__itineraire[k]):
+                    __etape.append(j)
+            elif __itineraire[k]["travel_mode"] == "TRANSIT":
+                __etape.append(GoogleMapsTransit.get_with_transit(__itineraire[k]))
+        return __etape
 
 
 """class GoogleMapsWaypointsTransit(GoogleMapsWaypoints,GoogleMapsTransit):
@@ -179,8 +183,6 @@ if __name__ == '__main__':
         requete = GoogleMaps(user_id=identifiant, startcoord=coord_depart, endcoord=coord_fin,
                              driving_mode=driving_mode_front, transit_mode=transit_mode_front,
                              waypoints=waypoints_front)
-
-
 
     requete = requete.get_etape()
     for x in requete:
