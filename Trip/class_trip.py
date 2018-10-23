@@ -34,6 +34,7 @@ class Trip:
 
         # True si nous recommandons le trajet, False sinon
         self.__recommandation = {"foot": True, "bicycle": True, "car": True, "transit": True}
+        self.analyse()
 
     @staticmethod
     def clean_str(chaine):

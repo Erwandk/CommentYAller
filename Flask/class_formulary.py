@@ -3,8 +3,6 @@
 
 __author__ = 'eke, gab, axel'
 
-from APIs.class_InfoUser import InfoUser
-
 
 class Formulary:
     """
