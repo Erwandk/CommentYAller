@@ -8,6 +8,9 @@ from threading import Thread
 
 
 class Foot(Thread):
+    """
+    Classe représentant le trajet à pied
+    """
 
     def __init__(self, user_id, pos_init, pos_final):
         Thread.__init__(self)
@@ -84,6 +87,9 @@ class Foot(Thread):
 
 
 class Bicycle(Thread):
+    """
+    Classe représentant le trajet en vélo
+    """
 
     def __init__(self, user_id, pos_init, pos_final):
         Thread.__init__(self)
@@ -160,6 +166,9 @@ class Bicycle(Thread):
 
 
 class Car(Thread):
+    """
+    Classe représentant le trajet en voiture
+    """
 
     def __init__(self, user_id, pos_init, pos_final):
         Thread.__init__(self)
@@ -236,6 +245,9 @@ class Car(Thread):
 
 
 class Transit(Thread):
+    """
+    Classe représentant le trajet en transport en commun
+    """
 
     def __init__(self, user_id, pos_init, pos_final):
         Thread.__init__(self)
