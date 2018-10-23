@@ -18,7 +18,11 @@ class InfoUser(API):
 
     def __init__(self, user_id=0):
         API.__init__(self, url="http://api.ipstack.com/", nom="ipstack", user_id=user_id)
-        self.__ip = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0]
+        try:
+            self.__ip = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0]
+        except:
+            print("Your computer doesn't seem to be connected to internet !")
+            self.__ip = ""
 
         self.__continent = ""
         self.__country = ""
@@ -27,7 +31,8 @@ class InfoUser(API):
         self.__lat = 0
         self.__long = 0
 
-        self.__compute_param()
+        if self.__ip != "":
+            self.__compute_param()
 
     def __compute_param(self):
         __new_url = self.url + self.__ip + "?access_key=" + self.key

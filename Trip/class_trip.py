@@ -6,7 +6,7 @@ __author__ = 'eke, gab, axel'
 from Trip.class_itinary import Foot, Bicycle, Car, Transit
 from APIs.class_meteo import Meteo
 import re
-from operator import itemgetter
+
 
 class Trip:
     """
@@ -45,18 +45,19 @@ class Trip:
         self.__trip_car.join()
         self.__trip_transit.join()
 
+        # TODO : compute something to manage bugs (no internet / bad destination -> trip empty)
+
         # Calcul des positions GPS initiale et finale de l'utilisateur
         self.__gps_init = self.__trip_foot.etapes[0][2]
         self.__gps_final = self.__trip_foot.etapes[len(self.__trip_foot.etapes)-1][3]
 
-        # True si nous recommandons le trajet, False sinon
         self.__recommandation = ""
         self.analyse()
 
     @staticmethod
     def clean_str(chaine):
         """
-         Méthode statique qui transforme une chaine de caractère aux contraintes de l'API GoogleMaps
+         Méthode statique qui transforme une chaine de caractère avec les contraintes de l'API GoogleMaps
         """
         __new_chaine = chaine.lower().replace(" ", "+").replace(",", "+")
         pattern = r'^[0-9]+.[0-9]+%2C[0-9]+.[0-9]+$'
@@ -69,20 +70,19 @@ class Trip:
         """
         Méthode qui calcule nos recommandations en fonction des paramètres du trajet
         """
-        X = {"trip_bicycle": self.__trip_bicycle.duree_tot,"trip_car": self.__trip_car.duree_tot,"trip_foot":
-            self.__trip_foot.duree_tot,"trip_transit": self.__trip_transit.duree_tot}
+        x = {"trip_bicycle": self.__trip_bicycle.duree_tot, "trip_car": self.__trip_car.duree_tot,
+             "trip_foot": self.__trip_foot.duree_tot, "trip_transit": self.__trip_transit.duree_tot}
         if self.__bagage == "on":
-            del X["trip_transit"]
+            del x["trip_transit"]
         if self.__meteo.snow == "oui" or self.__meteo.rain > 21:
-            del X["trip_walking"]
-        min_time = min(y for y in X.values())
+            del x["trip_walking"]
+        min_time = min(y for y in x.values())
 
-        for i,j in X.items():
+        for i, j in x.items():
             print(i, "est et vaut", j)
             if j == min_time:
                 self.__recommandation = i
                 break
-
 
     # Définition des getters, setters des attributs de notre classe
     @property
