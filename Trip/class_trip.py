@@ -5,6 +5,7 @@ __author__ = 'eke, gab, axel'
 
 from Trip.class_itinary import Foot, Bicycle, Car, Transit
 from APIs.class_meteo import Meteo
+import re
 
 
 class Trip:
@@ -42,8 +43,11 @@ class Trip:
          Méthode statique qui transforme une chaine de caractère aux contraintes de l'API GoogleMaps
         """
         __new_chaine = chaine.lower().replace(" ", "+").replace(",", "+")
-        if "paris" not in __new_chaine:
-            __new_chaine += "+paris"
+        pattern = r'^[0-9]+.[0-9]+%2C[0-9]+.[0-9]+$'
+        if not re.match(pattern, __new_chaine):
+            if "paris" not in __new_chaine:
+                __new_chaine += "+paris"
+        print("chaine is GPS coordonates")
         return __new_chaine
 
     def analyse(self):

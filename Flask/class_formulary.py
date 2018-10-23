@@ -36,7 +36,7 @@ class Formulary:
         s'effectue depuis sa propre position
         """
         if self.__pos_init == "Ma position":
-            self.__pos_init = str(info.long) + "%C2" + str(info.lat)
+            self.__pos_init = str(info.lat) + "%2C" + str(info.long)
 
     # Définition des getters, setters des attributs de notre classe
     @property
