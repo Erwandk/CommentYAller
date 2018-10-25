@@ -17,13 +17,13 @@ class Carte:
     def set_mode(trip):
 
         if trip.recommandation == "trip_foot":
-            return trip.trip_foot.etapes
+            return trip.trip_foot.steps
         elif trip.recommandation == 'trip_bicycle':
-            return trip.trip_bicycle.etapes
+            return trip.trip_bicycle.steps
         elif trip.recommandation == "trip_car":
-            return trip.trip_car.etapes
+            return trip.trip_car.steps
         else:
-            return trip.trip_transit.etapes
+            return trip.trip_transit.steps
 
     @property
     def min_lat(self):
