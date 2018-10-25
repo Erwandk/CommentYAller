@@ -25,38 +25,38 @@
             <li>convective : {{ trip.meteo.convective_rain }}</li>
         </ul>
         <p><strong>Nous recommandons : {{ trip.recommandation }}</strong></p>
-        <p>Pour aller de <strong>{{ trip.pos_init }}</strong> à <strong>{{ trip.pos_final}}</strong>, voici nos analyses :</p>
+        <p>Pour aller de <strong>{{ trip.init_pos }}</strong> à <strong>{{ trip.final_pos}}</strong>, voici nos analyses :</p>
         <div id="foot">
             <h3>A pied :</h3>
             <ul>
-                <li>duree : {{ trip.trip_foot.duree_tot }} s</li>
-                <li>distance : {{ trip.trip_foot.distance_tot }} m</li>
-                <li>etapes : {{ trip.trip_foot.etapes }}</li>
+                <li>duree : {{ trip.trip_foot.total_duration }} s</li>
+                <li>distance : {{ trip.trip_foot.total_distance }} m</li>
+                <li>etapes : {{ trip.trip_foot.steps }}</li>
             </ul>
         </div>
         <div id="bicycle">
             <h3>A vélo :</h3>
             <ul>
-                <li>duree : {{ trip.trip_bicycle.duree_tot }} s</li>
-                <li>distance : {{ trip.trip_bicycle.distance_tot }} m</li>
-                <li>etapes : {{ trip.trip_bicycle.etapes }}</li>
+                <li>duree : {{ trip.trip_bicycle.total_duration }} s</li>
+                <li>distance : {{ trip.trip_bicycle.total_distance }} m</li>
+                <li>etapes : {{ trip.trip_bicycle.steps }}</li>
             </ul>
         </div>
         <div id="car">
             <h3>En voiture :</h3>
             <ul>
-                <li>duree : {{ trip.trip_car.duree_tot }} s</li>
-                <li>distance : {{ trip.trip_car.distance_tot }} m</li>
-                <li>etapes : {{ trip.trip_car.etapes }}</li>
+                <li>duree : {{ trip.trip_car.total_duration }} s</li>
+                <li>distance : {{ trip.trip_car.total_distance }} m</li>
+                <li>etapes : {{ trip.trip_car.steps }}</li>
             </ul>
         </div>
         <div id="transit">
             <h3>En transport en commun :</h3>
             <ul>
-                <li>duree : {{ trip.trip_transit.duree_tot }} s</li>
-                <li>distance : {{ trip.trip_transit.distance_tot }} m</li>
-                <li>nombre d'étapes : {{ trip.trip_transit.nb_etapes }}</li>
-                <li>etapes : {{ trip.trip_transit.etapes }}</li>
+                <li>duree : {{ trip.trip_transit.total_duration }} s</li>
+                <li>distance : {{ trip.trip_transit.total_distance }} m</li>
+                <li>nombre d'étapes : {{ trip.trip_transit.steps_nbr }}</li>
+                <li>etapes : {{ trip.trip_transit.steps }}</li>
             </ul>
         </div>
     </div>
