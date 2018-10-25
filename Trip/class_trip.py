@@ -3,7 +3,7 @@
 
 __author__ = 'eke, gab, axel'
 
-from Trip.class_itinary import Foot, Bicycle, Car, Transit
+from Trip.class_itinary import Foot, Bicycle, Car, Transit, Velib
 from APIs.class_meteo import Meteo
 import re
 
@@ -24,7 +24,7 @@ class Trip:
         self.__bagage = True if bagage == "on" else False
         self.__elevation = True if elevation == "on" else False
 
-        # Définition des différents trajets (1 thread = 1 appel à une API)
+        # Définition des différents trajets, sauf Vélib (1 thread = 1 appel à une API)
         self.__meteo = Meteo()
         self.__trip_foot = Foot(self.__user_id, self.__init_pos, self.__final_pos)
         self.__trip_bicycle = Bicycle(self.__user_id, self.__init_pos, self.__final_pos)
@@ -48,8 +48,13 @@ class Trip:
         # TODO : compute something to manage bugs (no internet / bad destination -> trip empty)
 
         # Calcul des positions GPS initiale et finale de l'utilisateur
-        self.__gps_init = self.__trip_foot.steps[0][2]
-        self.__gps_final = self.__trip_foot.steps[len(self.__trip_foot.steps)-1][3]
+        self.__gps_init = self.__trip_foot.steps[0][2]  # au format dict{'lat':X; 'lng':X}
+        self.__gps_final = self.__trip_foot.steps[len(self.__trip_foot.steps)-1][3]  # au format dict{'lat':X; 'lng':X}
+
+        # Calcul du trajet en Vélib (qui nécessite les coordonnées GPS calculées ci-dessus)
+        self.__trip_velib = Velib(self.__user_id, init_pos_dict=self.__gps_init, final_pos_dict=self.__gps_final,
+                                  init_pos_str=self.__init_pos, final_pos_str=self.__final_pos)
+        self.__trip_velib.compute_itinary()
 
         self.__recommandation = ""
         self.analyse()
@@ -156,6 +161,14 @@ class Trip:
     @trip_transit.setter
     def trip_transit(self, value):
         print("You are not allowed to modify trip_transit by {} !".format(value))
+
+    @property
+    def trip_velib(self):
+        return self.__trip_velib
+
+    @trip_velib.setter
+    def trip_velib(self, value):
+        print("You are not allowed to modify trip_velib by {} !".format(value))
 
     @property
     def bagage(self):
