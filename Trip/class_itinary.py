@@ -4,6 +4,7 @@
 __author__ = 'eke, gab, axel'
 
 from APIs.class_googlesmaps import GoogleMaps, GoogleMapsTransit
+from APIs.class_velib_station import Velib_Station
 from threading import Thread
 
 
@@ -338,3 +339,180 @@ class Transit(Thread):
     @steps.setter
     def steps(self, value):
         print("You are not allowed to modify steps by {}".format(value))
+
+
+class Velib():
+    """
+    Classe représentant le trajet en Vélib
+    """
+
+    def __init__(self, user_id, init_pos_dict, final_pos_dict, init_pos_str, final_pos_str):
+        self.__user_id = user_id
+        self.__init_pos_dict = init_pos_dict  # Coord GPS au format dict{'lat':XXX; 'lng':XXX} pour l'API Vélib
+        self.__final_pos_dict = final_pos_dict  # Coord GPS au format dict{'lat':XXX; 'lng':XXX} pour l'API Vélib
+        self.__init_pos_str = init_pos_str  # Coord GPS au format 'latitude'+'2%C'+'longitude' pour l'API GoogleMaps
+        self.__final_pos_str = final_pos_str  # Coord GPS au format 'latitude'+'2%C'+'longitude' pour l'API GoogleMaps
+
+        self.__dep_station = Velib_Station(gps_position=self.__init_pos_dict, type='departure')  # Station de départ
+        self.__arr_station = Velib_Station(gps_position=self.__final_pos_dict, type='arrival')  # Station d'arrivée
+
+        self.__steps = []
+        self.__total_duration = 0
+        self.__total_distance = 0
+
+        # Itinéraire à pieds depuis le point initial jusqu'à la station Vélib de départ
+        self.__initial_walking = Foot(user_id=self.user_id, init_pos=self.__init_pos_str,
+                                      final_pos=self.__dep_station.coord)
+        # Itinéraire en vélo entre les 2 stations Vélib
+        self.__bicycling = Bicycle(user_id=self.user_id, init_pos=self.__dep_station.coord,
+                                   final_pos=self.__arr_station.coord)
+        # Itinéraire à pieds depuis la station Vélib d'arrivée jusqu'à la destination finale
+        self.__final_walking = Foot(user_id=self.user_id, init_pos=self.__arr_station.coord,
+                                    final_pos=self.__final_pos_str)
+
+    def compute_itinary(self):
+        # Lancement des threads liés à l'API GoogleMaps
+        self.__initial_walking.start()
+        self.__bicycling.start()
+        self.__final_walking.start()
+
+        # Attente de la fin des threads
+        self.__initial_walking.join()
+        self.__bicycling.join()
+        self.__final_walking.join()
+
+        # Calcul des caractéristiques de l'itinéraire (étapes, distance, durée)
+        self.__steps = self.__initial_walking.steps + self.__bicycling.steps + self.__final_walking.steps
+        self.__compute_total_duration()
+        self.__compute_total_distance()
+
+    def __compute_total_distance(self):
+        for step in self.__steps:
+            self.__total_distance += step[0]
+
+    def __compute_total_duration(self):
+        for step in self.__steps:
+            self.__total_duration += step[1]
+
+    @property
+    def user_id(self):
+        return self.__user_id
+
+    @user_id.setter
+    def user_id(self, value):
+        print("You are not allowed to modify user_id by {}".format(value))
+
+    @property
+    def init_pos_dict(self):
+        return self.__init_pos_dict
+
+    @init_pos_dict.setter
+    def init_pos_dict(self, value):
+        print("You are not allowed to modify init_pos_dict by {}".format(value))
+
+    @property
+    def final_pos_dict(self):
+        return self.__final_pos_dict
+
+    @final_pos_dict.setter
+    def final_pos_dict(self, value):
+        print("You are not allowed to modify final_pos_dict by {}".format(value))
+
+    @property
+    def init_pos_str(self):
+        return self.__init_pos_str
+
+    @init_pos_str.setter
+    def init_pos_str(self, value):
+        print("You are not allowed to modify init_pos_str by {}".format(value))
+
+    @property
+    def final_pos_str(self):
+        return self.__final_pos_str
+
+    @final_pos_str.setter
+    def final_pos_str(self, value):
+        print("You are not allowed to modify final_pos_str by {}".format(value))
+
+    @property
+    def dep_station(self):
+        return self.__dep_station
+
+    @dep_station.setter
+    def dep_station(self, value):
+        print("You are not allowed to modify dep_station by {}".format(value))
+
+    @property
+    def arr_station(self):
+        return self.__arr_station
+
+    @arr_station.setter
+    def arr_station(self, value):
+        print("You are not allowed to modify arr_station by {}".format(value))
+
+    @property
+    def total_duration(self):
+        return self.__total_duration
+
+    @total_duration.setter
+    def total_duration(self, value):
+        print("You are not allowed to modify total_duration by {}".format(value))
+
+    @property
+    def total_distance(self):
+        return self.__total_distance
+
+    @total_distance.setter
+    def total_distance(self, value):
+        print("You are not allowed to modify total_distance by {}".format(value))
+
+    @property
+    def steps(self):
+        return self.__steps
+
+    @steps.setter
+    def steps(self, value):
+        print("You are not allowed to modify steps by {}".format(value))
+
+    @property
+    def initial_walking(self):
+        return self.__initial_walking
+
+    @initial_walking.setter
+    def initial_walking(self, value):
+        print("You are not allowed to modify initial_walking by {}".format(value))
+
+    @property
+    def bicycling(self):
+        return self.__bicycling
+
+    @bicycling.setter
+    def bicycling(self, value):
+        print("You are not allowed to modify bicycling by {}".format(value))
+
+    @property
+    def final_walking(self):
+        return self.__final_walking
+
+    @final_walking.setter
+    def final_walking(self, value):
+        print("You are not allowed to modify final_walking by {}".format(value))
+
+
+if __name__ == '__main__':
+
+    def main():
+        init_pos_dict = {'lat': 48.854606, 'lng': 2.277205}
+        # init_pos_str = '48.854606%2C2.277205'
+        init_pos_str = '6+rue+des+marronniers+paris'
+        final_pos_dict = {'lat': 48.83411, 'lng': 2.29628}
+        # final_pos_str = '48.83411%2C2.29628'
+        final_pos_str = '8+rue+des+morillons+paris'
+        Test = Velib(user_id=1, init_pos_dict=init_pos_dict, init_pos_str=init_pos_str, final_pos_dict=final_pos_dict,
+                     final_pos_str=final_pos_str)
+        Test.compute_itinary()
+        print("distance:{}".format(Test.total_distance))
+        print("durée:{}".format(Test.total_duration))
+        print("étapes:{}".format(Test.steps))
+
+    main()
