@@ -13,23 +13,23 @@ class Trip:
     Cette classe représente le trajet dans son ensemble avec toutes les données correspondantes.
     """
 
-    def __init__(self, pos_init, pos_final, bagage, elevation, user_id=0):
+    def __init__(self, init_pos, final_pos, bagage, elevation, user_id=0):
         """
         Le constructeur de cette classe prend en entrée les données de position de départ et d'arrivée
         """
         # Définitions des attributs de la classe
         self.__user_id = user_id
-        self.__pos_init = self.clean_str(pos_init)
-        self.__pos_final = self.clean_str(pos_final)
+        self.__init_pos = self.clean_str(init_pos)
+        self.__final_pos = self.clean_str(final_pos)
         self.__bagage = True if bagage == "on" else False
         self.__elevation = True if elevation == "on" else False
 
         # Définition des différents trajets (1 thread = 1 appel à une API)
         self.__meteo = Meteo()
-        self.__trip_foot = Foot(self.__user_id, self.__pos_init, self.pos_final)
-        self.__trip_bicycle = Bicycle(self.__user_id, self.__pos_init, self.pos_final)
-        self.__trip_car = Car(self.__user_id, self.__pos_init, self.pos_final)
-        self.__trip_transit = Transit(self.__user_id, self.__pos_init, self.pos_final)
+        self.__trip_foot = Foot(self.__user_id, self.__init_pos, self.__final_pos)
+        self.__trip_bicycle = Bicycle(self.__user_id, self.__init_pos, self.__final_pos)
+        self.__trip_car = Car(self.__user_id, self.__init_pos, self.__final_pos)
+        self.__trip_transit = Transit(self.__user_id, self.__init_pos, self.__final_pos)
 
         # Lancement des threads
         self.__meteo.start()
@@ -48,8 +48,8 @@ class Trip:
         # TODO : compute something to manage bugs (no internet / bad destination -> trip empty)
 
         # Calcul des positions GPS initiale et finale de l'utilisateur
-        self.__gps_init = self.__trip_foot.etapes[0][2]
-        self.__gps_final = self.__trip_foot.etapes[len(self.__trip_foot.etapes)-1][3]
+        self.__gps_init = self.__trip_foot.steps[0][2]
+        self.__gps_final = self.__trip_foot.steps[len(self.__trip_foot.steps)-1][3]
 
         self.__recommandation = ""
         self.analyse()
@@ -70,8 +70,8 @@ class Trip:
         """
         Méthode qui calcule nos recommandations en fonction des paramètres du trajet
         """
-        x = {"trip_bicycle": self.__trip_bicycle.duree_tot, "trip_car": self.__trip_car.duree_tot,
-             "trip_foot": self.__trip_foot.duree_tot, "trip_transit": self.__trip_transit.duree_tot}
+        x = {"trip_bicycle": self.__trip_bicycle.total_duration, "trip_car": self.__trip_car.total_duration,
+             "trip_foot": self.__trip_foot.total_duration, "trip_transit": self.__trip_transit.total_duration}
         if self.__bagage == "on":
             del x["trip_transit"]
         if self.__meteo.snow == "oui" or self.__meteo.rain > 21:
@@ -90,101 +90,101 @@ class Trip:
         return self.__user_id
 
     @user_id.setter
-    def user_id(self, valeur):
-        print("You are not allowed to modify user_id by {} !".format(valeur))
+    def user_id(self, value):
+        print("You are not allowed to modify user_id by {} !".format(value))
 
     @property
-    def pos_init(self):
-        return self.__pos_init
+    def init_pos(self):
+        return self.__init_pos
 
-    @pos_init.setter
-    def pos_init(self, valeur):
-        print("You are not allowed to modify pos_init by {} !".format(valeur))
+    @init_pos.setter
+    def init_pos(self, value):
+        print("You are not allowed to modify init_pos by {} !".format(value))
 
     @property
-    def pos_final(self):
-        return self.__pos_final
+    def final_pos(self):
+        return self.__final_pos
 
-    @pos_final.setter
-    def pos_final(self, valeur):
-        print("You are not allowed to modify pos_final by {} !".format(valeur))
+    @final_pos.setter
+    def final_pos(self, value):
+        print("You are not allowed to modify final_pos by {} !".format(value))
 
     @property
     def gps_init(self):
         return self.__gps_init
 
     @gps_init.setter
-    def gps_init(self, valeur):
-        print("You are not allowed to modify gps_init by {} !".format(valeur))
+    def gps_init(self, value):
+        print("You are not allowed to modify gps_init by {} !".format(value))
 
     @property
     def gps_final(self):
         return self.__gps_final
 
     @gps_final.setter
-    def gps_final(self, valeur):
-        print("You are not allowed to modify gps_final by {} !".format(valeur))
+    def gps_final(self, value):
+        print("You are not allowed to modify gps_final by {} !".format(value))
 
     @property
     def trip_foot(self):
         return self.__trip_foot
 
     @trip_foot.setter
-    def trip_foot(self, valeur):
-        print("You are not allowed to modify trip_foot by {} !".format(valeur))
+    def trip_foot(self, value):
+        print("You are not allowed to modify trip_foot by {} !".format(value))
 
     @property
     def trip_bicycle(self):
         return self.__trip_bicycle
 
     @trip_bicycle.setter
-    def trip_bicycle(self, valeur):
-        print("You are not allowed to modify trip_bicyle by {} !".format(valeur))
+    def trip_bicycle(self, value):
+        print("You are not allowed to modify trip_bicyle by {} !".format(value))
 
     @property
     def trip_car(self):
         return self.__trip_car
 
     @trip_car.setter
-    def trip_car(self, valeur):
-        print("You are not allowed to modify trip_car by {} !".format(valeur))
+    def trip_car(self, value):
+        print("You are not allowed to modify trip_car by {} !".format(value))
 
     @property
     def trip_transit(self):
         return self.__trip_transit
 
     @trip_transit.setter
-    def trip_transit(self, valeur):
-        print("You are not allowed to modify trip_transit by {} !".format(valeur))
+    def trip_transit(self, value):
+        print("You are not allowed to modify trip_transit by {} !".format(value))
 
     @property
     def bagage(self):
         return self.__bagage
 
     @bagage.setter
-    def bagage(self, valeur):
-        print("You are not allowed to modify bagage by {} !".format(valeur))
+    def bagage(self, value):
+        print("You are not allowed to modify bagage by {} !".format(value))
 
     @property
     def elevation(self):
         return self.__elevation
 
     @elevation.setter
-    def elevation(self, valeur):
-        print("You are not allowed to modify elevation by {} !".format(valeur))
+    def elevation(self, value):
+        print("You are not allowed to modify elevation by {} !".format(value))
 
     @property
     def meteo(self):
         return self.__meteo
 
     @meteo.setter
-    def meteo(self, valeur):
-        print("You are not allowed to modify meteo by {} !".format(valeur))
+    def meteo(self, value):
+        print("You are not allowed to modify meteo by {} !".format(value))
 
     @property
     def recommandation(self):
         return self.__recommandation
 
     @recommandation.setter
-    def recommandation(self, valeur):
-        print("You are not allowed to modify recommandation by {} !".format(valeur))
+    def recommandation(self, value):
+        print("You are not allowed to modify recommandation by {} !".format(value))
