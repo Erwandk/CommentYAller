@@ -13,7 +13,7 @@ class Velib_Station(API):
     l'adresse de départ et de l'adresse d'arrivée de l'utilisateur, et en fonction des vélos et places disponibles en
     temps réel. Rq : pas de calcul d'itinéraire pour du non temps réel (car pas d'infos sur les vélos et places)"""
 
-    def __init__(self, user_position, type):
+    def __init__(self, gps_position, type):
         API.__init__(self,
                      url='https://opendata.paris.fr/api/records/1.0/search/?dataset=velib-disponibilite-en-temps-reel&rows=2000',
                      nom='velib')
@@ -22,10 +22,11 @@ class Velib_Station(API):
         self.__name = str()
         self.__latitude = float()
         self.__longitude = float()
+        self.__coord = str()  # Coord GPS au format exploitable par l'API Google Maps : 'latitude'+'%2C'+'longitude'
         self.__bikes = int()  # Nombre de vélos disponibles
         self.__docks = int()  # Nombre de places disponibles
         self.__type = type  # Prend les valeurs 'departure' et 'arrival' pour distinguer les 2 stations de l'itinéraire
-        self.__set_attributes(user_position)
+        self.__set_attributes(gps_position)
 
     def __repr__(self):
         return "Station: {}\n" \
@@ -48,35 +49,36 @@ class Velib_Station(API):
         # Renvoit la liste des stations où les coordonnées GPS existent
         return
 
-    def __set_attributes(self, user_position):
+    def __set_attributes(self, gps_position):
         """Méthode permettant de choisir la station adéquate et d'attribuer les attributs de l'obj en conséquent
         :param position : adresse renseignée par l'utilisateur ou coord GPS de géoloc - de départ ou d'arrivée"""
         self.__retrieve_data_api()  # Appel à l'API et assignation de l'attribut self.list
-        self.__closer_station(user_position)  # Détermine la station la plus proche et assigne l'attribut self.index
+        self.__closer_station(gps_position)  # Détermine la station la plus proche et assigne l'attribut self.index
         self.__name = self.list[self.index]['fields']['name']
         self.__latitude = self.list[self.index]['fields']['lat']
         self.__longitude = self.list[self.index]['fields']['lon']
+        self.__coord = str(self.__latitude) + '%2C' + str(self.__longitude)
         self.__bikes = self.list[self.index]['fields']['numbikesavailable']
         self.__docks = self.list[self.index]['fields']['numdocksavailable']
 
-    def __closer_station(self, user_position):
+    def __closer_station(self, gps_position):
         """ Méthode permettant de définir la station la plus proche d'un point GPS parmi la liste des stations dispos et
         d'affecter l'attribut self.index
-        :param user_position: Coordonnées GPS d'un point (départ ou arrivée) au format dict{'lat':XXX; 'lng':XXX}
+        :param gps_position: Coordonnées GPS d'un point (départ ou arrivée) au format dict{'lat':XXX; 'lng':XXX}
         :return:
         """
         d = float('inf')
         if self.__type == 'departure':  # Traitement pour la station de départ (vérifie qu'il y a des vélos dispos)
             for j in range(len(self.__list)):  # Parcourt toute la liste des stations
                 station_position = self.__list[j]['fields']['xy']  # format : list [latitude, longitude]
-                distance = self.__distance(station_position, user_position)
+                distance = self.__distance(station_position, gps_position)
                 if distance < d and self.__list[j]['fields']['numbikesavailable'] > 0:  # Vérifie la dispo des vélos
                     d = distance
                     self.__index = j
         elif self.__type == 'arrival':  # Traitement pour la station d'arrivée (vérifie qu'il y a des places dispos)
             for j in range(len(self.__list)):  # Parcourt toute la liste des stations
                 station_position = self.__list[j]['fields']['xy']  # format : list [latitude, longitude]
-                distance = self.__distance(station_position, user_position)
+                distance = self.__distance(station_position, gps_position)
                 if distance < d and self.__list[j]['fields']['numdocksavailable'] > 0:  # Vérifie la dispo des places
                     d = distance
                     self.__index = j
@@ -85,14 +87,14 @@ class Velib_Station(API):
         return
 
     @staticmethod
-    def __distance(station_position, user_position):
+    def __distance(station_position, gps_position):
         """ Méthode permettant de calculer la distance entre une station Vélib et un point donné
         :param station_position: Coordonnées GPS d'une station au format list[latitude, longitude]
-        :param user_position: Coordonnées GPS d'un point (départ ou arrivée) au format dict{'lat':XXX; 'lng':XXX}
+        :param gps_position: Coordonnées GPS d'un point (départ ou arrivée) au format dict{'lat':XXX; 'lng':XXX}
         :return:
         """
         x1, y1 = station_position[0], station_position[1]
-        x2, y2 = user_position['lat'], user_position['lng']
+        x2, y2 = gps_position['lat'], gps_position['lng']
         return math.sqrt((y2-y1)**2+(x2-x1)**2)
 
     @property
@@ -134,6 +136,14 @@ class Velib_Station(API):
     @longitude.setter
     def longitude(self, value):
         print("You are not allowed to modify longitude by {}".format(value))
+
+    @property
+    def coord(self):
+        return self.__coord
+
+    @coord.setter
+    def coord(self, value):
+        print("You are not allowed to modify coord by {}".format(value))
 
     @property
     def bikes(self):
