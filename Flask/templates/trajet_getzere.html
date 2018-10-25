@@ -59,6 +59,14 @@
                 <li>etapes : {{ trip.trip_transit.steps }}</li>
             </ul>
         </div>
+        <div id="velib">
+            <h3>En Vélib :</h3>
+            <ul>
+                <li>duree : {{ trip.trip_velib.total_duration }} s</li>
+                <li>distance : {{ trip.trip_velib.total_distance }} m</li>
+                <li>etapes : {{ trip.trip_velib.steps }}</li>
+            </ul>
+        </div>
     </div>
 
     <div class="column" id="carte">
