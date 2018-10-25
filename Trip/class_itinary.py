@@ -12,78 +12,78 @@ class Foot(Thread):
     Classe représentant le trajet à pied
     """
 
-    def __init__(self, user_id, pos_init, pos_final):
+    def __init__(self, user_id, init_pos, final_pos):
         Thread.__init__(self)
         self.__user_id = user_id
-        self.__pos_init = pos_init
-        self.__pos_final = pos_final
+        self.__init_pos = init_pos
+        self.__final_pos = final_pos
 
-        self.__etapes = []
-        self.__duree_tot = 0
-        self.__distance_tot = 0
+        self.__steps = []
+        self.__total_duration = 0
+        self.__total_distance = 0
 
     def run(self):
-        self.__etapes = GoogleMaps(user_id=self.__user_id, startcoord=self.__pos_init, endcoord=self.__pos_final,
-                                   driving_mode="walking", transit_mode="",
-                                   waypoints="").get_etape()
-        self.__compute_duree_tot()
-        self.__compute_distance_tot()
+        self.__steps = GoogleMaps(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
+                                  driving_mode="walking", transit_mode="",
+                                  waypoints="").get_etape()
+        self.__compute_total_duration()
+        self.__compute_total_distance()
 
-    def __compute_distance_tot(self):
-        for step in self.etapes:
-            self.__distance_tot += step[0]
+    def __compute_total_distance(self):
+        for step in self.__steps:
+            self.__total_distance += step[0]
 
-    def __compute_duree_tot(self):
-        for step in self.etapes:
-            self.__duree_tot += step[1]
+    def __compute_total_duration(self):
+        for step in self.__steps:
+            self.__total_duration += step[1]
 
     @property
     def user_id(self):
         return self.__user_id
 
     @user_id.setter
-    def user_id(self, valeur):
-        print("You are not allowed to modify user_id by {}".format(valeur))
+    def user_id(self, value):
+        print("You are not allowed to modify user_id by {}".format(value))
 
     @property
-    def pos_init(self):
-        return self.__pos_init
+    def init_pos(self):
+        return self.__init_pos
 
-    @pos_init.setter
-    def pos_init(self, valeur):
-        print("You are not allowed to modify pos_init by {}".format(valeur))
-
-    @property
-    def pos_final(self):
-        return self.__pos_final
-
-    @pos_final.setter
-    def pos_final(self, valeur):
-        print("You are not allowed to modify pos_final by {}".format(valeur))
+    @init_pos.setter
+    def init_pos(self, value):
+        print("You are not allowed to modify init_pos by {}".format(value))
 
     @property
-    def duree_tot(self):
-        return self.__duree_tot
+    def final_pos(self):
+        return self.__final_pos
 
-    @duree_tot.setter
-    def duree_tot(self, valeur):
-        print("You are not allowed to modify duree_tot by {}".format(valeur))
-
-    @property
-    def distance_tot(self):
-        return self.__distance_tot
-
-    @distance_tot.setter
-    def distance_tot(self, valeur):
-        print("You are not allowed to modify distance_tot by {}".format(valeur))
+    @final_pos.setter
+    def final_pos(self, value):
+        print("You are not allowed to modify final_pos by {}".format(value))
 
     @property
-    def etapes(self):
-        return self.__etapes
+    def total_duration(self):
+        return self.__total_duration
 
-    @etapes.setter
-    def etapes(self, valeur):
-        print("You are not allowed to modify etapes by {}".format(valeur))
+    @total_duration.setter
+    def total_duration(self, value):
+        print("You are not allowed to modify total_duration by {}".format(value))
+
+    @property
+    def total_distance(self):
+        return self.__total_distance
+
+    @total_distance.setter
+    def total_distance(self, value):
+        print("You are not allowed to modify total_distance by {}".format(value))
+
+    @property
+    def steps(self):
+        return self.__steps
+
+    @steps.setter
+    def steps(self, value):
+        print("You are not allowed to modify steps by {}".format(value))
 
 
 class Bicycle(Thread):
@@ -91,78 +91,78 @@ class Bicycle(Thread):
     Classe représentant le trajet en vélo
     """
 
-    def __init__(self, user_id, pos_init, pos_final):
+    def __init__(self, user_id, init_pos, final_pos):
         Thread.__init__(self)
         self.__user_id = user_id
-        self.__pos_init = pos_init
-        self.__pos_final = pos_final
+        self.__init_pos = init_pos
+        self.__final_pos = final_pos
 
-        self.__etapes = []
-        self.__duree_tot = 0
-        self.__distance_tot = 0
+        self.__steps = []
+        self.__total_duration = 0
+        self.__total_distance = 0
 
     def run(self):
-        self.__etapes = GoogleMaps(user_id=self.__user_id, startcoord=self.__pos_init, endcoord=self.__pos_final,
-                                   driving_mode="bicycling", transit_mode="",
-                                   waypoints="").get_etape()
-        self.__compute_duree_tot()
-        self.__compute_distance_tot()
+        self.__steps = GoogleMaps(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
+                                  driving_mode="bicycling", transit_mode="",
+                                  waypoints="").get_etape()
+        self.__compute_total_duration()
+        self.__compute_total_distance()
 
-    def __compute_distance_tot(self):
-        for step in self.etapes:
-            self.__distance_tot += step[0]
+    def __compute_total_distance(self):
+        for step in self.__steps:
+            self.__total_distance += step[0]
 
-    def __compute_duree_tot(self):
-        for step in self.etapes:
-            self.__duree_tot += step[1]
+    def __compute_total_duration(self):
+        for step in self.__steps:
+            self.__total_duration += step[1]
 
     @property
     def user_id(self):
         return self.__user_id
 
     @user_id.setter
-    def user_id(self, valeur):
-        print("You are not allowed to modify user_id by {}".format(valeur))
+    def user_id(self, value):
+        print("You are not allowed to modify user_id by {}".format(value))
 
     @property
-    def pos_init(self):
-        return self.__pos_init
+    def init_pos(self):
+        return self.__init_pos
 
-    @pos_init.setter
-    def pos_init(self, valeur):
-        print("You are not allowed to modify pos_init by {}".format(valeur))
-
-    @property
-    def pos_final(self):
-        return self.__pos_final
-
-    @pos_final.setter
-    def pos_final(self, valeur):
-        print("You are not allowed to modify pos_final by {}".format(valeur))
+    @init_pos.setter
+    def init_pos(self, value):
+        print("You are not allowed to modify init_pos by {}".format(value))
 
     @property
-    def duree_tot(self):
-        return self.__duree_tot
+    def final_pos(self):
+        return self.__final_pos
 
-    @duree_tot.setter
-    def duree_tot(self, valeur):
-        print("You are not allowed to modify duree_tot by {}".format(valeur))
-
-    @property
-    def distance_tot(self):
-        return self.__distance_tot
-
-    @distance_tot.setter
-    def distance_tot(self, valeur):
-        print("You are not allowed to modify distance_tot by {}".format(valeur))
+    @final_pos.setter
+    def final_pos(self, value):
+        print("You are not allowed to modify final_pos by {}".format(value))
 
     @property
-    def etapes(self):
-        return self.__etapes
+    def total_duration(self):
+        return self.__total_duration
 
-    @etapes.setter
-    def etapes(self, valeur):
-        print("You are not allowed to modify etapes by {}".format(valeur))
+    @total_duration.setter
+    def total_duration(self, value):
+        print("You are not allowed to modify total_duration by {}".format(value))
+
+    @property
+    def total_distance(self):
+        return self.__total_distance
+
+    @total_distance.setter
+    def total_distance(self, value):
+        print("You are not allowed to modify total_distance by {}".format(value))
+
+    @property
+    def steps(self):
+        return self.__steps
+
+    @steps.setter
+    def steps(self, value):
+        print("You are not allowed to modify steps by {}".format(value))
 
 
 class Car(Thread):
@@ -170,78 +170,78 @@ class Car(Thread):
     Classe représentant le trajet en voiture
     """
 
-    def __init__(self, user_id, pos_init, pos_final):
+    def __init__(self, user_id, init_pos, final_pos):
         Thread.__init__(self)
         self.__user_id = user_id
-        self.__pos_init = pos_init
-        self.__pos_final = pos_final
+        self.__init_pos = init_pos
+        self.__final_pos = final_pos
 
-        self.__etapes = []
-        self.__duree_tot = 0
-        self.__distance_tot = 0
+        self.__steps = []
+        self.__total_duration = 0
+        self.__total_distance = 0
 
     def run(self):
-        self.__etapes = GoogleMaps(user_id=self.__user_id, startcoord=self.__pos_init, endcoord=self.__pos_final,
-                                   driving_mode="driving", transit_mode="",
-                                   waypoints="").get_etape()
-        self.__compute_duree_tot()
-        self.__compute_distance_tot()
+        self.__steps = GoogleMaps(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
+                                  driving_mode="driving", transit_mode="",
+                                  waypoints="").get_etape()
+        self.__compute_total_duration()
+        self.__compute_total_distance()
 
-    def __compute_distance_tot(self):
-        for step in self.etapes:
-            self.__distance_tot += step[0]
+    def __compute_total_distance(self):
+        for step in self.__steps:
+            self.__total_distance += step[0]
 
-    def __compute_duree_tot(self):
-        for step in self.etapes:
-            self.__duree_tot += step[1]
+    def __compute_total_duration(self):
+        for step in self.__steps:
+            self.__total_duration += step[1]
 
     @property
     def user_id(self):
         return self.__user_id
 
     @user_id.setter
-    def user_id(self, valeur):
-        print("You are not allowed to modify user_id by {}".format(valeur))
+    def user_id(self, value):
+        print("You are not allowed to modify user_id by {}".format(value))
 
     @property
-    def pos_init(self):
-        return self.__pos_init
+    def init_pos(self):
+        return self.__init_pos
 
-    @pos_init.setter
-    def pos_init(self, valeur):
-        print("You are not allowed to modify pos_init by {}".format(valeur))
-
-    @property
-    def pos_final(self):
-        return self.__pos_final
-
-    @pos_final.setter
-    def pos_final(self, valeur):
-        print("You are not allowed to modify pos_final by {}".format(valeur))
+    @init_pos.setter
+    def init_pos(self, value):
+        print("You are not allowed to modify init_pos by {}".format(value))
 
     @property
-    def duree_tot(self):
-        return self.__duree_tot
+    def final_pos(self):
+        return self.__final_pos
 
-    @duree_tot.setter
-    def duree_tot(self, valeur):
-        print("You are not allowed to modify duree_tot by {}".format(valeur))
-
-    @property
-    def distance_tot(self):
-        return self.__distance_tot
-
-    @distance_tot.setter
-    def distance_tot(self, valeur):
-        print("You are not allowed to modify distance_tot by {}".format(valeur))
+    @final_pos.setter
+    def final_pos(self, value):
+        print("You are not allowed to modify final_pos by {}".format(value))
 
     @property
-    def etapes(self):
-        return self.__etapes
+    def total_duration(self):
+        return self.__total_duration
 
-    @etapes.setter
-    def etapes(self, valeur):
-        print("You are not allowed to modify etapes by {}".format(valeur))
+    @total_duration.setter
+    def total_duration(self, value):
+        print("You are not allowed to modify total_duration by {}".format(value))
+
+    @property
+    def total_distance(self):
+        return self.__total_distance
+
+    @total_distance.setter
+    def total_distance(self, value):
+        print("You are not allowed to modify total_distance by {}".format(value))
+
+    @property
+    def steps(self):
+        return self.__steps
+
+    @steps.setter
+    def steps(self, value):
+        print("You are not allowed to modify steps by {}".format(value))
 
 
 class Transit(Thread):
@@ -249,92 +249,92 @@ class Transit(Thread):
     Classe représentant le trajet en transport en commun
     """
 
-    def __init__(self, user_id, pos_init, pos_final):
+    def __init__(self, user_id, init_pos, final_pos):
         Thread.__init__(self)
         self.__user_id = user_id
-        self.__pos_init = pos_init
-        self.__pos_final = pos_final
-        self.__etapes = []
+        self.__init_pos = init_pos
+        self.__final_pos = final_pos
 
-        self.__distance_tot = 0
-        self.__duree_tot = 0
-        self.__nb_etapes = 1
+        self.__steps = []
+        self.__total_duration = 0
+        self.__total_distance = 0
+        self.__steps_nbr = 1
 
     def run(self):
-        self.__etapes = GoogleMapsTransit(user_id=self.__user_id, startcoord=self.__pos_init, endcoord=self.__pos_final,
-                                          driving_mode="transit", transit_mode="",
-                                          waypoints="").get_etape()
-        self.__compute_distance_tot()
-        self.__compute_duree_tot()
-        self.__compute_nb_etape()
+        self.__steps = GoogleMapsTransit(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
+                                  driving_mode="transit", transit_mode="",
+                                  waypoints="").get_etape()
+        self.__compute_total_duration()
+        self.__compute_total_distance()
+        self.__compute_steps_nbr()
 
-    def __compute_distance_tot(self):
-        for step in self.etapes:
-            self.__distance_tot += step[0]
+    def __compute_total_distance(self):
+        for step in self.__steps:
+            self.__total_distance += step[0]
 
-    def __compute_duree_tot(self):
-        for step in self.etapes:
-            self.__duree_tot += step[1]
+    def __compute_total_duration(self):
+        for step in self.__steps:
+            self.__total_duration += step[1]
 
-    def __compute_nb_etape(self):
-        n = len(self.__etapes)
+    def __compute_steps_nbr(self):
+        n = len(self.__steps)
         # Is the walking for changing transit mode a step?
-        for x in range(0, n-1):
-            if self.__etapes[x][5] != self.__etapes[x+1][5]:
-                self.__nb_etapes += 1
+        for x in range(0, n - 1):
+            if self.__steps[x][5] != self.__steps[x + 1][5]:
+                self.__steps_nbr += 1
 
     @property
     def user_id(self):
         return self.__user_id
 
     @user_id.setter
-    def user_id(self, valeur):
-        print("You are not allowed to modify user_id by {}".format(valeur))
+    def user_id(self, value):
+        print("You are not allowed to modify user_id by {}".format(value))
 
     @property
-    def pos_init(self):
-        return self.__pos_init
+    def init_pos(self):
+        return self.__init_pos
 
-    @pos_init.setter
-    def pos_init(self, valeur):
-        print("You are not allowed to modify pos_init by {}".format(valeur))
-
-    @property
-    def pos_final(self):
-        return self.__pos_final
-
-    @pos_final.setter
-    def pos_final(self, valeur):
-        print("You are not allowed to modify pos_final by {}".format(valeur))
+    @init_pos.setter
+    def init_pos(self, value):
+        print("You are not allowed to modify init_pos by {}".format(value))
 
     @property
-    def duree_tot(self):
-        return self.__duree_tot
+    def final_pos(self):
+        return self.__final_pos
 
-    @duree_tot.setter
-    def duree_tot(self, valeur):
-        print("You are not allowed to modify duree_tot by {}".format(valeur))
-
-    @property
-    def distance_tot(self):
-        return self.__distance_tot
-
-    @distance_tot.setter
-    def distance_tot(self, valeur):
-        print("You are not allowed to modify distance_tot by {}".format(valeur))
+    @final_pos.setter
+    def final_pos(self, value):
+        print("You are not allowed to modify final_pos by {}".format(value))
 
     @property
-    def etapes(self):
-        return self.__etapes
+    def total_duration(self):
+        return self.__total_duration
 
-    @etapes.setter
-    def etapes(self, valeur):
-        print("You are not allowed to modify etapes by {}".format(valeur))
+    @total_duration.setter
+    def total_duration(self, value):
+        print("You are not allowed to modify total_duration by {}".format(value))
 
     @property
-    def nb_etapes(self):
-        return self.__nb_etapes
+    def total_distance(self):
+        return self.__total_distance
 
-    @nb_etapes.setter
-    def nb_etapes(self, valeur):
-        print("You are not allowed to modify nb_etapes by {}".format(valeur))
+    @total_distance.setter
+    def total_distance(self, value):
+        print("You are not allowed to modify total_distance by {}".format(value))
+
+    @property
+    def steps_nbr(self):
+        return self.__steps_nbr
+
+    @steps_nbr.setter
+    def steps_nbr(self, value):
+        print("You are not allowed to modify steps_nbr by {}".format(value))
+
+    @property
+    def steps(self):
+        return self.__steps
+
+    @steps.setter
+    def steps(self, value):
+        print("You are not allowed to modify steps by {}".format(value))
