@@ -55,7 +55,7 @@ def trajet(pos_init, pos_final, bagage, elevation):
     """
     if request.method == 'GET':
         trip = Trip(pos_init, pos_final, bagage, elevation)
-        carte = Carte(trip, trip_type=trip.recommandation)
+        carte = Carte(trip, trip_type=trip.recommendation)
         carte.get_map()
         return render_template('trajet_getzere.html', trip=trip, carte=carte)
 
