@@ -54,7 +54,7 @@ class Foot(Thread):
     def init_pos(self, value):
         # todo : lever une exception si ce n'est pas au bon format
         self.__init_pos = value
-        return self.__init_pos
+        return
 
     @property
     def final_pos(self):
@@ -64,7 +64,7 @@ class Foot(Thread):
     def final_pos(self, value):
         # todo : lever une exception si ce n'est pas au bon format
         self.__final_pos = value
-        return self.__final_pos
+        return
 
     @property
     def total_duration(self):
@@ -137,7 +137,7 @@ class Bicycle(Thread):
     def init_pos(self, value):
         # todo: lever une exception si ce n'est pas au bon format
         self.__init_pos = value
-        return self.__init_pos
+        return
 
     @property
     def final_pos(self):
@@ -147,7 +147,7 @@ class Bicycle(Thread):
     def final_pos(self, value):
         # todo : lever une exception si ce n'est pas au bon format
         self.__final_pos = value
-        return self.__final_pos
+        return
 
     @property
     def total_duration(self):
@@ -271,8 +271,7 @@ class Transit(Thread):
 
     def run(self):
         self.__steps = GoogleMapsTransit(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
-                                  driving_mode="transit", transit_mode="",
-                                  waypoints="").get_etape()
+                                         driving_mode="transit", transit_mode="", waypoints="").get_etape()
         self.__compute_total_duration()
         self.__compute_total_distance()
         self.__compute_steps_nbr()
@@ -349,7 +348,7 @@ class Transit(Thread):
         print("You are not allowed to modify steps by {}".format(value))
 
 
-class Velib():
+class Velib:
     """
     Classe représentant le trajet en Vélib
     """
@@ -433,7 +432,7 @@ class Velib():
     def init_pos_dict(self, value):
         # todo: lever une expception si mauvais format
         self.__init_pos_dict = value
-        return self.__init_pos_dict
+        return
 
     @property
     def final_pos_dict(self):
@@ -443,7 +442,7 @@ class Velib():
     def final_pos_dict(self, value):
         # todo: lever une exception si mauvais format
         self.__final_pos_dict = value
-        return self.__final_pos_dict
+        return
 
     @property
     def init_pos_str(self):
@@ -535,11 +534,11 @@ if __name__ == '__main__':
         final_pos_dict = {'lat': 48.83411, 'lng': 2.29628}
         # final_pos_str = '48.83411%2C2.29628'
         final_pos_str = '8+rue+des+morillons+paris'
-        Test = Velib(user_id=1, init_pos_dict=init_pos_dict, init_pos_str=init_pos_str, final_pos_dict=final_pos_dict,
+        test = Velib(user_id=1, init_pos_dict=init_pos_dict, init_pos_str=init_pos_str, final_pos_dict=final_pos_dict,
                      final_pos_str=final_pos_str)
-        Test.compute_itinary()
-        print("distance:{}".format(Test.total_distance))
-        print("durée:{}".format(Test.total_duration))
-        print("étapes:{}".format(Test.steps))
+        test.compute_itinary()
+        print("distance:{}".format(test.total_distance))
+        print("durée:{}".format(test.total_duration))
+        print("étapes:{}".format(test.steps))
 
     main()
