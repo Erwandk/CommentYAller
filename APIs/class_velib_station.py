@@ -4,11 +4,12 @@
 __author__ = 'eke, gab, axel'
 
 from APIs.class_api import API
+from threading import Thread
 import requests
-import pprint
 import math
 
-class Velib_Station(API):
+
+class Velib_Station(Thread, API):
     """Classe Vélib pour connaître la station de départ et la station d'arrivée d'un itinéraire vélib en fonction de
     l'adresse de départ et de l'adresse d'arrivée de l'utilisateur, et en fonction des vélos et places disponibles en
     temps réel. Rq : pas de calcul d'itinéraire pour du non temps réel (car pas d'infos sur les vélos et places)"""
@@ -17,6 +18,7 @@ class Velib_Station(API):
         API.__init__(self,
                      url='https://opendata.paris.fr/api/records/1.0/search/?dataset=velib-disponibilite-en-temps-reel&rows=2000',
                      nom='velib')
+        Thread.__init__(self)
         self.__list = list()  # Liste des stations Vélib pourvues de coordonnées GPS avec leurs infos temps réel
         self.__index = 0  # Indice de la station dans la liste self.list
         self.__name = str()
@@ -26,13 +28,25 @@ class Velib_Station(API):
         self.__bikes = int()  # Nombre de vélos disponibles
         self.__docks = int()  # Nombre de places disponibles
         self.__type = type  # Prend les valeurs 'departure' et 'arrival' pour distinguer les 2 stations de l'itinéraire
-        self.__set_attributes(gps_position)
+        self.__gps_position = gps_position  # Position renseignée par l'utilisateur (point de départ ou arrivée)
 
     def __repr__(self):
         return "Station: {}\n" \
                "Coordonnées: {}; {}\n" \
                "Vélos disponibles: {}\n" \
                "Places disponibles: {}".format(self.name, self.latitude, self.longitude, self.bikes, self.docks)
+
+    def run(self):
+        """Méthode permettant de choisir la station adéquate et d'attribuer les attributs de l'obj en conséquent
+        :param position : adresse renseignée par l'utilisateur ou coord GPS de géoloc - de départ ou d'arrivée"""
+        self.__retrieve_data_api()  # Appel à l'API et assignation de l'attribut self.list
+        self.__closer_station(self.__gps_position)  # Détermine la station la plus proche et assigne self.index
+        self.__name = self.list[self.index]['fields']['name']
+        self.__latitude = self.list[self.index]['fields']['lat']
+        self.__longitude = self.list[self.index]['fields']['lon']
+        self.__coord = str(self.__latitude) + '%2C' + str(self.__longitude)
+        self.__bikes = self.list[self.index]['fields']['numbikesavailable']
+        self.__docks = self.list[self.index]['fields']['numdocksavailable']
 
     def __retrieve_data_api(self):
         """Méthode qui se connecte à l'API 'Velib disponibilité temps réel' et affecte l'attribut self.__list : liste de
@@ -48,18 +62,6 @@ class Velib_Station(API):
         self.__list = [X[k] for k in range(len(X)) if 'geometry' in X[k].keys()]
         # Renvoit la liste des stations où les coordonnées GPS existent
         return
-
-    def __set_attributes(self, gps_position):
-        """Méthode permettant de choisir la station adéquate et d'attribuer les attributs de l'obj en conséquent
-        :param position : adresse renseignée par l'utilisateur ou coord GPS de géoloc - de départ ou d'arrivée"""
-        self.__retrieve_data_api()  # Appel à l'API et assignation de l'attribut self.list
-        self.__closer_station(gps_position)  # Détermine la station la plus proche et assigne l'attribut self.index
-        self.__name = self.list[self.index]['fields']['name']
-        self.__latitude = self.list[self.index]['fields']['lat']
-        self.__longitude = self.list[self.index]['fields']['lon']
-        self.__coord = str(self.__latitude) + '%2C' + str(self.__longitude)
-        self.__bikes = self.list[self.index]['fields']['numbikesavailable']
-        self.__docks = self.list[self.index]['fields']['numdocksavailable']
 
     def __closer_station(self, gps_position):
         """ Méthode permettant de définir la station la plus proche d'un point GPS parmi la liste des stations dispos et
@@ -169,8 +171,20 @@ class Velib_Station(API):
     def type(self, value):
         print("You are not allowed to modify type by {}".format(value))
 
+    @property
+    def gps_position(self):
+        return self.__gps_position
+
+    @gps_position.setter
+    def gps_position(self, value):
+        # todo : lever exception si mauvais format
+        self.__gps_position = value
+        return self.__gps_position
+
 
 if __name__ == '__main__':
     coord = {'lat': 48.834269, 'lng': 2.296338}
     Test = Velib_Station(coord, 'departure')
+    Test.start()
+    Test.join()
     print(Test)

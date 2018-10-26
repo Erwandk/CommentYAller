@@ -24,41 +24,7 @@
             <li>neige : {{ trip.meteo.snow }}</li>
             <li>convective : {{ trip.meteo.convective_rain }}</li>
         </ul>
-        <p><strong>Nous recommandons : {{ trip.recommandation }}</strong></p>
-
-        <div class="columns">
-            <div class="column is-two">
-                <form class="form" action="" method="post">
-                    <input class="type_trip" name="type_trip" type="hidden" value="foot">
-                    <input id="submit1" type="submit" class="button" value="A pied">
-                </form>
-            </div>
-            <div class="column is-two">
-                <form class="form" action="" method="post">
-                    <input class="type_trip" name="type_trip" type="hidden" value="bicycle">
-                    <input id="submit2" type="submit" class="button" value="A vélo">
-                </form>
-            </div>
-            <div class="column is-two">
-                <form class="form" action="" method="post">
-                    <input class="type_trip" name="type_trip" type="hidden" value="car">
-                    <input id="submit3" type="submit" class="button" value="En voiture">
-                </form>
-            </div>
-            <div class="column is-two">
-                <form class="form" action="" method="post">
-                    <input class="type_trip" name="type_trip" type="hidden" value="transit">
-                    <input id="submit4" type="submit" class="button" value="En transport">
-                </form>
-            </div>
-            <div class="column is-two">
-                <form class="form" action="" method="post">
-                    <input class="type_trip" name="type_trip" type="hidden" value="velib">
-                    <input id="submit5" type="submit" class="button" value="En vélib'">
-                </form>
-            </div>
-        </div>
-
+        <p><strong>Nous recommandons : {{ trip.recommendation }}</strong></p>
         <p>Pour aller de <strong>{{ trip.init_pos }}</strong> à <strong>{{ trip.final_pos}}</strong>, voici nos analyses :</p>
         <div id="foot">
             <h3>A pied :</h3>
@@ -106,11 +72,6 @@
     <div class="column" id="carte">
 
         <!-- valeurs à remplacer une fois les bonnes coordonnées récupérées -->
-
-      <iframe src="carte.html"
-                width="550"
-                height="450" >
-      </iframe>
 
         <figure class="image">
             <iframe id="map"

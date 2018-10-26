@@ -52,7 +52,9 @@ class Foot(Thread):
 
     @init_pos.setter
     def init_pos(self, value):
-        print("You are not allowed to modify init_pos by {}".format(value))
+        # todo : lever une exception si ce n'est pas au bon format
+        self.__init_pos = value
+        return self.__init_pos
 
     @property
     def final_pos(self):
@@ -60,7 +62,9 @@ class Foot(Thread):
 
     @final_pos.setter
     def final_pos(self, value):
-        print("You are not allowed to modify final_pos by {}".format(value))
+        # todo : lever une exception si ce n'est pas au bon format
+        self.__final_pos = value
+        return self.__final_pos
 
     @property
     def total_duration(self):
@@ -131,7 +135,9 @@ class Bicycle(Thread):
 
     @init_pos.setter
     def init_pos(self, value):
-        print("You are not allowed to modify init_pos by {}".format(value))
+        # todo: lever une exception si ce n'est pas au bon format
+        self.__init_pos = value
+        return self.__init_pos
 
     @property
     def final_pos(self):
@@ -139,7 +145,9 @@ class Bicycle(Thread):
 
     @final_pos.setter
     def final_pos(self, value):
-        print("You are not allowed to modify final_pos by {}".format(value))
+        # todo : lever une exception si ce n'est pas au bon format
+        self.__final_pos = value
+        return self.__final_pos
 
     @property
     def total_duration(self):
@@ -347,6 +355,7 @@ class Velib():
     """
 
     def __init__(self, user_id, init_pos_dict, final_pos_dict, init_pos_str, final_pos_str):
+        print("Classe Vélib appelée")
         self.__user_id = user_id
         self.__init_pos_dict = init_pos_dict  # Coord GPS au format dict{'lat':XXX; 'lng':XXX} pour l'API Vélib
         self.__final_pos_dict = final_pos_dict  # Coord GPS au format dict{'lat':XXX; 'lng':XXX} pour l'API Vélib
@@ -371,7 +380,21 @@ class Velib():
                                     final_pos=self.__final_pos_str)
 
     def compute_itinary(self):
-        # Lancement des threads liés à l'API GoogleMaps
+        # Lancement des threads de l'API Vélib
+        self.__dep_station.start()
+        self.__arr_station.start()
+
+        # Attente de la fin des threads
+        self.__dep_station.join()
+        self.__arr_station.join()
+
+        # Prise en compte des coordonnées des stations Vélib trouvées pour le calcul d'itinéraire avec GoogleMaps
+        self.__initial_walking.final_pos = self.__dep_station.coord
+        self.__bicycling.init_pos = self.__dep_station.coord
+        self.__bicycling.final_pos = self.__arr_station.coord
+        self.final_walking.init_pos = self.__arr_station.coord
+
+        # Lancement des threads de l'API GoogleMaps
         self.__initial_walking.start()
         self.__bicycling.start()
         self.__final_walking.start()
@@ -408,7 +431,9 @@ class Velib():
 
     @init_pos_dict.setter
     def init_pos_dict(self, value):
-        print("You are not allowed to modify init_pos_dict by {}".format(value))
+        # todo: lever une expception si mauvais format
+        self.__init_pos_dict = value
+        return self.__init_pos_dict
 
     @property
     def final_pos_dict(self):
@@ -416,7 +441,9 @@ class Velib():
 
     @final_pos_dict.setter
     def final_pos_dict(self, value):
-        print("You are not allowed to modify final_pos_dict by {}".format(value))
+        # todo: lever une exception si mauvais format
+        self.__final_pos_dict = value
+        return self.__final_pos_dict
 
     @property
     def init_pos_str(self):

@@ -17,11 +17,11 @@ class Meteo(API, Thread):
                      url='http://www.infoclimat.fr/public-api/gfs/json?_ll=48.85341,2.3488&_auth=CBIAFwN9BiRRfFtsA3ULIgBoBTBdK1dwA38CYVs%2BB3pWPVAxVDRTNVY4VyoFKlVjWXQFZl5lUmIBagZ%2BCHpXNghiAGwDaAZhUT5bPgMsCyAALgVkXX1XcANhAmZbPgd6VjRQPVQyUy9WO1cxBTdVf1loBWdeYFJ1AX0GYAhgVzcIYwBjA2MGZVE9WzADMgsgACwFYF0wVz0DZwJnW2IHY1ZjUDdUMlMxVjtXZwUwVX9ZYwVkXmBSaAFrBmQIZ1c1CHQAewMZBhdRI1t5A3ELagB1BXhdN1cxAzQ%3D&_c=cc703eb909f9f00058063c7c570f6a45',
                      nom='meteo')
         self.__time = ''
-        self.__data = dict()
-        self.temperature = 0
-        self.rain = 0
-        self.convective_rain = 0
-        self.snow = ""
+        self.__data = dict()  # Json retourné par l'API
+        self.temperature = 0  # Température au sol en °C
+        self.rain = 0  # Nbr de mm de précipitation (sur un créneau de 3h)
+        self.convective_rain = 0  # Nbr de mm de précipitation convective (sur un créneau de 3h)
+        self.snow = ""  # 'oui' s'il y a un risque de neige, 'non' sinon
 
     def run(self):
         self.__time = self.__set_time()
