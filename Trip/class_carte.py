@@ -10,11 +10,11 @@ class Carte:
 
     def __init__(self, trip, trip_type):
         """trip_type est censé etre de la forme 'trip.trip_foot'"""
-        self._etape = Carte.set_mode(trip,trip_type)
-        self.__min_lat = min([etapes[2]["lat"] for etapes in self._etape]+[trip.gps_final['lat']]) - 0.00025
-        self.__max_lat = max([etapes[2]["lat"] for etapes in self._etape]+[trip.gps_final['lat']]) + 0.00025
-        self.__min_lon = min([etapes[2]["lng"] for etapes in self._etape]+[trip.gps_final['lng']]) - 0.00025
-        self.__max_lon = max([etapes[2]["lng"] for etapes in self._etape]+[trip.gps_final['lng']]) + 0.00025
+        self.__etape = Carte.set_mode(trip,trip_type)
+        self.__min_lat = min([etapes[2]["lat"] for etapes in self.__etape]+[trip.gps_final['lat']]) - 0.00025
+        self.__max_lat = max([etapes[2]["lat"] for etapes in self.__etape]+[trip.gps_final['lat']]) + 0.00025
+        self.__min_lon = min([etapes[2]["lng"] for etapes in self.__etape]+[trip.gps_final['lng']]) - 0.00025
+        self.__max_lon = max([etapes[2]["lng"] for etapes in self.__etape]+[trip.gps_final['lng']]) + 0.00025
         self.__trip = trip
 
     @staticmethod
@@ -39,10 +39,10 @@ class Carte:
                       , popup="<b>Start</b>").add_to(m)
         folium.Marker([self.trip.gps_final["lat"],self.trip.gps_final["lng"]],icon=folium.Icon(color="red"),
                       popup="<b>End</b>").add_to(m)
-        n = len(self._etape)
+        n = len(self.__etape)
         for k in range(1,n):
             print(k)
-            folium.Marker([self._etape[k][2]["lat"],self._etape[k][2]["lng"]], popup="<i>Etape {}".format(k)).add_to(m)
+            folium.Marker([self.__etape[k][2]["lat"],self.__etape[k][2]["lng"]], popup="<i>Etape {}".format(k)).add_to(m)
         m.save(path)
 
     @property

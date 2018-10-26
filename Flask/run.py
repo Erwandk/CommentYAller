@@ -4,8 +4,8 @@
 __author__ = 'eke, axel, gab'
 
 from user_api import secret_key
-from flask import Flask, request, render_template, url_for, redirect, session, send_file
 
+from flask import Flask, request, render_template, url_for, redirect, session, send_file
 
 from Flask.class_formulary import Formulary
 from Trip.class_trip import Trip
@@ -43,14 +43,12 @@ def index():
     else:
         raise NotImplementedError("This method is not implemented !")
 
-
 @app.route('/carte.html')
 def image():
     print("test test")
     return send_file('static/carte.html', cache_timeout=0, add_etags=False)
 
 @app.route('/trajet?<pos_init>&<pos_final>&<bagage>&<elevation>', methods=['GET', 'POST'])
-
 def trajet(pos_init, pos_final, bagage, elevation):
     """
     page des résultats
