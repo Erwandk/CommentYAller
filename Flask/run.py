@@ -4,13 +4,15 @@
 __author__ = 'eke, axel, gab'
 
 from user_api import secret_key
-from flask import Flask, request, render_template, url_for, redirect, session
+
+from flask import Flask, request, render_template, url_for, redirect, session, send_file
 
 from Flask.class_formulary import Formulary
 from Trip.class_trip import Trip
 from APIs.class_InfoUser import InfoUser
 
 from Trip.class_carte import Carte
+import folium
 
 
 app = Flask(__name__)
@@ -41,6 +43,10 @@ def index():
     else:
         raise NotImplementedError("This method is not implemented !")
 
+@app.route('/carte.html')
+def image():
+    print("test test")
+    return send_file('static/carte.html', cache_timeout=0, add_etags=False)
 
 @app.route('/trajet?<pos_init>&<pos_final>&<bagage>&<elevation>', methods=['GET', 'POST'])
 def trajet(pos_init, pos_final, bagage, elevation):
@@ -49,10 +55,8 @@ def trajet(pos_init, pos_final, bagage, elevation):
     """
     if request.method == 'GET':
         trip = Trip(pos_init, pos_final, bagage, elevation)
-        # session['trip'] = trip
-        type_trip = str(trip.reco_type_trip)
-
-        carte = Carte(trip, type_trip)
+        carte = Carte(trip, trip_type=trip.recommandation)
+        carte.get_map()
         return render_template('trajet_getzere.html', trip=trip, carte=carte)
 
     if request.method == 'POST':
@@ -65,7 +69,6 @@ def trajet(pos_init, pos_final, bagage, elevation):
         return render_template('trajet_getzere.html', trip=trip, carte=carte)
     else:
         raise NotImplementedError("This method is not implemented !")
-
 
 if __name__ == '__main__':
 
