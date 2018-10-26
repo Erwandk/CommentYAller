@@ -5,9 +5,10 @@ __author__ = 'eke, gab, axel'
 import folium
 import os
 
+
 class Carte:
 
-    def __init__(self, trip,trip_type):
+    def __init__(self, trip, trip_type):
         """trip_type est censé etre de la forme 'trip.trip_foot'"""
         self._etape = Carte.set_mode(trip,trip_type)
         self.__min_lat = min([etapes[2]["lat"] for etapes in self._etape]+[trip.gps_final['lat']]) - 0.00025
