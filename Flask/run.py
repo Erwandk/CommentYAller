@@ -4,13 +4,14 @@
 __author__ = 'eke, axel, gab'
 
 from user_api import secret_key
-from flask import Flask, request, render_template, url_for, redirect
+from flask import Flask, request, render_template, url_for, redirect, send_file
 
 from Flask.class_formulary import Formulary
 from Trip.class_trip import Trip
 from APIs.class_InfoUser import InfoUser
 
 from Trip.class_carte import Carte
+import folium
 
 
 app = Flask(__name__)
@@ -42,13 +43,19 @@ def index():
         return "Cette methode n'est pas implémentée..."
 
 
+@app.route('/carte.html')
+def image():
+    print("test test")
+    return send_file('static/carte.html', cache_timeout=0, add_etags=False)
+
 @app.route('/trajet?<pos_init>&<pos_final>&<bagage>&<elevation>')
 def trajet(pos_init, pos_final, bagage, elevation):
     """
     page des résultats
     """
     trip = Trip(pos_init, pos_final, bagage, elevation)
-    carte = Carte(trip)
+    carte = Carte(trip,trip_type=Trip.recommandation)
+    carte.get_map()
     return render_template('trajet_getzere.html', trip=trip, carte=carte)
 
 
