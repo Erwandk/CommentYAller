@@ -57,6 +57,7 @@ class Trip:
         self.__trip_velib.compute_itinary()
 
         self.__recommandation = ""
+        self.__reco_type_trip = "transit"
         self.analyse()
 
     @staticmethod
@@ -201,3 +202,11 @@ class Trip:
     @recommandation.setter
     def recommandation(self, value):
         print("You are not allowed to modify recommandation by {} !".format(value))
+
+    @property
+    def reco_type_trip(self):
+        return self.__reco_type_trip
+
+    @reco_type_trip.setter
+    def reco_type_trip(self, value):
+        print("You are not allowed to modify reco_type_trip by {} !".format(value))

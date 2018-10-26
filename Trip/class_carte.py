@@ -5,7 +5,7 @@ __author__ = 'eke, gab, axel'
 
 class Carte:
 
-    def __init__(self, trip):
+    def __init__(self, trip, type_trip):
         """trip_type est censé etre de la forme 'trip.trip_foot'"""
         self.__etape = Carte.set_mode(trip)
         self.__min_lat = min([etapes[2]["lat"] for etapes in self.__etape]+[trip.gps_final['lat']]) - 0.00025

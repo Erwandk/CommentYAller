@@ -4,7 +4,7 @@
 __author__ = 'eke, axel, gab'
 
 from user_api import secret_key
-from flask import Flask, request, render_template, url_for, redirect
+from flask import Flask, request, render_template, url_for, redirect, session
 
 from Flask.class_formulary import Formulary
 from Trip.class_trip import Trip
@@ -39,17 +39,32 @@ def index():
         return render_template('main_getzere.html')
 
     else:
-        return "Cette methode n'est pas implémentée..."
+        raise NotImplementedError("This method is not implemented !")
 
 
-@app.route('/trajet?<pos_init>&<pos_final>&<bagage>&<elevation>')
+@app.route('/trajet?<pos_init>&<pos_final>&<bagage>&<elevation>', methods=['GET', 'POST'])
 def trajet(pos_init, pos_final, bagage, elevation):
     """
     page des résultats
     """
-    trip = Trip(pos_init, pos_final, bagage, elevation)
-    carte = Carte(trip)
-    return render_template('trajet_getzere.html', trip=trip, carte=carte)
+    if request.method == 'GET':
+        trip = Trip(pos_init, pos_final, bagage, elevation)
+        # session['trip'] = trip
+        type_trip = str(trip.reco_type_trip)
+
+        carte = Carte(trip, type_trip)
+        return render_template('trajet_getzere.html', trip=trip, carte=carte)
+
+    if request.method == 'POST':
+        type_trip = request.form.get('type_trip')
+        # trip = session.pop('trip')
+        # TODO : en attendant de trouver comment stocker trip, on le ré-appelle ici !
+        trip = Trip(pos_init, pos_final, bagage, elevation)
+
+        carte = Carte(trip, type_trip)
+        return render_template('trajet_getzere.html', trip=trip, carte=carte)
+    else:
+        raise NotImplementedError("This method is not implemented !")
 
 
 if __name__ == '__main__':
