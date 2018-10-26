@@ -2,6 +2,7 @@
 
 {% block header %}
 {{ super() }}
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
 {% endblock %}
 
 {% block corps %}
@@ -24,9 +25,30 @@
             <li>neige : {{ trip.meteo.snow }}</li>
             <li>convective : {{ trip.meteo.convective_rain }}</li>
         </ul>
-        <p><strong>Nous recommandons : {{ trip.recommendation }}</strong></p>
+
+        <p><strong>Nous recommandons : {{ trip.recommandation }}</strong></p>
+
+        <div class="columns">
+            <div class="column is-two">
+                <input id="submit1" type="submit" class="button" value="A pied" onclick="display_trip('.foot')">
+            </div>
+            <div class="column is-two">
+                <input id="submit2" type="submit" class="button" value="A vélo" onclick="display_trip('.bicycle')">
+            </div>
+            <div class="column is-two">
+                <input id="submit3" type="submit" class="button" value="En voiture" onclick="display_trip('.car')">
+            </div>
+            <div class="column is-two">
+                <input id="submit4" type="submit" class="button" value="En transport" onclick="display_trip('.transit')">
+            </div>
+            <div class="column is-two">
+                <input id="submit5" type="submit" class="button" value="En vélib'" onclick="display_trip('.velib')">
+            </div>
+        </div>
+
         <p>Pour aller de <strong>{{ trip.init_pos }}</strong> à <strong>{{ trip.final_pos}}</strong>, voici nos analyses :</p>
-        <div id="foot">
+
+        <div class="foot type_trip">
             <h3>A pied :</h3>
             <ul>
                 <li>duree : {{ trip.trip_foot.total_duration }} s</li>
@@ -34,7 +56,7 @@
                 <li>etapes : {{ trip.trip_foot.steps }}</li>
             </ul>
         </div>
-        <div id="bicycle">
+        <div class="bicycle type_trip">
             <h3>A vélo :</h3>
             <ul>
                 <li>duree : {{ trip.trip_bicycle.total_duration }} s</li>
@@ -42,7 +64,7 @@
                 <li>etapes : {{ trip.trip_bicycle.steps }}</li>
             </ul>
         </div>
-        <div id="car">
+        <div class="car type_trip">
             <h3>En voiture :</h3>
             <ul>
                 <li>duree : {{ trip.trip_car.total_duration }} s</li>
@@ -50,7 +72,7 @@
                 <li>etapes : {{ trip.trip_car.steps }}</li>
             </ul>
         </div>
-        <div id="transit">
+        <div class="transit type_trip">
             <h3>En transport en commun :</h3>
             <ul>
                 <li>duree : {{ trip.trip_transit.total_duration }} s</li>
@@ -59,7 +81,7 @@
                 <li>etapes : {{ trip.trip_transit.steps }}</li>
             </ul>
         </div>
-        <div id="velib">
+        <div class="velib type_trip">
             <h3>En Vélib :</h3>
             <ul>
                 <li>duree : {{ trip.trip_velib.total_duration }} s</li>
@@ -71,7 +93,25 @@
 
     <div class="column" id="carte">
 
-        <!-- valeurs à remplacer une fois les bonnes coordonnées récupérées -->
+        <figure class="image">
+
+            <!-- @Axel tu peux mettre les <iframe> a l'interieur des balises ci-dessous -->
+            <div class="foot type_trip">
+            </div>
+            <div class="bicycle type_trip">
+            </div>
+            <div class="car type_trip">
+            </div>
+            <div class="transit type_trip">
+            </div>
+            <div class="velib type_trip">
+            </div>
+
+            <iframe src="carte.html"
+                    width="550"
+                    height="450" >
+            </iframe>
+        </figure>
 
         <figure class="image">
             <iframe id="map"
@@ -83,6 +123,19 @@
         </figure>
     </div>
 </div>
+
+<!--fonction permettant d'afficher uniquement un certain type de trajet-->
+<script>
+
+    function display_trip(balise) {
+        $(".type_trip").hide();
+        $(balise).show();
+    }
+
+    recommandation = "{{ trip.reco_type_trip }}"
+
+    display_trip("." + recommandation)
+</script>
 
 {% endblock %}
 
