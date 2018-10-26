@@ -55,12 +55,14 @@ def trajet(pos_init, pos_final, bagage, elevation):
     """
     if request.method == 'GET':
         trip = Trip(pos_init, pos_final, bagage, elevation)
+        print("trip_type dans def trajet:{}:".format(trip.recommendation))
         carte = Carte(trip, trip_type=trip.recommendation)
         carte.get_map()
         return render_template('trajet_getzere.html', trip=trip, carte=carte)
 
     if request.method == 'POST':
         type_trip = request.form.get('type_trip')
+        print('type_trip: {}'.format(type_trip))
         # trip = session.pop('trip')
         # TODO : en attendant de trouver comment stocker trip, on le ré-appelle ici !
         trip = Trip(pos_init, pos_final, bagage, elevation)

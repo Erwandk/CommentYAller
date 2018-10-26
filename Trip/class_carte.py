@@ -10,7 +10,7 @@ class Carte:
 
     def __init__(self, trip, trip_type):
         """trip_type est censé etre de la forme 'trip.trip_foot'"""
-        self.__etape = Carte.set_mode(trip,trip_type)
+        self.__etape = Carte.set_mode(trip, trip_type)
         self.__min_lat = min([etapes[2]["lat"] for etapes in self.__etape]+[trip.gps_final['lat']]) - 0.00025
         self.__max_lat = max([etapes[2]["lat"] for etapes in self.__etape]+[trip.gps_final['lat']]) + 0.00025
         self.__min_lon = min([etapes[2]["lng"] for etapes in self.__etape]+[trip.gps_final['lng']]) - 0.00025
@@ -18,7 +18,7 @@ class Carte:
         self.__trip = trip
 
     @staticmethod
-    def set_mode(trip,trip_type):
+    def set_mode(trip, trip_type):
 
         if trip_type == "trip_foot":
             return trip.trip_foot.steps
@@ -83,4 +83,4 @@ class Carte:
 
     @trip.setter
     def trip(self,valeur):
-print("You are not allowed to modify trip by {}".format(valeur))
+        print("You are not allowed to modify trip by {}".format(valeur))
