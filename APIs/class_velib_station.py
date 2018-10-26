@@ -179,7 +179,7 @@ class Velib_Station(Thread, API):
     def gps_position(self, value):
         # todo : lever exception si mauvais format
         self.__gps_position = value
-        return self.__gps_position
+        return
 
 
 if __name__ == '__main__':
