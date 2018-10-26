@@ -28,39 +28,25 @@
 
         <div class="columns">
             <div class="column is-two">
-                <form class="form" action="" method="post">
-                    <input class="type_trip" name="type_trip" type="hidden" value="foot">
-                    <input id="submit1" type="submit" class="button" value="A pied">
-                </form>
+                <input id="submit1" type="submit" class="button" value="A pied">
             </div>
             <div class="column is-two">
-                <form class="form" action="" method="post">
-                    <input class="type_trip" name="type_trip" type="hidden" value="bicycle">
-                    <input id="submit2" type="submit" class="button" value="A vélo">
-                </form>
+                <input id="submit2" type="submit" class="button" value="A vélo">
             </div>
             <div class="column is-two">
-                <form class="form" action="" method="post">
-                    <input class="type_trip" name="type_trip" type="hidden" value="car">
-                    <input id="submit3" type="submit" class="button" value="En voiture">
-                </form>
+                <input id="submit3" type="submit" class="button" value="En voiture">
             </div>
             <div class="column is-two">
-                <form class="form" action="" method="post">
-                    <input class="type_trip" name="type_trip" type="hidden" value="transit">
                     <input id="submit4" type="submit" class="button" value="En transport">
-                </form>
             </div>
             <div class="column is-two">
-                <form class="form" action="" method="post">
-                    <input class="type_trip" name="type_trip" type="hidden" value="velib">
                     <input id="submit5" type="submit" class="button" value="En vélib'">
-                </form>
             </div>
         </div>
 
         <p>Pour aller de <strong>{{ trip.init_pos }}</strong> à <strong>{{ trip.final_pos}}</strong>, voici nos analyses :</p>
-        <div id="foot">
+
+        <div class="foot">
             <h3>A pied :</h3>
             <ul>
                 <li>duree : {{ trip.trip_foot.total_duration }} s</li>
@@ -68,7 +54,7 @@
                 <li>etapes : {{ trip.trip_foot.steps }}</li>
             </ul>
         </div>
-        <div id="bicycle">
+        <div class="bicycle">
             <h3>A vélo :</h3>
             <ul>
                 <li>duree : {{ trip.trip_bicycle.total_duration }} s</li>
@@ -76,7 +62,7 @@
                 <li>etapes : {{ trip.trip_bicycle.steps }}</li>
             </ul>
         </div>
-        <div id="car">
+        <div class="car">
             <h3>En voiture :</h3>
             <ul>
                 <li>duree : {{ trip.trip_car.total_duration }} s</li>
@@ -84,7 +70,7 @@
                 <li>etapes : {{ trip.trip_car.steps }}</li>
             </ul>
         </div>
-        <div id="transit">
+        <div class="transit">
             <h3>En transport en commun :</h3>
             <ul>
                 <li>duree : {{ trip.trip_transit.total_duration }} s</li>
@@ -93,7 +79,7 @@
                 <li>etapes : {{ trip.trip_transit.steps }}</li>
             </ul>
         </div>
-        <div id="velib">
+        <div class="velib">
             <h3>En Vélib :</h3>
             <ul>
                 <li>duree : {{ trip.trip_velib.total_duration }} s</li>
