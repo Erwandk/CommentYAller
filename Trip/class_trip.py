@@ -19,19 +19,106 @@ class Trip:
         """
         # Définitions des attributs de la classe
         self.__user_id = user_id
-        self.__init_pos = self.clean_str(init_pos)
-        self.__final_pos = self.clean_str(final_pos)
+        self.__init_pos = self.__clean_str(init_pos)
+        self.__final_pos = self.__clean_str(final_pos)
         self.__bagage = True if bagage == "on" else False
         self.__elevation = True if elevation == "on" else False
+        self.__pers_bicycle = True  # if pers_bicycle == 'on' else False
+        self.__pers_car = True  # if pers_car == 'on' else False
+        # todo: ajouter l'option vélo personnel et voiture personnelle sur le formulaire
 
-        # Définition des différents trajets, sauf Vélib (1 thread = 1 appel à une API)
+        self.__gps_init = dict()
+        self.__gps_final = dict()
+        self.__weather_ok = bool()  # True si les conditions météo sont jugées décentes, False sinon
+        # self.__elevation_ok = bool() # True si l'élévation est acceptable, False sinon
+        self.__recommendation = 'trip_transit'
+        self.__reco_type_trip = "transit"
+
+        # Définition des différents trajets et de la météo (1 thread = 1 appel à une API)
+        # Les threads sont lancés dans la méthodes compute_trip
         self.__meteo = Meteo()
         self.__trip_foot = Foot(self.__user_id, self.__init_pos, self.__final_pos)
         self.__trip_bicycle = Bicycle(self.__user_id, self.__init_pos, self.__final_pos)
         self.__trip_car = Car(self.__user_id, self.__init_pos, self.__final_pos)
         self.__trip_transit = Transit(self.__user_id, self.__init_pos, self.__final_pos)
+        self.__trip_velib = Velib(self.__user_id, init_pos_dict=self.__gps_init, final_pos_dict=self.__gps_final,
+                                  init_pos_str=self.__init_pos, final_pos_str=self.__final_pos)
 
-        # Lancement des threads
+        # Calcul des attributs du trajet
+        self.__compute_trip()
+
+    @staticmethod
+    def __clean_str(chaine):
+        """
+         Méthode statique qui transforme une chaîne de caractères avec les contraintes de l'API GoogleMaps
+        """
+        __new_chaine = chaine.lower().replace(" ", "+").replace(",", "+")
+        pattern = r'^[0-9]+.[0-9]+%2C[0-9]+.[0-9]+$'
+        if not re.match(pattern, __new_chaine):
+            if "paris" not in __new_chaine:
+                __new_chaine += "+paris"
+        return __new_chaine
+
+    def __check_weather(self):
+        """
+        Méthode qui vérifie les conditions météo pour proposer un trajet à vélo, à partir des critères suivants:
+        Température > 8°C
+        Précipitations < 21mm sur 3 heures (soit <7mm/h, seuil de pluie modérée, au delà duquel la pluie est forte)
+        Précipitations convectives < 21mm sur 3 heures
+        Risque neige = non
+        :return: True si les conditions sont vérifiées, False sinon
+        """
+        if self.__meteo.temperature > 8 and self.__meteo.rain < 21 and self.__meteo.convective_rain < 21:
+            # ajouter la condition sur le risque de neige
+            return True
+        else:
+            return False
+
+    # def __check_elevation(self):
+    #     """
+    #     Méthode qui vérifie si le dénivelé est acceptable pour proposer un trajet en vélo selon les critères suivants:
+    #     Si l'utilisateur souhaite prendre en compte le dénivéle, au delà de 80m de dénivelé positif le vélo n'est pas
+    #     recommandé.
+    #     Si l'utilisateur ne souhaite pas prendre en compte le dénivelé, il n'y a pas de limite.
+    #     :return: True si les conditions sont vérifiées, False sinon
+    #     """
+    #     if self.__elevation:
+    #         # todo : récupérer le dénivelé dans une autre API MAps
+    #         # if XXX return True else False
+    #     else:
+    #         return True
+
+    def __compute_recommendation(self):
+        """
+        Méthode qui calcule nos recommandations en fonction des paramètres du trajet. Le trajet de référence est
+        l'itinéraire en transport en commun, auquel on compare si les autres options sont mieux.
+        """
+        # Etude de l'itinéraire à pieds
+        # Pour les distances de moins d'1km sous les bonnes conditions météo, nous recommandons un trajet à pieds
+        if self.__trip_foot.total_distance < 1001 and self.__weather_ok:
+            self.__recommendation = 'trip_foot'
+        # Etude de l'itinéraire en vélo (ou vélib)
+        # Si l'utilisateur n'est pas chargé et que les conditions météo sont bonnes, étude du trajet à vélo/vélib
+        elif not self.__bagage and self.__weather_ok:  # and self.__check_elevation == True:
+            # Vérification du trajet en vélo perso
+            if self.__pers_bicycle and self.__trip_bicycle.total_duration < self.__trip_transit.total_duration:
+                self.__recommendation = 'trip_bicycle'
+            # Vérification du trajet en vélib
+            elif not self.__pers_bicycle and self.__trip_velib.total_duration < self.__trip_transit.total_duration:
+                self.__recommendation = 'trip_velib'
+        elif self.__pers_car and self.__trip_car.total_duration < 0.66*self.__trip_transit.total_duration:
+            self.__recommendation = 'trip_car'
+        else:  # Dans tous les autres cas, privilégier les transports en communs
+            self.__recommendation = 'trip_transit'
+        print("self.recommendation:{}".format(self.recommendation))
+        return
+
+    def __compute_trip(self):
+        """
+        Méthode qui calcule tous les attributs du trajet.
+        :return:
+        """
+        # Lancement des threads d'appel aux API
         self.__meteo.start()
         self.__trip_foot.start()
         self.__trip_bicycle.start()
@@ -51,46 +138,20 @@ class Trip:
         self.__gps_init = self.__trip_foot.steps[0][2]  # au format dict{'lat':X; 'lng':X}
         self.__gps_final = self.__trip_foot.steps[len(self.__trip_foot.steps)-1][3]  # au format dict{'lat':X; 'lng':X}
 
-        # Calcul du trajet en Vélib (qui nécessite les coordonnées GPS calculées ci-dessus)
-        self.__trip_velib = Velib(self.__user_id, init_pos_dict=self.__gps_init, final_pos_dict=self.__gps_final,
-                                  init_pos_str=self.__init_pos, final_pos_str=self.__final_pos)
+        # Calcul de l'itinéraire Vélib (lancé après les autres itis car nécessite le calcul des coord GPS ci-dessus)
+        self.__trip_velib.init_pos_dict = self.__gps_init
+        self.__trip_velib.dep_station.gps_position = self.__gps_init  # todo : try sans (cf maj dans autre fichier)
+        self.__trip_velib.final_pos_dict = self.__gps_final
+        self.__trip_velib.arr_station.gps_position = self.__gps_final  # todo: try without
         self.__trip_velib.compute_itinary()
 
-        self.__recommendation = ""
-        self.__reco_type_trip = "transit"
-        self.analyse()
-
-    @staticmethod
-    def clean_str(chaine):
-        """
-         Méthode statique qui transforme une chaine de caractère avec les contraintes de l'API GoogleMaps
-        """
-        __new_chaine = chaine.lower().replace(" ", "+").replace(",", "+")
-        pattern = r'^[0-9]+.[0-9]+%2C[0-9]+.[0-9]+$'
-        if not re.match(pattern, __new_chaine):
-            if "paris" not in __new_chaine:
-                __new_chaine += "+paris"
-        return __new_chaine
-
-    def analyse(self):
-        """
-        Méthode qui calcule nos recommendations en fonction des paramètres du trajet
-        """
-        x = {"trip_bicycle": self.__trip_bicycle.total_duration, "trip_car": self.__trip_car.total_duration,
-             "trip_foot": self.__trip_foot.total_duration, "trip_transit": self.__trip_transit.total_duration}
-        if self.__bagage == "on":
-            del x["trip_transit"]
-        if self.__meteo.snow == "oui" or self.__meteo.rain > 21:
-            del x["trip_walking"]
-        min_time = min(y for y in x.values())
-
-        for i, j in x.items():
-            print(i, "est et vaut", j)
-            if j == min_time:
-                self.__recommendation = i
-                break
+        # Calcul de la recommandation d'itinéraire
+        self.__weather_ok = self.__check_weather()
+        # self.__check_elevation
+        self.__compute_recommendation()
 
     # Définition des getters, setters des attributs de notre classe
+    # TODO : Vérifier la liste des getters et setters (complète pour tous les attributs de la classe?)
     @property
     def user_id(self):
         return self.__user_id
@@ -196,12 +257,8 @@ class Trip:
         print("You are not allowed to modify meteo by {} !".format(value))
 
     @property
-    def recommendation(self):
-        return self.__recommendation
-
-    @recommendation.setter
-    def recommendation(self, value):
-        print("You are not allowed to modify recommendation by {} !".format(value))
+    def check_weather(self):
+        return self.__check_weather
 
     @property
     def reco_type_trip(self):
@@ -210,3 +267,31 @@ class Trip:
     @reco_type_trip.setter
     def reco_type_trip(self, value):
         print("You are not allowed to modify reco_type_trip by {} !".format(value))
+
+    @check_weather.setter
+    def check_weather(self, value):
+        print("You are not allowed to modify check_weather by {} !".format(value))
+
+    @property
+    def recommendation(self):
+        return self.__recommendation
+
+    @recommendation.setter
+    def recommendation(self, value):
+        print("You are not allowed to modify recommendation by {} !".format(value))
+
+
+if __name__ == '__main__':
+
+    def main():
+        init_pos = '6+rue+des+marronniers+paris'
+        final_pos = '8+rue+des+morillons+paris'
+        bagage = 'off'
+        elevation = 'off'
+        # pers_bicycle = 'on'
+        # pers_car = 'on'
+        test = Trip(init_pos, final_pos, bagage, elevation, user_id=0)
+        print(test.check_weather)
+        print(test.recommendation)
+
+    main()
