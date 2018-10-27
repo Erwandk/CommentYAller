@@ -132,7 +132,11 @@ class Trip:
         self.__trip_car.join()
         self.__trip_transit.join()
 
-        # TODO : compute something to manage bugs (no internet / bad destination -> trip empty)
+        # Vérification du bon calcul des itinéraires: en cas de bug, lever une exception
+        if not self.__trip_foot.steps or not self.__trip_bicycle.steps or not self.__trip_car.steps \
+                or not self.__trip_transit.steps:
+            raise ValueError("Les itinéraires n'ont pas pu être calculés: problème de connexion internet ou d'adresses "
+                             "mal saisies")
 
         # Calcul des positions GPS initiale et finale de l'utilisateur
         self.__gps_init = self.__trip_foot.steps[0][2]  # au format dict{'lat':X; 'lng':X}
@@ -140,10 +144,15 @@ class Trip:
 
         # Calcul de l'itinéraire Vélib (lancé après les autres itis car nécessite le calcul des coord GPS ci-dessus)
         self.__trip_velib.init_pos_dict = self.__gps_init
-        self.__trip_velib.dep_station.gps_position = self.__gps_init  # todo : try sans (cf maj dans autre fichier)
+        self.__trip_velib.dep_station.gps_position = self.__gps_init
         self.__trip_velib.final_pos_dict = self.__gps_final
-        self.__trip_velib.arr_station.gps_position = self.__gps_final  # todo: try without
+        self.__trip_velib.arr_station.gps_position = self.__gps_final
         self.__trip_velib.compute_itinary()
+
+        # Vérification du bon calcul de l'itinéraire : en cas de bug, lever une exception
+        if not self.__trip_velib.steps:
+            raise ValueError("Les itinéraires n'ont pas pu être calculés: problème de connexion internet ou d'adresses "
+                             "mal saisies")
 
         # Calcul de la recommandation d'itinéraire
         self.__weather_ok = self.__check_weather()

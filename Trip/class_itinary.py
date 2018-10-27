@@ -6,6 +6,7 @@ __author__ = 'eke, gab, axel'
 from APIs.class_googlesmaps import GoogleMaps, GoogleMapsTransit
 from APIs.class_velib_station import Velib_Station
 from threading import Thread
+import re
 
 
 class Foot(Thread):
@@ -52,7 +53,9 @@ class Foot(Thread):
 
     @init_pos.setter
     def init_pos(self, value):
-        # todo : lever une exception si ce n'est pas au bon format
+        pattern = r'^[0-9]+.[0-9]+%2C[0-9]+.[0-9]+$'
+        if not re.match(pattern, value):
+            raise ValueError("La valeur de init_pos indiquée n'est pas au format 'latitude'+'%2C'+'longitude.")
         self.__init_pos = value
         return
 
@@ -62,7 +65,9 @@ class Foot(Thread):
 
     @final_pos.setter
     def final_pos(self, value):
-        # todo : lever une exception si ce n'est pas au bon format
+        pattern = r'^[0-9]+.[0-9]+%2C[0-9]+.[0-9]+$'
+        if not re.match(pattern, value):
+            raise ValueError("La valeur de final_pos indiquée n'est pas au format 'latitude'+'%2C'+'longitude.")
         self.__final_pos = value
         return
 
@@ -135,7 +140,9 @@ class Bicycle(Thread):
 
     @init_pos.setter
     def init_pos(self, value):
-        # todo: lever une exception si ce n'est pas au bon format
+        pattern = r'^[0-9]+.[0-9]+%2C[0-9]+.[0-9]+$'
+        if not re.match(pattern, value):
+            raise ValueError("La valeur de init_pos indiquée n'est pas au format 'latitude'+'%2C'+'longitude.")
         self.__init_pos = value
         return
 
@@ -145,7 +152,9 @@ class Bicycle(Thread):
 
     @final_pos.setter
     def final_pos(self, value):
-        # todo : lever une exception si ce n'est pas au bon format
+        pattern = r'^[0-9]+.[0-9]+%2C[0-9]+.[0-9]+$'
+        if not re.match(pattern, value):
+            raise ValueError("La valeur de final_pos indiquée n'est pas au format 'latitude'+'%2C'+'longitude.")
         self.__final_pos = value
         return
 
@@ -354,7 +363,6 @@ class Velib:
     """
 
     def __init__(self, user_id, init_pos_dict, final_pos_dict, init_pos_str, final_pos_str):
-        print("Classe Vélib appelée")
         self.__user_id = user_id
         self.__init_pos_dict = init_pos_dict  # Coord GPS au format dict{'lat':XXX; 'lng':XXX} pour l'API Vélib
         self.__final_pos_dict = final_pos_dict  # Coord GPS au format dict{'lat':XXX; 'lng':XXX} pour l'API Vélib
@@ -430,7 +438,8 @@ class Velib:
 
     @init_pos_dict.setter
     def init_pos_dict(self, value):
-        # todo: lever une expception si mauvais format
+        if type(value) is not dict or 'lat' not in value.keys() or 'lng' not in value.keys():
+            raise ValueError("La valeur de init_pos_dict indiquée n'est pas au format {'lat':..., 'lng':...}.")
         self.__init_pos_dict = value
         return
 
@@ -440,7 +449,8 @@ class Velib:
 
     @final_pos_dict.setter
     def final_pos_dict(self, value):
-        # todo: lever une exception si mauvais format
+        if type(value) is not dict or 'lat' not in value.keys() or 'lng' not in value.keys():
+            raise ValueError("La valeur de final_pos_dict indiquée n'est pas au format {'lat':..., 'lng':...}.")
         self.__final_pos_dict = value
         return
 
