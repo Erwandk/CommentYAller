@@ -4,7 +4,7 @@
 __author__ = 'eke, gab, axel'
 
 from APIs.class_googlesmaps import GoogleMaps, GoogleMapsTransit
-from APIs.class_velib_station import Velib_Station
+from APIs.class_velib_station import VelibStation
 from threading import Thread
 import re
 
@@ -45,7 +45,7 @@ class Foot(Thread):
 
     @user_id.setter
     def user_id(self, value):
-        print("You are not allowed to modify user_id by {}".format(value))
+        raise AttributeError("You are not allowed to modify user_id by {}".format(value))
 
     @property
     def init_pos(self):
@@ -57,7 +57,6 @@ class Foot(Thread):
         if not re.match(pattern, value):
             raise ValueError("La valeur de init_pos indiquée n'est pas au format 'latitude'+'%2C'+'longitude.")
         self.__init_pos = value
-        return
 
     @property
     def final_pos(self):
@@ -69,7 +68,6 @@ class Foot(Thread):
         if not re.match(pattern, value):
             raise ValueError("La valeur de final_pos indiquée n'est pas au format 'latitude'+'%2C'+'longitude.")
         self.__final_pos = value
-        return
 
     @property
     def total_duration(self):
@@ -77,7 +75,7 @@ class Foot(Thread):
 
     @total_duration.setter
     def total_duration(self, value):
-        print("You are not allowed to modify total_duration by {}".format(value))
+        raise AttributeError("You are not allowed to modify total_duration by {}".format(value))
 
     @property
     def total_distance(self):
@@ -85,7 +83,7 @@ class Foot(Thread):
 
     @total_distance.setter
     def total_distance(self, value):
-        print("You are not allowed to modify total_distance by {}".format(value))
+        raise AttributeError("You are not allowed to modify total_distance by {}".format(value))
 
     @property
     def steps(self):
@@ -93,7 +91,7 @@ class Foot(Thread):
 
     @steps.setter
     def steps(self, value):
-        print("You are not allowed to modify steps by {}".format(value))
+        raise AttributeError("You are not allowed to modify steps by {}".format(value))
 
 
 class Bicycle(Thread):
@@ -132,7 +130,7 @@ class Bicycle(Thread):
 
     @user_id.setter
     def user_id(self, value):
-        print("You are not allowed to modify user_id by {}".format(value))
+        raise AttributeError("You are not allowed to modify user_id by {}".format(value))
 
     @property
     def init_pos(self):
@@ -144,7 +142,6 @@ class Bicycle(Thread):
         if not re.match(pattern, value):
             raise ValueError("La valeur de init_pos indiquée n'est pas au format 'latitude'+'%2C'+'longitude.")
         self.__init_pos = value
-        return
 
     @property
     def final_pos(self):
@@ -156,7 +153,6 @@ class Bicycle(Thread):
         if not re.match(pattern, value):
             raise ValueError("La valeur de final_pos indiquée n'est pas au format 'latitude'+'%2C'+'longitude.")
         self.__final_pos = value
-        return
 
     @property
     def total_duration(self):
@@ -164,7 +160,7 @@ class Bicycle(Thread):
 
     @total_duration.setter
     def total_duration(self, value):
-        print("You are not allowed to modify total_duration by {}".format(value))
+        raise AttributeError("You are not allowed to modify total_duration by {}".format(value))
 
     @property
     def total_distance(self):
@@ -172,7 +168,7 @@ class Bicycle(Thread):
 
     @total_distance.setter
     def total_distance(self, value):
-        print("You are not allowed to modify total_distance by {}".format(value))
+        raise AttributeError("You are not allowed to modify total_distance by {}".format(value))
 
     @property
     def steps(self):
@@ -180,7 +176,7 @@ class Bicycle(Thread):
 
     @steps.setter
     def steps(self, value):
-        print("You are not allowed to modify steps by {}".format(value))
+        raise AttributeError("You are not allowed to modify steps by {}".format(value))
 
 
 class Car(Thread):
@@ -219,7 +215,7 @@ class Car(Thread):
 
     @user_id.setter
     def user_id(self, value):
-        print("You are not allowed to modify user_id by {}".format(value))
+        raise AttributeError("You are not allowed to modify user_id by {}".format(value))
 
     @property
     def init_pos(self):
@@ -227,7 +223,10 @@ class Car(Thread):
 
     @init_pos.setter
     def init_pos(self, value):
-        print("You are not allowed to modify init_pos by {}".format(value))
+        pattern = r'^[0-9]+.[0-9]+%2C[0-9]+.[0-9]+$'
+        if not re.match(pattern, value):
+            raise ValueError("La valeur de init_pos indiquée n'est pas au format 'latitude'+'%2C'+'longitude.")
+        self.__init_pos = value
 
     @property
     def final_pos(self):
@@ -235,7 +234,10 @@ class Car(Thread):
 
     @final_pos.setter
     def final_pos(self, value):
-        print("You are not allowed to modify final_pos by {}".format(value))
+        pattern = r'^[0-9]+.[0-9]+%2C[0-9]+.[0-9]+$'
+        if not re.match(pattern, value):
+            raise ValueError("La valeur de final_pos indiquée n'est pas au format 'latitude'+'%2C'+'longitude.")
+        self.__final_pos = value
 
     @property
     def total_duration(self):
@@ -243,7 +245,7 @@ class Car(Thread):
 
     @total_duration.setter
     def total_duration(self, value):
-        print("You are not allowed to modify total_duration by {}".format(value))
+        raise AttributeError("You are not allowed to modify total_duration by {}".format(value))
 
     @property
     def total_distance(self):
@@ -251,7 +253,7 @@ class Car(Thread):
 
     @total_distance.setter
     def total_distance(self, value):
-        print("You are not allowed to modify total_distance by {}".format(value))
+        raise AttributeError("You are not allowed to modify total_distance by {}".format(value))
 
     @property
     def steps(self):
@@ -259,7 +261,7 @@ class Car(Thread):
 
     @steps.setter
     def steps(self, value):
-        print("You are not allowed to modify steps by {}".format(value))
+        raise AttributeError("You are not allowed to modify steps by {}".format(value))
 
 
 class Transit(Thread):
@@ -306,7 +308,7 @@ class Transit(Thread):
 
     @user_id.setter
     def user_id(self, value):
-        print("You are not allowed to modify user_id by {}".format(value))
+        raise AttributeError("You are not allowed to modify user_id by {}".format(value))
 
     @property
     def init_pos(self):
@@ -314,7 +316,10 @@ class Transit(Thread):
 
     @init_pos.setter
     def init_pos(self, value):
-        print("You are not allowed to modify init_pos by {}".format(value))
+        pattern = r'^[0-9]+.[0-9]+%2C[0-9]+.[0-9]+$'
+        if not re.match(pattern, value):
+            raise ValueError("La valeur de init_pos indiquée n'est pas au format 'latitude'+'%2C'+'longitude.")
+        self.__init_pos = value
 
     @property
     def final_pos(self):
@@ -322,7 +327,10 @@ class Transit(Thread):
 
     @final_pos.setter
     def final_pos(self, value):
-        print("You are not allowed to modify final_pos by {}".format(value))
+        pattern = r'^[0-9]+.[0-9]+%2C[0-9]+.[0-9]+$'
+        if not re.match(pattern, value):
+            raise ValueError("La valeur de final_pos indiquée n'est pas au format 'latitude'+'%2C'+'longitude.")
+        self.__final_pos = value
 
     @property
     def total_duration(self):
@@ -330,7 +338,7 @@ class Transit(Thread):
 
     @total_duration.setter
     def total_duration(self, value):
-        print("You are not allowed to modify total_duration by {}".format(value))
+        raise AttributeError("You are not allowed to modify total_duration by {}".format(value))
 
     @property
     def total_distance(self):
@@ -338,7 +346,7 @@ class Transit(Thread):
 
     @total_distance.setter
     def total_distance(self, value):
-        print("You are not allowed to modify total_distance by {}".format(value))
+        raise AttributeError("You are not allowed to modify total_distance by {}".format(value))
 
     @property
     def steps_nbr(self):
@@ -346,7 +354,7 @@ class Transit(Thread):
 
     @steps_nbr.setter
     def steps_nbr(self, value):
-        print("You are not allowed to modify steps_nbr by {}".format(value))
+        raise AttributeError("You are not allowed to modify steps_nbr by {}".format(value))
 
     @property
     def steps(self):
@@ -354,7 +362,7 @@ class Transit(Thread):
 
     @steps.setter
     def steps(self, value):
-        print("You are not allowed to modify steps by {}".format(value))
+        raise AttributeError("You are not allowed to modify steps by {}".format(value))
 
 
 class Velib:
@@ -369,8 +377,8 @@ class Velib:
         self.__init_pos_str = init_pos_str  # Coord GPS au format 'latitude'+'2%C'+'longitude' pour l'API GoogleMaps
         self.__final_pos_str = final_pos_str  # Coord GPS au format 'latitude'+'2%C'+'longitude' pour l'API GoogleMaps
 
-        self.__dep_station = Velib_Station(gps_position=self.__init_pos_dict, type='departure')  # Station de départ
-        self.__arr_station = Velib_Station(gps_position=self.__final_pos_dict, type='arrival')  # Station d'arrivée
+        self.__dep_station = VelibStation(gps_position=self.__init_pos_dict, type='departure')  # Station de départ
+        self.__arr_station = VelibStation(gps_position=self.__final_pos_dict, type='arrival')  # Station d'arrivée
 
         self.__steps = []
         self.__total_duration = 0
@@ -430,7 +438,7 @@ class Velib:
 
     @user_id.setter
     def user_id(self, value):
-        print("You are not allowed to modify user_id by {}".format(value))
+        raise AttributeError("You are not allowed to modify user_id by {}".format(value))
 
     @property
     def init_pos_dict(self):
@@ -460,7 +468,7 @@ class Velib:
 
     @init_pos_str.setter
     def init_pos_str(self, value):
-        print("You are not allowed to modify init_pos_str by {}".format(value))
+        raise AttributeError("You are not allowed to modify init_pos_str by {}".format(value))
 
     @property
     def final_pos_str(self):
@@ -468,7 +476,7 @@ class Velib:
 
     @final_pos_str.setter
     def final_pos_str(self, value):
-        print("You are not allowed to modify final_pos_str by {}".format(value))
+        raise AttributeError("You are not allowed to modify final_pos_str by {}".format(value))
 
     @property
     def dep_station(self):
@@ -476,7 +484,7 @@ class Velib:
 
     @dep_station.setter
     def dep_station(self, value):
-        print("You are not allowed to modify dep_station by {}".format(value))
+        raise AttributeError("You are not allowed to modify dep_station by {}".format(value))
 
     @property
     def arr_station(self):
@@ -484,7 +492,7 @@ class Velib:
 
     @arr_station.setter
     def arr_station(self, value):
-        print("You are not allowed to modify arr_station by {}".format(value))
+        raise AttributeError("You are not allowed to modify arr_station by {}".format(value))
 
     @property
     def total_duration(self):
@@ -492,7 +500,7 @@ class Velib:
 
     @total_duration.setter
     def total_duration(self, value):
-        print("You are not allowed to modify total_duration by {}".format(value))
+        raise AttributeError("You are not allowed to modify total_duration by {}".format(value))
 
     @property
     def total_distance(self):
@@ -500,7 +508,7 @@ class Velib:
 
     @total_distance.setter
     def total_distance(self, value):
-        print("You are not allowed to modify total_distance by {}".format(value))
+        raise AttributeError("You are not allowed to modify total_distance by {}".format(value))
 
     @property
     def steps(self):
@@ -508,7 +516,7 @@ class Velib:
 
     @steps.setter
     def steps(self, value):
-        print("You are not allowed to modify steps by {}".format(value))
+        raise AttributeError("You are not allowed to modify steps by {}".format(value))
 
     @property
     def initial_walking(self):
@@ -516,7 +524,7 @@ class Velib:
 
     @initial_walking.setter
     def initial_walking(self, value):
-        print("You are not allowed to modify initial_walking by {}".format(value))
+        raise AttributeError("You are not allowed to modify initial_walking by {}".format(value))
 
     @property
     def bicycling(self):
@@ -524,7 +532,7 @@ class Velib:
 
     @bicycling.setter
     def bicycling(self, value):
-        print("You are not allowed to modify bicycling by {}".format(value))
+        raise AttributeError("You are not allowed to modify bicycling by {}".format(value))
 
     @property
     def final_walking(self):
@@ -532,7 +540,7 @@ class Velib:
 
     @final_walking.setter
     def final_walking(self, value):
-        print("You are not allowed to modify final_walking by {}".format(value))
+        raise AttributeError("You are not allowed to modify final_walking by {}".format(value))
 
 
 if __name__ == '__main__':

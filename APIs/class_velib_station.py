@@ -9,15 +9,17 @@ import requests
 import math
 
 
-class Velib_Station(Thread, API):
-    """Classe Vélib pour connaître la station de départ et la station d'arrivée d'un itinéraire vélib en fonction de
+class VelibStation(Thread, API):
+    """
+    Classe Vélib pour connaître la station de départ et la station d'arrivée d'un itinéraire vélib en fonction de
     l'adresse de départ et de l'adresse d'arrivée de l'utilisateur, et en fonction des vélos et places disponibles en
-    temps réel. Rq : pas de calcul d'itinéraire pour du non temps réel (car pas d'infos sur les vélos et places)"""
+    temps réel. Rq : pas de calcul d'itinéraire pour du non temps réel (car pas d'infos sur les vélos et places)
+    """
 
     def __init__(self, gps_position, type):
         API.__init__(self,
                      url='https://opendata.paris.fr/api/records/1.0/search/?dataset=velib-disponibilite-en-temps-reel&rows=2000',
-                     nom='velib')
+                     api_name='velib')
         Thread.__init__(self)
         self.__list = list()  # Liste des stations Vélib pourvues de coordonnées GPS avec leurs infos temps réel
         self.__index = 0  # Indice de la station dans la liste self.list
@@ -37,8 +39,9 @@ class Velib_Station(Thread, API):
                "Places disponibles: {}".format(self.name, self.latitude, self.longitude, self.bikes, self.docks)
 
     def run(self):
-        """Méthode permettant de choisir la station adéquate et d'attribuer les attributs de l'obj en conséquent
-        :param position : adresse renseignée par l'utilisateur ou coord GPS de géoloc - de départ ou d'arrivée"""
+        """
+        Méthode permettant de choisir la station adéquate et d'attribuer les attributs de l'obj en conséquent
+        """
         self.__retrieve_data_api()  # Appel à l'API et assignation de l'attribut self.list
         self.__closer_station(self.__gps_position)  # Détermine la station la plus proche et assigne self.index
         self.__name = self.list[self.index]['fields']['name']
@@ -49,8 +52,10 @@ class Velib_Station(Thread, API):
         self.__docks = self.list[self.index]['fields']['numdocksavailable']
 
     def __retrieve_data_api(self):
-        """Méthode qui se connecte à l'API 'Velib disponibilité temps réel' et affecte l'attribut self.__list : liste de
-        dictionnaires des données temps réel des stations comportant des coordonnées GPS"""
+        """
+        Méthode qui se connecte à l'API 'Velib disponibilité temps réel' et affecte l'attribut self.__list : liste de
+        dictionnaires des données temps réel des stations comportant des coordonnées GPS
+        """
         # Connexion à l'API
         resp = requests.get(self.url)
         if resp.status_code != 200:
@@ -58,8 +63,8 @@ class Velib_Station(Thread, API):
             raise NotImplementedError(
                 "Erreur {} : vous n'avez pas réussi à vous connecter à l'url {}.".format(resp.status_code, self.url))
         # Extraction de la liste des stations comportant des coordonnées GPS (les autres sont inexploitables)
-        X = resp.json()['records']  # liste de toutes les stations
-        self.__list = [X[k] for k in range(len(X)) if 'geometry' in X[k].keys()]
+        x = resp.json()['records']  # liste de toutes les stations
+        self.__list = [x[k] for k in range(len(x)) if 'geometry' in x[k].keys()]
         # Renvoit la liste des stations où les coordonnées GPS existent
         return
 
@@ -105,7 +110,7 @@ class Velib_Station(Thread, API):
 
     @list.setter
     def list(self, value):
-        print("You are not allowed to modify list by {}".format(value))
+        raise AttributeError("You are not allowed to modify list by {}".format(value))
 
     @property
     def index(self):
@@ -113,7 +118,7 @@ class Velib_Station(Thread, API):
 
     @index.setter
     def index(self, value):
-        print("You are not allowed to modify index by {}".format(value))
+        raise AttributeError("You are not allowed to modify index by {}".format(value))
 
     @property
     def name(self):
@@ -121,7 +126,7 @@ class Velib_Station(Thread, API):
 
     @name.setter
     def name(self, value):
-        print("You are not allowed to modify name by {}".format(value))
+        raise AttributeError("You are not allowed to modify name by {}".format(value))
 
     @property
     def latitude(self):
@@ -129,7 +134,7 @@ class Velib_Station(Thread, API):
 
     @latitude.setter
     def latitude(self, value):
-        print("You are not allowed to modify latitude by {}".format(value))
+        raise AttributeError("You are not allowed to modify latitude by {}".format(value))
 
     @property
     def longitude(self):
@@ -137,7 +142,7 @@ class Velib_Station(Thread, API):
 
     @longitude.setter
     def longitude(self, value):
-        print("You are not allowed to modify longitude by {}".format(value))
+        raise AttributeError("You are not allowed to modify longitude by {}".format(value))
 
     @property
     def coord(self):
@@ -145,7 +150,7 @@ class Velib_Station(Thread, API):
 
     @coord.setter
     def coord(self, value):
-        print("You are not allowed to modify coord by {}".format(value))
+        raise AttributeError("You are not allowed to modify coord by {}".format(value))
 
     @property
     def bikes(self):
@@ -153,7 +158,7 @@ class Velib_Station(Thread, API):
 
     @bikes.setter
     def bikes(self, value):
-        print("You are not allowed to modify bikes by {}".format(value))
+        raise AttributeError("You are not allowed to modify bikes by {}".format(value))
 
     @property
     def docks(self):
@@ -161,7 +166,7 @@ class Velib_Station(Thread, API):
 
     @docks.setter
     def docks(self, value):
-        print("You are not allowed to modify docks by {}".format(value))
+        raise AttributeError("You are not allowed to modify docks by {}".format(value))
 
     @property
     def type(self):
@@ -169,7 +174,7 @@ class Velib_Station(Thread, API):
 
     @type.setter
     def type(self, value):
-        print("You are not allowed to modify type by {}".format(value))
+        raise AttributeError("You are not allowed to modify type by {}".format(value))
 
     @property
     def gps_position(self):
@@ -179,12 +184,11 @@ class Velib_Station(Thread, API):
     def gps_position(self, value):
         # todo : lever exception si mauvais format
         self.__gps_position = value
-        return
 
 
 if __name__ == '__main__':
     coord = {'lat': 48.834269, 'lng': 2.296338}
-    Test = Velib_Station(coord, 'departure')
+    Test = VelibStation(coord, 'departure')
     Test.start()
     Test.join()
     print(Test)

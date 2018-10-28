@@ -110,7 +110,6 @@ class Trip:
             self.__recommendation = 'trip_car'
         else:  # Dans tous les autres cas, privilégier les transports en communs
             self.__recommendation = 'trip_transit'
-        print("self.recommendation:{}".format(self.recommendation))
         return
 
     def __compute_trip(self):

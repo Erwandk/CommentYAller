@@ -14,73 +14,73 @@ class API:
     - user_id : correspond a l'id du user pour recuperer la cle de l'API correspondante
     """
 
-    def __init__(self, url, nom="", user_id=0):
+    def __init__(self, url, api_name="", user_id=0):
         self._url = url
-        self.__nom = nom
+        self.__api_name = api_name
         self._user_id = user_id
         self._key = self._get_key_by_id(self._user_id)
-
-    @property
-    def url(self):
-        return self._url
-
-    @url.setter
-    def url(self, valeur):
-        print("A reflechir : donnez l'accès ou non à la modification de l'url")
-        self._url = valeur
-
-    @property
-    def nom(self):
-        return self.__nom
-
-    @nom.setter
-    def nom(self, valeur):
-        print("A reflechir : donnez l'accès ou non à la modification du nom")
-        self.__nom = valeur
-
-    @property
-    def user_id(self):
-        return self._user_id
-
-    @user_id.setter
-    def user_id(self, valeur):
-        print("A reflechir : donnez l'accès ou non à la modification du user_id")
-        self._user_id = valeur
-
-    @property
-    def key(self):
-        return self._key
-
-    @key.setter
-    def key(self, valeur):
-        print("A reflechir : donnez l'accès ou non à la modification de la clé")
-        self._key = valeur
 
     def _get_key_by_id(self, user_id):
         """
          Methode permettant de récupérer la clé de chaque API en fonction du user_id et de son nom
         """
 
-        key = ""
+        __key = ""
         if user_id not in (0, 1, 2, 9):
-            raise ValueError("Le user_id renseigné pour récupérer les clés n'est pas correct : {}".format(user_id))
+            raise ValueError("user_id to retrieve keys is incorrect : {}".format(user_id))
 
-        if self.nom == "googlemaps":
+        if self.__api_name == "googlemaps":
             if user_id not in dic_user_key_googlemaps:
-                print("Le user_id {} n'est pas présent dans dic_user_key_googlemaps".format(user_id))
+                raise KeyError("user_id {} is not in dic_user_key_googlemaps".format(user_id))
             else:
-                key = dic_user_key_googlemaps[user_id]
-        elif self.nom == "citymapper":
+                __key = dic_user_key_googlemaps[user_id]
+        elif self.__api_name == "citymapper":
             if user_id not in dic_user_key_citymapper:
-                print("Le user_id {} n'est pas présent dans dic_user_key_citymapper".format(user_id))
+                raise KeyError("user_id {} is not in dic_user_key_citymapper".format(user_id))
             else:
-                key = dic_user_key_citymapper[user_id]
-        elif self.nom == "ipstack":
+                __key = dic_user_key_citymapper[user_id]
+        elif self.__api_name == "ipstack":
             if user_id not in dic_user_key_apistack:
-                print("Le user_id {} n'est pas présent dans dic_user_key_apistack".format(user_id))
+                raise KeyError("user_id {} is not in dic_user_key_apistack".format(user_id))
             else:
-                key = dic_user_key_apistack[user_id]
+                __key = dic_user_key_apistack[user_id]
         else:
-            if user_id != 9:
-                print("Je ne trouve pas le nom de l'API {} pour l'user_id {}".format(self.nom, user_id))
-        return key
+            if self.__api_name not in ["meteo", "velib"]:
+                raise NameError("I don't find name for API {} with user_id {}".format(self.__api_name, user_id))
+        return __key
+
+    # Défintion des getters et setters des attributs de la classe
+    @property
+    def url(self):
+        return self._url
+
+    @url.setter
+    def url(self, value):
+        raise AttributeError("Your are not allowed to modify url by {}".format(value))
+
+    @property
+    def api_name(self):
+        return self.__api_name
+
+    @api_name.setter
+    def api_name(self, value):
+        raise AttributeError("Your are not allowed to modify api_name by {}".format(value))
+
+    @property
+    def user_id(self):
+        return self._user_id
+
+    @user_id.setter
+    def user_id(self, value):
+        if value not in [0, 1, 2, 9]:
+            raise AttributeError("user_id should be equal to 0, 1, 2 or 9")
+        else:
+            self._user_id = value
+
+    @property
+    def key(self):
+        return self._key
+
+    @key.setter
+    def key(self, value):
+        raise AttributeError("Your are not allowed to modify key by {}".format(value))

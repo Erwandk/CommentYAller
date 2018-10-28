@@ -44,40 +44,37 @@ class Formulary:
         return self.__pos_init
 
     @pos_init.setter
-    def pos_init(self, valeur):
-        print("You are not allowed to modify pos_init by {} !".format(valeur))
+    def pos_init(self, value):
+        raise AttributeError("You are not allowed to modify pos_init by {}".format(value))
 
     @property
     def pos_final(self):
         return self.__pos_final
 
     @pos_final.setter
-    def pos_final(self, valeur):
-        print("You are not allowed to modify pos_final by {} !".format(valeur))
+    def pos_final(self, value):
+        raise AttributeError("You are not allowed to modify pos_final by {}".format(value))
 
     @property
     def check_data(self):
         return self.__check_data
 
     @check_data.setter
-    def check_data(self, valeur):
-        print("Reflechir à l'autorisation ou non de la modification de check_data")
-        self.__check_data = valeur
+    def check_data(self, value):
+        raise AttributeError("You are not allowed to modify check_data by {}".format(value))
 
     @property
     def bagage(self):
         return self.__bagage
 
     @bagage.setter
-    def bagage(self, valeur):
-        print("Reflechir à l'autorisation ou non de la modification de bagage")
-        self.__bagage = valeur
+    def bagage(self, value):
+        raise AttributeError("You are not allowed to modify bagage by {}".format(value))
 
     @property
     def elevation(self):
         return self.__elevation
 
     @elevation.setter
-    def elevation(self, valeur):
-        print("Reflechir à l'autorisation ou non de la modification de elevation")
-        self.__elevation = valeur
+    def elevation(self, value):
+        raise AttributeError("You are not allowed to modify elevation by {}".format(value))

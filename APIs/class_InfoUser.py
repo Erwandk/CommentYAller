@@ -17,11 +17,12 @@ class InfoUser(API):
     """
 
     def __init__(self, user_id=0):
-        API.__init__(self, url="http://api.ipstack.com/", nom="ipstack", user_id=user_id)
+        API.__init__(self, url="http://api.ipstack.com/", api_name="ipstack", user_id=user_id)
         try:
             self.__ip = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0]
-        except:
+        except Exception as e:
             print("Your computer doesn't seem to be connected to internet !")
+            print(str(e))
             self.__ip = ""
 
         self.__continent = ""
@@ -51,7 +52,7 @@ class InfoUser(API):
 
     @ip.setter
     def ip(self, value):
-        print("You are not allowed to modify ip by {}".format(value))
+        raise AttributeError("You are not allowed to modify ip by {}".format(value))
 
     @property
     def continent(self):
@@ -59,7 +60,7 @@ class InfoUser(API):
 
     @continent.setter
     def continent(self, value):
-        print("You are not allowed to modify continent by {}".format(value))
+        raise AttributeError("You are not allowed to modify continent by {}".format(value))
 
     @property
     def country(self):
@@ -67,7 +68,7 @@ class InfoUser(API):
 
     @country.setter
     def country(self, value):
-        print("You are not allowed to modify country by {}".format(value))
+        raise AttributeError("You are not allowed to modify country by {}".format(value))
 
     @property
     def region(self):
@@ -75,7 +76,7 @@ class InfoUser(API):
 
     @region.setter
     def region(self, value):
-        print("You are not allowed to modify region by {}".format(value))
+        raise AttributeError("You are not allowed to modify region by {}".format(value))
 
     @property
     def city(self):
@@ -83,7 +84,7 @@ class InfoUser(API):
 
     @city.setter
     def city(self, value):
-        print("You are not allowed to modify city by {}".format(value))
+        raise AttributeError("You are not allowed to modify city by {}".format(value))
 
     @property
     def lat(self):
@@ -91,7 +92,7 @@ class InfoUser(API):
 
     @lat.setter
     def lat(self, value):
-        print("You are not allowed to modify lat by {}".format(value))
+        raise AttributeError("You are not allowed to modify lat by {}".format(value))
 
     @property
     def long(self):
@@ -99,4 +100,4 @@ class InfoUser(API):
 
     @long.setter
     def long(self, value):
-        print("You are not allowed to modify long by {}".format(value))
+        raise AttributeError("You are not allowed to modify long by {}".format(value))

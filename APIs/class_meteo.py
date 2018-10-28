@@ -10,12 +10,15 @@ from APIs.class_api import API
 
 
 class Meteo(API, Thread):
+    """
+    Cette classe permet de se connecter à une API météo de récupérer des données pour la journée ou les jours à venir
+    """
 
     def __init__(self):
         Thread.__init__(self)
         API.__init__(self,
                      url='http://www.infoclimat.fr/public-api/gfs/json?_ll=48.85341,2.3488&_auth=CBIAFwN9BiRRfFtsA3ULIgBoBTBdK1dwA38CYVs%2BB3pWPVAxVDRTNVY4VyoFKlVjWXQFZl5lUmIBagZ%2BCHpXNghiAGwDaAZhUT5bPgMsCyAALgVkXX1XcANhAmZbPgd6VjRQPVQyUy9WO1cxBTdVf1loBWdeYFJ1AX0GYAhgVzcIYwBjA2MGZVE9WzADMgsgACwFYF0wVz0DZwJnW2IHY1ZjUDdUMlMxVjtXZwUwVX9ZYwVkXmBSaAFrBmQIZ1c1CHQAewMZBhdRI1t5A3ELagB1BXhdN1cxAzQ%3D&_c=cc703eb909f9f00058063c7c570f6a45',
-                     nom='meteo')
+                     api_name='meteo')
         self.__time = ''
         self.__data = dict()  # Json retourné par l'API
         self.temperature = 0  # Température au sol en °C
