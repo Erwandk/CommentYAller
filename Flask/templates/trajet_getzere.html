@@ -3,6 +3,9 @@
 {% block header %}
 {{ super() }}
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css"
+      integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns"
+      crossorigin="anonymous">
 {% endblock %}
 
 {% block corps %}
@@ -13,6 +16,7 @@
 <div class="columns">
     <div class="column is-half" id="donnees">
         <h2>Résultats :</h2>
+        <p>Pour aller de <strong>{{ trip.init_pos }}</strong> à <strong>{{ trip.final_pos}}</strong></p>
         <h3>Coordonnées GPS :</h3>
         <p>départ : lat : {{ trip.gps_init['lat'] }}, long : {{ trip.gps_init['lng'] }}</p>
         <p>arrivée : lat : {{ trip.gps_final['lat'] }}, long : {{ trip.gps_final['lng'] }}</p>
@@ -46,31 +50,64 @@
             </div>
         </div>
 
-        <p>Pour aller de <strong>{{ trip.init_pos }}</strong> à <strong>{{ trip.final_pos}}</strong>, voici nos analyses :</p>
-
         <div class="foot type_trip">
-            <h3>A pied :</h3>
-            <ul>
-                <li>duree : {{ trip.trip_foot.total_duration }} s</li>
-                <li>distance : {{ trip.trip_foot.total_distance }} m</li>
-                <li>etapes : {{ trip.trip_foot.steps }}</li>
-            </ul>
+            <h3>Pour aller à votre destination à pied :</h3><br>
+            <div class="box columns">
+                <div class="column is-two">
+                    <span class="icon">
+                        <i class="fas fa-walking"></i>
+                    </span>
+                </div>
+                <div class="column is-two">
+                    <p>Marcher</p>
+                </div>
+                <div class="column is-two">
+                    <p>{{ trip.trip_foot.total_duration | format_time }}</p>
+                </div>
+                <div class="column is-two">
+                    <p>{{ trip.trip_foot.total_distance | format_dist }}</p>
+                </div>
+            </div>
+
         </div>
         <div class="bicycle type_trip">
-            <h3>A vélo :</h3>
-            <ul>
-                <li>duree : {{ trip.trip_bicycle.total_duration }} s</li>
-                <li>distance : {{ trip.trip_bicycle.total_distance }} m</li>
-                <li>etapes : {{ trip.trip_bicycle.steps }}</li>
-            </ul>
+            <h3>Pour aller à votre destination à vélo :</h3><br>
+            <div class="box columns">
+                <div class="column is-two">
+                    <span class="icon">
+                        <i class="fas fa-bicycle"></i>
+                    </span>
+                </div>
+                <div class="column is-two">
+                    <p>Rouler</p>
+                </div>
+                <div class="column is-two">
+                    <p>{{ trip.trip_bicycle.total_duration | format_time }}</p>
+                </div>
+                <div class="column is-two">
+                    <p>{{ trip.trip_bicycle.total_distance | format_dist }}</p>
+                </div>
+            </div>
+
         </div>
         <div class="car type_trip">
-            <h3>En voiture :</h3>
-            <ul>
-                <li>duree : {{ trip.trip_car.total_duration }} s</li>
-                <li>distance : {{ trip.trip_car.total_distance }} m</li>
-                <li>etapes : {{ trip.trip_car.steps }}</li>
-            </ul>
+            <h3>Pour aller à votre destination en voiture :</h3><br>
+            <div class="box columns">
+                <div class="column is-two">
+                    <span class="icon">
+                        <i class="fas fa-car"></i>
+                    </span>
+                </div>
+                <div class="column is-two">
+                    <p>Rouler</p>
+                </div>
+                <div class="column is-two">
+                    <p>{{ trip.trip_car.total_duration | format_time }}</p>
+                </div>
+                <div class="column is-two">
+                    <p>{{ trip.trip_car.total_distance | format_dist }}</p>
+                </div>
+            </div>
         </div>
         <div class="transit type_trip">
             <h3>En transport en commun :</h3>

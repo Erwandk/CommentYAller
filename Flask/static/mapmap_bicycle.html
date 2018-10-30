@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script>L_PREFER_CANVAS=false; L_NO_TOUCH=false; L_DISABLE_3D=false;</script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.2.0/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.2.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://rawgit.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    
+    <style>#map_88181133447148c89971a926c235f4a8 {
+        position: relative;
+        width: 100.0%;
+        height: 100.0%;
+        left: 0.0%;
+        top: 0.0%;
+        }
+    </style>
+</head>
+<body>    
+    
+    <div class="folium-map" id="map_88181133447148c89971a926c235f4a8" ></div>
+</body>
+<script>    
+    
+    
+        var bounds = null;
+    
+
+    var map_88181133447148c89971a926c235f4a8 = L.map(
+        'map_88181133447148c89971a926c235f4a8', {
+        center: [48.8454128, 2.3129111499999997],
+        zoom: 15,
+        maxBounds: bounds,
+        layers: [],
+        worldCopyJump: false,
+        crs: L.CRS.EPSG3857,
+        zoomControl: true,
+        });
+
+    
+    
+    var tile_layer_780fc3a307fe4132bc0d88d7a4fad70f = L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+        "attribution": null,
+        "detectRetina": false,
+        "maxNativeZoom": 18,
+        "maxZoom": 18,
+        "minZoom": 0,
+        "noWrap": false,
+        "subdomains": "abc"
+}).addTo(map_88181133447148c89971a926c235f4a8);
+    
+        var marker_fcc102754b9d404aab600a587df311e4 = L.marker(
+            [48.84654279999999, 2.317276],
+            {
+                icon: new L.Icon.Default()
+                }
+            ).addTo(map_88181133447148c89971a926c235f4a8);
+        
+    
+
+                var icon_ef47c58e0c1744e9b11e784b99f815e4 = L.AwesomeMarkers.icon({
+                    icon: 'info-sign',
+                    iconColor: 'white',
+                    markerColor: 'red',
+                    prefix: 'glyphicon',
+                    extraClasses: 'fa-rotate-0'
+                    });
+                marker_fcc102754b9d404aab600a587df311e4.setIcon(icon_ef47c58e0c1744e9b11e784b99f815e4);
+            
+    
+            var popup_54de5fb029214179a8a36333e7a23ed3 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_3e2e9ae7606b47ac8169d298cbaaf50c = $('<div id="html_3e2e9ae7606b47ac8169d298cbaaf50c" style="width: 100.0%; height: 100.0%;"><b>Start</b></div>')[0];
+                popup_54de5fb029214179a8a36333e7a23ed3.setContent(html_3e2e9ae7606b47ac8169d298cbaaf50c);
+            
+
+            marker_fcc102754b9d404aab600a587df311e4.bindPopup(popup_54de5fb029214179a8a36333e7a23ed3)
+            ;
+
+            
+        
+    
+        var marker_6b4ed3fefdb84538a93c2bdeebf76fa6 = L.marker(
+            [48.8438891, 2.3085801],
+            {
+                icon: new L.Icon.Default()
+                }
+            ).addTo(map_88181133447148c89971a926c235f4a8);
+        
+    
+
+                var icon_2364de6145914c69a651e22e1ad5e5ca = L.AwesomeMarkers.icon({
+                    icon: 'info-sign',
+                    iconColor: 'white',
+                    markerColor: 'red',
+                    prefix: 'glyphicon',
+                    extraClasses: 'fa-rotate-0'
+                    });
+                marker_6b4ed3fefdb84538a93c2bdeebf76fa6.setIcon(icon_2364de6145914c69a651e22e1ad5e5ca);
+            
+    
+            var popup_b313d51cd89943b7acfd76ee4aceb57c = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_370027adda6a42e8ac928234c7744d99 = $('<div id="html_370027adda6a42e8ac928234c7744d99" style="width: 100.0%; height: 100.0%;"><b>End</b></div>')[0];
+                popup_b313d51cd89943b7acfd76ee4aceb57c.setContent(html_370027adda6a42e8ac928234c7744d99);
+            
+
+            marker_6b4ed3fefdb84538a93c2bdeebf76fa6.bindPopup(popup_b313d51cd89943b7acfd76ee4aceb57c)
+            ;
+
+            
+        
+    
+        var marker_52e2066072b64c05a1e0a4307f88cff0 = L.marker(
+            [48.8469365, 2.3168179],
+            {
+                icon: new L.Icon.Default()
+                }
+            ).addTo(map_88181133447148c89971a926c235f4a8);
+        
+    
+
+                var icon_cc3d58b4256c4b52b68c759d7b2fee59 = L.AwesomeMarkers.icon({
+                    icon: 'bicycle',
+                    iconColor: 'white',
+                    markerColor: 'blue',
+                    prefix: 'fa',
+                    extraClasses: 'fa-rotate-0'
+                    });
+                marker_52e2066072b64c05a1e0a4307f88cff0.setIcon(icon_cc3d58b4256c4b52b68c759d7b2fee59);
+            
+    
+            var popup_bf16206bd23242c79aeb5e52fbd43492 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_cbdee53d804648f39b6f6dc52e6209ef = $('<div id="html_cbdee53d804648f39b6f6dc52e6209ef" style="width: 100.0%; height: 100.0%;"><i>Etape 1</i></div>')[0];
+                popup_bf16206bd23242c79aeb5e52fbd43492.setContent(html_cbdee53d804648f39b6f6dc52e6209ef);
+            
+
+            marker_52e2066072b64c05a1e0a4307f88cff0.bindPopup(popup_bf16206bd23242c79aeb5e52fbd43492)
+            ;
+
+            
+        
+    
+        var marker_f85644e69dcc4549aacea87ad883eecb = L.marker(
+            [48.84536689999999, 2.311815],
+            {
+                icon: new L.Icon.Default()
+                }
+            ).addTo(map_88181133447148c89971a926c235f4a8);
+        
+    
+
+                var icon_e38b3ff613464a7ab1c3b67ef8279f7b = L.AwesomeMarkers.icon({
+                    icon: 'bicycle',
+                    iconColor: 'white',
+                    markerColor: 'blue',
+                    prefix: 'fa',
+                    extraClasses: 'fa-rotate-0'
+                    });
+                marker_f85644e69dcc4549aacea87ad883eecb.setIcon(icon_e38b3ff613464a7ab1c3b67ef8279f7b);
+            
+    
+            var popup_8715003a45734ef2bc0a5a8edcb663ad = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_f04128bd4e0b4cf1ad88dbeeca2f2aa5 = $('<div id="html_f04128bd4e0b4cf1ad88dbeeca2f2aa5" style="width: 100.0%; height: 100.0%;"><i>Etape 2</i></div>')[0];
+                popup_8715003a45734ef2bc0a5a8edcb663ad.setContent(html_f04128bd4e0b4cf1ad88dbeeca2f2aa5);
+            
+
+            marker_f85644e69dcc4549aacea87ad883eecb.bindPopup(popup_8715003a45734ef2bc0a5a8edcb663ad)
+            ;
+
+            
+        
+    
+        var marker_92128e0c322d49898704488967d6828a = L.marker(
+            [48.8450866, 2.3108984],
+            {
+                icon: new L.Icon.Default()
+                }
+            ).addTo(map_88181133447148c89971a926c235f4a8);
+        
+    
+
+                var icon_151ec6b5a44f41f4a53a73f907ed5dfd = L.AwesomeMarkers.icon({
+                    icon: 'bicycle',
+                    iconColor: 'white',
+                    markerColor: 'blue',
+                    prefix: 'fa',
+                    extraClasses: 'fa-rotate-0'
+                    });
+                marker_92128e0c322d49898704488967d6828a.setIcon(icon_151ec6b5a44f41f4a53a73f907ed5dfd);
+            
+    
+            var popup_21597a4d42e747eda1c5eab1f7617055 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_6cfd2bc74c8f44b185205e72234ce819 = $('<div id="html_6cfd2bc74c8f44b185205e72234ce819" style="width: 100.0%; height: 100.0%;"><i>Etape 3</i></div>')[0];
+                popup_21597a4d42e747eda1c5eab1f7617055.setContent(html_6cfd2bc74c8f44b185205e72234ce819);
+            
+
+            marker_92128e0c322d49898704488967d6828a.bindPopup(popup_21597a4d42e747eda1c5eab1f7617055)
+            ;
+
+            
+        
+    
+        var marker_c28c446103504aeba07224ad19a01ed3 = L.marker(
+            [48.8444245, 2.3087596],
+            {
+                icon: new L.Icon.Default()
+                }
+            ).addTo(map_88181133447148c89971a926c235f4a8);
+        
+    
+
+                var icon_840f9e417cd84b7d806b0a8fea05d8df = L.AwesomeMarkers.icon({
+                    icon: 'bicycle',
+                    iconColor: 'white',
+                    markerColor: 'blue',
+                    prefix: 'fa',
+                    extraClasses: 'fa-rotate-0'
+                    });
+                marker_c28c446103504aeba07224ad19a01ed3.setIcon(icon_840f9e417cd84b7d806b0a8fea05d8df);
+            
+    
+            var popup_075bbbbc24904042ad79744570f4e714 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_917b647b86ee4f40b4a149fd80dc21db = $('<div id="html_917b647b86ee4f40b4a149fd80dc21db" style="width: 100.0%; height: 100.0%;"><i>Etape 4</i></div>')[0];
+                popup_075bbbbc24904042ad79744570f4e714.setContent(html_917b647b86ee4f40b4a149fd80dc21db);
+            
+
+            marker_c28c446103504aeba07224ad19a01ed3.bindPopup(popup_075bbbbc24904042ad79744570f4e714)
+            ;
+
+            
+        
+</script>

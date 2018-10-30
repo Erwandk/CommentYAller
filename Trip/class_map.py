@@ -51,21 +51,22 @@ class Maps:
         """
 
         __map_name = "map{}.html".format(self.__trip_type[4:])
-        __path = os.path.join(os.getcwd(), "static/map/" + str(__map_name))
+        __path = os.path.join(os.getcwd(), "static", "map" + str(__map_name))
 
         # Icones
         __map_icone = {"trip_foot": "male", "trip_bicycle": "bicycle", "trip_car": "car",
                        "trip_velib": "bicycle", "trip_transit": "bus"}
         __icone = __map_icone[self.__trip_type]
-        print(__icone)
 
         # Création de la carte
-        maps = folium.Map(location=[self.trip.gps_init["lat"], self.trip.gps_init["lng"]], zoom_start=26)
+        __lat_center = (self.__min_lat + self.__max_lat) / 2
+        __lng_center = (self.__min_lon + self.__max_lon) / 2
+        maps = folium.Map(location=[__lat_center, __lng_center], zoom_start=15)
 
         # Ajout de marqueurs initiaux, finaux ainsi que pout chaque étape
-        folium.Marker([self.trip.gps_init["lat"], self.trip.gps_init["lng"]], icon=folium.Icon(color="red"),
+        folium.Marker([self.__trip.gps_init["lat"], self.__trip.gps_init["lng"]], icon=folium.Icon(color="red"),
                       popup="<b>Start</b>").add_to(maps)
-        folium.Marker([self.trip.gps_final["lat"], self.trip.gps_final["lng"]], icon=folium.Icon(color="red"),
+        folium.Marker([self.__trip.gps_final["lat"], self.__trip.gps_final["lng"]], icon=folium.Icon(color="red"),
                       popup="<b>End</b>").add_to(maps)
         for k in range(1, len(self.__etape)):
             folium.Marker([self.__etape[k][2]["lat"], self.__etape[k][2]["lng"]],

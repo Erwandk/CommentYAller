@@ -42,6 +42,19 @@ def index():
         raise NotImplementedError("This method is not implemented !")
 
 
+@app.route('/trajet?<pos_init>&<pos_final>&<bagage>&<elevation>')
+def trajet(pos_init, pos_final, bagage, elevation):
+    """
+    page des résultats
+    """
+    trip = Trip(pos_init, pos_final, bagage, elevation)
+    trip_types = ['trip_foot', 'trip_bicycle', 'trip_car', 'trip_velib', 'trip_transit']
+    maps = []
+    for types in trip_types:
+        maps.append(Maps(trip=trip, trip_type=types))
+    return render_template('trajet_getzere.html', trip=trip)
+
+
 @app.route('/map_foot.html')
 def image_foot():
     try:
@@ -82,17 +95,31 @@ def image_transit():
         raise ImportError("Could not load map at 'static/map/map_transit.html'")
 
 
-@app.route('/trajet?<pos_init>&<pos_final>&<bagage>&<elevation>')
-def trajet(pos_init, pos_final, bagage, elevation):
-    """
-    page des résultats
-    """
-    trip = Trip(pos_init, pos_final, bagage, elevation)
-    trip_types = ['trip_foot', 'trip_bicycle', 'trip_car', 'trip_velib', 'trip_transit']
-    maps = []
-    for types in trip_types:
-        maps.append(Maps(trip=trip, trip_type=types))
-    return render_template('trajet_getzere.html', trip=trip)
+@app.template_filter('format_time')
+def convert_time(second):
+    if second > 60:
+        minut = second // 60
+        second = second % 60
+        if minut > 60:
+            hour = minut // 60
+            minut = minut % 60
+            return "{} h {} min".format(hour, minut)
+        else:
+            if second > 30:
+                minut += 1
+            return "{} min".format(minut)
+    else:
+        return "{} sec".format(second)
+
+
+@app.template_filter('format_dist')
+def convert_time(meters):
+    if meters > 1000:
+        kmeters = meters // 1000
+        meters = meters % 1000
+        return "{} kilomètres et {} mètres".format(kmeters, meters)
+    else:
+        return "{} mètres".format(meters)
 
 
 if __name__ == '__main__':
