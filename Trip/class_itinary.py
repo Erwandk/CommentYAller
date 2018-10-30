@@ -276,6 +276,7 @@ class Transit(Thread):
         self.__final_pos = final_pos
 
         self.__steps = []
+        self.__distinct_steps = [[]]
         self.__total_duration = 0
         self.__total_distance = 0
         self.__steps_nbr = 1
@@ -283,9 +284,11 @@ class Transit(Thread):
     def run(self):
         self.__steps = GoogleMapsTransit(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
                                          driving_mode="transit", transit_mode="", waypoints="").get_etape()
+        self.__compute_distinct_steps()
         self.__compute_total_duration()
         self.__compute_total_distance()
-        self.__compute_steps_nbr()
+        self.__steps_nbr = len(self.__distinct_steps)
+        print(self.__distinct_steps)
 
     def __compute_total_distance(self):
         for step in self.__steps:
@@ -295,13 +298,24 @@ class Transit(Thread):
         for step in self.__steps:
             self.__total_duration += step[1]
 
-    def __compute_steps_nbr(self):
+    def __compute_distinct_steps(self):
         n = len(self.__steps)
-        # Is the walking for changing transit mode a step?
-        for x in range(0, n - 1):
-            if self.__steps[x][5] != self.__steps[x + 1][5]:
-                self.__steps_nbr += 1
+        self.__distinct_steps[0].append(self.__steps[0])
+        __duration = 0
+        __distance = 0
+        for x in range(1, n):
+            if self.__steps[x][4] != self.__steps[x-1][4] or self.__steps[x][5] != self.__steps[x-1][5]:
+                self.__distinct_steps[-1].append((__distance, __duration))
+                self.__distinct_steps.append([self.__steps[x]])
+                __distance = self.__steps[x][0]
+                __duration = self.__steps[x][1]
+            else:
+                self.__distinct_steps[-1].append(self.__steps[x])
+                __distance += self.__steps[x][0]
+                __duration += self.__steps[x][1]
+        self.__distinct_steps[-1].append((__distance, __duration))
 
+    # Définition des getters et des setters de la classe
     @property
     def user_id(self):
         return self.__user_id
@@ -363,6 +377,14 @@ class Transit(Thread):
     @steps.setter
     def steps(self, value):
         raise AttributeError("You are not allowed to modify steps by {}".format(value))
+
+    @property
+    def distinct_steps(self):
+        return self.__distinct_steps
+
+    @distinct_steps.setter
+    def distinct_steps(self, value):
+        raise AttributeError("You are not allowed to modify distinct_steps by {}".format(value))
 
 
 class Velib:

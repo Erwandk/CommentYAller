@@ -16,21 +16,10 @@
 <div class="columns">
     <div class="column is-half" id="donnees">
         <h2>Résultats :</h2>
-        <p>Pour aller de <strong>{{ trip.init_pos }}</strong> à <strong>{{ trip.final_pos}}</strong></p>
-        <h3>Coordonnées GPS :</h3>
-        <p>départ : lat : {{ trip.gps_init['lat'] }}, long : {{ trip.gps_init['lng'] }}</p>
-        <p>arrivée : lat : {{ trip.gps_final['lat'] }}, long : {{ trip.gps_final['lng'] }}</p>
-        <p>l'option bagage a pour valeur : {{ trip.bagage }}</p>
-        <p>l'option elevation a pour valeur : {{ trip.elevation }}</p>
-        <p>Voici le bulletin météo :</p>
-        <ul>
-            <li>pluie : {{ trip.meteo.rain }}</li>
-            <li>temperature : {{ trip.meteo.temperature }}</li>
-            <li>neige : {{ trip.meteo.snow }}</li>
-            <li>convective : {{ trip.meteo.convective_rain }}</li>
-        </ul>
+        <p>Pour aller de <strong>{{ trip.init_pos | format_address }}</strong>
+            à <strong>{{ trip.final_pos | format_address }}</strong></p>
 
-        <p><strong>Nous recommandons : {{ trip.recommendation }}</strong></p>
+        <p><strong>Nous vous recommandons : {{ trip.recommendation }}</strong></p>
 
         <div class="columns">
             <div class="column is-two">
@@ -110,13 +99,52 @@
             </div>
         </div>
         <div class="transit type_trip">
-            <h3>En transport en commun :</h3>
-            <ul>
-                <li>duree : {{ trip.trip_transit.total_duration }} s</li>
-                <li>distance : {{ trip.trip_transit.total_distance }} m</li>
-                <li>nombre d'étapes : {{ trip.trip_transit.steps_nbr }}</li>
-                <li>etapes : {{ trip.trip_transit.steps }}</li>
-            </ul>
+            <h3>Pour aller à votre destination en transport en commun :</h3><br>
+                {% for step in trip.trip_transit.distinct_steps %}
+                    {% if step[0][4] == "WALKING" %}
+                        <div class="box columns">
+                            <div class="column is-two">
+                                <span class="icon">
+                                    <i class="fas fa-walking"></i>
+                                </span>
+                            </div>
+                            <div class="column is-two">
+                                <p>Marcher</p>
+                            </div>
+                            <div class="column is-two">
+                                <p>{{ step[-1][1] | format_time }}</p>
+                            </div>
+                            <div class="column is-two">
+                                <p>{{ step[-1][0] | format_dist }}</p>
+                            </div>
+                        </div><br>
+                    {% else %}
+                        <div class="box">
+                            <div class="columns">
+                                <div class="column is-two">
+                                    <span class="icon">
+                                        <i class="fas fa-bus"></i>
+                                    </span>
+                                </div>
+                                <div class="column is-four">
+                                    <p>Bus / Metro</p>
+                                </div>
+                                <div class="column is-two">
+                                    <p>{{ step[-1][1] | format_time }}</p>
+                                </div>
+                                <div class="column is-two">
+                                    <p>{{ step[-1][0] | format_dist }}</p>
+                                </div>
+                            </div>
+                            <div class="columns">
+                                <div class="column is-full">
+                                    <p>{{ step[0][5][3] }} : {{ step[0][5][0] }} / {{ step[0][5][1] }}</p>
+                                </div>
+                            </div>
+                        </div><br>
+                    {% endif %}
+                {% endfor %}
+
         </div>
         <div class="velib type_trip">
             <h3>En Vélib :</h3>
@@ -169,9 +197,21 @@
             </div>
 
         </figure>
-
     </div>
+
 </div>
+<h3>Coordonnées GPS :</h3>
+<p>départ : lat : {{ trip.gps_init['lat'] }}, long : {{ trip.gps_init['lng'] }}</p>
+<p>arrivée : lat : {{ trip.gps_final['lat'] }}, long : {{ trip.gps_final['lng'] }}</p>
+<p>l'option bagage a pour valeur : {{ trip.bagage }}</p>
+<p>l'option elevation a pour valeur : {{ trip.elevation }}</p>
+<p>Voici le bulletin météo :</p>
+<ul>
+    <li>pluie : {{ trip.meteo.rain }}</li>
+    <li>temperature : {{ trip.meteo.temperature }}</li>
+    <li>neige : {{ trip.meteo.snow }}</li>
+    <li>convective : {{ trip.meteo.convective_rain }}</li>
+</ul>
 
 <!--fonction permettant d'afficher uniquement un certain type de trajet-->
 <script>

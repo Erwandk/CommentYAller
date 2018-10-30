@@ -128,6 +128,21 @@ def convert_time(meters):
         return "{} mètres".format(meters)
 
 
+@app.template_filter('format_address')
+def convert_adress(address):
+    list_address = address.split('+')
+    list_address.remove('paris')
+    new_list_address = []
+    for mot in list_address:
+        try:
+            mot = int(mot)
+        except Exception:
+            mot = mot[0].upper() + mot[1:]
+        new_list_address.append(str(mot))
+    new_address = " ".join(new_list_address)
+    return new_address
+
+
 if __name__ == '__main__':
 
     app.run(debug=True, port=5000)
