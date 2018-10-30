@@ -34,6 +34,11 @@ class API:
                 raise KeyError("user_id {} is not in dic_user_key_googlemaps".format(user_id))
             else:
                 __key = dic_user_key_googlemaps[user_id]
+        elif self.__api_name == "elevation":
+            if user_id not in dic_user_key_googlemaps:
+                raise KeyError("user_id {} is not in dic_user_key_googlemaps".format(user_id))
+            else:
+                __key = dic_user_key_googlemaps[user_id]
         elif self.__api_name == "citymapper":
             if user_id not in dic_user_key_citymapper:
                 raise KeyError("user_id {} is not in dic_user_key_citymapper".format(user_id))
