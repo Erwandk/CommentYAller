@@ -8,10 +8,9 @@ from user_api import secret_key
 from flask import Flask, request, render_template, url_for, redirect, send_file
 
 from Flask.class_formulary import Formulary
-from Trip.class_trip import Trip
 from APIs.class_InfoUser import InfoUser
-
-from Trip.class_carte import Carte
+from Trip.class_trip import Trip
+from Trip.class_map import Maps
 
 
 app = Flask(__name__)
@@ -43,10 +42,44 @@ def index():
         raise NotImplementedError("This method is not implemented !")
 
 
-@app.route('/carte.html')
-def image():
-    print("test test")
-    return send_file('static/carte.html', cache_timeout=0, add_etags=False)
+@app.route('/map_foot.html')
+def image_foot():
+    try:
+        return send_file('static/map/map_foot.html', cache_timeout=0, add_etags=False)
+    except Exception:
+        raise ImportError("Could not load map at 'static/map/map_foot.html'")
+
+
+@app.route('/map_bicycle.html')
+def image_bicycle():
+    try:
+        return send_file('static/map/map_bicycle.html', cache_timeout=0, add_etags=False)
+    except Exception:
+        raise ImportError("Could not load map at 'static/map/map_bicycle.html'")
+
+
+@app.route('/map_car.html')
+def image_car():
+    try:
+        return send_file('static/map/map_car.html', cache_timeout=0, add_etags=False)
+    except Exception:
+        raise ImportError("Could not load map at 'static/map/map_car.html'")
+
+
+@app.route('/map_velib.html')
+def image_velib():
+    try:
+        return send_file('static/map/map_velib.html', cache_timeout=0, add_etags=False)
+    except Exception:
+        raise ImportError("Could not load map at 'static/map/map_velib.html'")
+
+
+@app.route('/map_transit.html')
+def image_transit():
+    try:
+        return send_file('static/map/map_transit.html', cache_timeout=0, add_etags=False)
+    except Exception:
+        raise ImportError("Could not load map at 'static/map/map_transit.html'")
 
 
 @app.route('/trajet?<pos_init>&<pos_final>&<bagage>&<elevation>')
@@ -55,9 +88,11 @@ def trajet(pos_init, pos_final, bagage, elevation):
     page des résultats
     """
     trip = Trip(pos_init, pos_final, bagage, elevation)
-    carte = Carte(trip, trip_type=trip.recommendation)
-    carte.get_map()
-    return render_template('trajet_getzere.html', trip=trip, carte=carte)
+    trip_types = ['trip_foot', 'trip_bicycle', 'trip_car', 'trip_velib', 'trip_transit']
+    maps = []
+    for types in trip_types:
+        maps.append(Maps(trip=trip, trip_type=types))
+    return render_template('trajet_getzere.html', trip=trip)
 
 
 if __name__ == '__main__':

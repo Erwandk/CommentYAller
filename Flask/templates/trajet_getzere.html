@@ -97,30 +97,42 @@
 
             <!-- @Axel tu peux mettre les <iframe> a l'interieur des balises ci-dessous -->
             <div class="foot type_trip">
-            </div>
-            <div class="bicycle type_trip">
-            </div>
-            <div class="car type_trip">
-            </div>
-            <div class="transit type_trip">
-            </div>
-            <div class="velib type_trip">
-            </div>
-
-            <iframe src="carte.html"
+                <iframe src="map_foot.html"
                     width="550"
                     height="450" >
-            </iframe>
+                </iframe>
+            </div>
+
+            <div class="bicycle type_trip">
+                <iframe src="map_bicycle.html"
+                    width="550"
+                    height="450" >
+                </iframe>
+            </div>
+
+            <div class="car type_trip">
+                <iframe src="map_car.html"
+                    width="550"
+                    height="450" >
+                </iframe>
+            </div>
+
+            <div class="transit type_trip">
+                <iframe src="map_transit.html"
+                    width="550"
+                    height="450" >
+                </iframe>
+            </div>
+
+            <div class="velib type_trip">
+                <iframe src="map_velib.html"
+                    width="550"
+                    height="450" >
+                </iframe>
+            </div>
+
         </figure>
 
-        <figure class="image">
-            <iframe id="map"
-                    title="Votre trajet"
-                    width="550"
-                    height="450"
-                    src="https://www.openstreetmap.org/export/embed.html?bbox={{ carte.min_lon }}%2C{{ carte.min_lat }}%2C{{ carte.max_lon }}%2C{{ carte.max_lat }}&layer=mapnik">
-            </iframe>
-        </figure>
     </div>
 </div>
 

@@ -8,4 +8,4 @@ nohup.out
 __init__.py
 
 # carte html
-Flask/static/carte.html
+Flask/static/map/
