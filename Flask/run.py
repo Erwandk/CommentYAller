@@ -6,6 +6,7 @@ __author__ = 'eke, axel, gab'
 from user_api import secret_key
 
 from flask import Flask, request, render_template, url_for, redirect, send_file
+import os
 
 from Flask.class_formulary import Formulary
 from APIs.class_InfoUser import InfoUser
@@ -58,7 +59,8 @@ def trajet(pos_init, pos_final, bagage, elevation):
 @app.route('/map_foot.html')
 def image_foot():
     try:
-        return send_file('static/map/map_foot.html', cache_timeout=0, add_etags=False)
+        path = os.path.join('static', 'map', 'map_foot.html')
+        return send_file(path, cache_timeout=0, add_etags=False)
     except Exception:
         raise ImportError("Could not load map at 'static/map/map_foot.html'")
 
@@ -66,7 +68,8 @@ def image_foot():
 @app.route('/map_bicycle.html')
 def image_bicycle():
     try:
-        return send_file('static/map/map_bicycle.html', cache_timeout=0, add_etags=False)
+        path = os.path.join('static', 'map', 'map_bicycle.html')
+        return send_file(path, cache_timeout=0, add_etags=False)
     except Exception:
         raise ImportError("Could not load map at 'static/map/map_bicycle.html'")
 
@@ -74,7 +77,8 @@ def image_bicycle():
 @app.route('/map_car.html')
 def image_car():
     try:
-        return send_file('static/map/map_car.html', cache_timeout=0, add_etags=False)
+        path = os.path.join('static', 'map', 'map_car.html')
+        return send_file(path, cache_timeout=0, add_etags=False)
     except Exception:
         raise ImportError("Could not load map at 'static/map/map_car.html'")
 
@@ -82,7 +86,8 @@ def image_car():
 @app.route('/map_velib.html')
 def image_velib():
     try:
-        return send_file('static/map/map_velib.html', cache_timeout=0, add_etags=False)
+        path = os.path.join('static', 'map', 'map_velib.html')
+        return send_file(path, cache_timeout=0, add_etags=False)
     except Exception:
         raise ImportError("Could not load map at 'static/map/map_velib.html'")
 
@@ -90,7 +95,8 @@ def image_velib():
 @app.route('/map_transit.html')
 def image_transit():
     try:
-        return send_file('static/map/map_transit.html', cache_timeout=0, add_etags=False)
+        path = os.path.join('static', 'map', 'map_transit.html')
+        return send_file(path, cache_timeout=0, add_etags=False)
     except Exception:
         raise ImportError("Could not load map at 'static/map/map_transit.html'")
 
