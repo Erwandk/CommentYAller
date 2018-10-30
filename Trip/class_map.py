@@ -51,7 +51,7 @@ class Maps:
         """
 
         __map_name = "map{}.html".format(self.__trip_type[4:])
-        __path = os.path.join(os.getcwd(), "static/map" + str(__map_name))
+        __path = os.path.join(os.getcwd(), "static", "map", str(__map_name))
 
         # Icones
         __map_icone = {"trip_foot": "male", "trip_bicycle": "bicycle", "trip_car": "car",
