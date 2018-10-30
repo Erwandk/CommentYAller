@@ -28,13 +28,14 @@ def index():
         info_user = InfoUser()
         form = Formulary(request.form, info_user)
         if not form.check_data:
-            if form.pos_init == "None%C2None":
+            if form.pos_init == "None%2CNone":
                 print(u'La position GPS de l utilisateur est introuvable', 'error')
             else:
                 print(u'Les données envoyées sont incorrectes', 'error')
             return render_template('main_getzere.html')
         return redirect(url_for('trajet', pos_init=form.pos_init, pos_final=form.pos_final,
-                                bagage=form.bagage, elevation=form.elevation))
+                                bagage=form.bagage, elevation=form.elevation, pers_bicycle=form.pers_bicycle,
+                                pers_car=form.pers_car))
 
     elif request.method == 'GET':
         return render_template('main_getzere.html')
@@ -43,12 +44,12 @@ def index():
         raise NotImplementedError("This method is not implemented !")
 
 
-@app.route('/trajet?<pos_init>&<pos_final>&<bagage>&<elevation>')
-def trajet(pos_init, pos_final, bagage, elevation):
+@app.route('/trajet?<pos_init>&<pos_final>&<bagage>&<elevation>&<pers_bicycle>&<pers_car>')
+def trajet(pos_init, pos_final, bagage, elevation, pers_bicycle, pers_car):
     """
     page des résultats
     """
-    trip = Trip(pos_init, pos_final, bagage, elevation)
+    trip = Trip(pos_init, pos_final, bagage, elevation, pers_bicycle, pers_car)
     trip_types = ['trip_foot', 'trip_bicycle', 'trip_car', 'trip_velib', 'trip_transit']
     maps = []
     for types in trip_types:

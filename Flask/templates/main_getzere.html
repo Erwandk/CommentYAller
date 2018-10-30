@@ -1,4 +1,4 @@
-{% extends "squelette_getzere.html" %}
+﻿{% extends "squelette_getzere.html" %}
 
 {% block header %}
 {{ super() }}
@@ -38,7 +38,25 @@
             <div class="control">
                 <label class="checkbox">
                 <input id="elevation" name="elevation" type="checkbox">
-                Je souhaite tenir compte de l'élévation du terrain
+                Je souhaite tenir compte du dénivelé
+                </label>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <label class="checkbox">
+                <input id="pers_bicycle" name="pers_bicycle" type="checkbox">
+                Je possède un vélo personnel
+                </label>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <label class="checkbox">
+                <input id="pers_car" name="pers_car" type="checkbox">
+                Je possède une voiture personnelle
                 </label>
             </div>
         </div>
