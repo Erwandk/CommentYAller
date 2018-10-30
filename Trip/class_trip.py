@@ -5,6 +5,7 @@ __author__ = 'eke, gab, axel'
 
 from Trip.class_itinary import Foot, Bicycle, Car, Transit, Velib
 from APIs.class_meteo import Meteo
+from APIs.class_googlemaps_elevation import Elevation
 import re
 
 
@@ -13,36 +14,37 @@ class Trip:
     Cette classe représente le trajet dans son ensemble avec toutes les données correspondantes.
     """
 
-    def __init__(self, init_pos, final_pos, bagage, elevation, user_id=0):
+    def __init__(self, init_pos, final_pos, bagage, elevation, pers_bicycle, pers_car, user_id=0):
         """
         Le constructeur de cette classe prend en entrée les données de position de départ et d'arrivée
         """
         # Définitions des attributs de la classe
         self.__user_id = user_id
-        self.__init_pos = self.__clean_str(init_pos)
-        self.__final_pos = self.__clean_str(final_pos)
+        self.__init_pos = self.__clean_str(init_pos)  # au format 'latitude'+'2%C'+'longitude' ou 'adresse'+'paris'
+        self.__final_pos = self.__clean_str(final_pos)  # au format 'latitude'+'2%C'+'longitude' ou 'adresse'+'paris'
         self.__bagage = True if bagage == "on" else False
         self.__elevation = True if elevation == "on" else False
-        self.__pers_bicycle = True  # if pers_bicycle == 'on' else False
-        self.__pers_car = True  # if pers_car == 'on' else False
-        # todo: ajouter l'option vélo personnel et voiture personnelle sur le formulaire
+        self.__pers_bicycle = True if pers_bicycle == 'on' else False
+        self.__pers_car = True if pers_car == 'on' else False
 
         self.__gps_init = dict()
         self.__gps_final = dict()
         self.__weather_ok = bool()  # True si les conditions météo sont jugées décentes, False sinon
-        # self.__elevation_ok = bool() # True si l'élévation est acceptable, False sinon
+        self.__elevation_ok = bool()  # True si l'élévation est acceptable, False sinon
         self.__recommendation = 'trip_transit'
         self.__reco_type_trip = "transit"
 
-        # Définition des différents trajets et de la météo (1 thread = 1 appel à une API)
+        # Définition des différents trajets, de leur dénivelé, et de la météo (1 thread = 1 appel à une API)
         # Les threads sont lancés dans la méthodes compute_trip
         self.__meteo = Meteo()
         self.__trip_foot = Foot(self.__user_id, self.__init_pos, self.__final_pos)
         self.__trip_bicycle = Bicycle(self.__user_id, self.__init_pos, self.__final_pos)
+        self.__elevation_bicycle = Elevation(self.__trip_bicycle.steps)
         self.__trip_car = Car(self.__user_id, self.__init_pos, self.__final_pos)
         self.__trip_transit = Transit(self.__user_id, self.__init_pos, self.__final_pos)
         self.__trip_velib = Velib(self.__user_id, init_pos_dict=self.__gps_init, final_pos_dict=self.__gps_final,
                                   init_pos_str=self.__init_pos, final_pos_str=self.__final_pos)
+        self.__elevation_velib = Elevation(self.__trip_velib.steps)
 
         # Calcul des attributs du trajet
         self.__compute_trip()
@@ -74,19 +76,18 @@ class Trip:
         else:
             return False
 
-    # def __check_elevation(self):
-    #     """
-    #     Méthode qui vérifie si le dénivelé est acceptable pour proposer un trajet en vélo selon les critères suivants:
-    #     Si l'utilisateur souhaite prendre en compte le dénivéle, au delà de 80m de dénivelé positif le vélo n'est pas
-    #     recommandé.
-    #     Si l'utilisateur ne souhaite pas prendre en compte le dénivelé, il n'y a pas de limite.
-    #     :return: True si les conditions sont vérifiées, False sinon
-    #     """
-    #     if self.__elevation:
-    #         # todo : récupérer le dénivelé dans une autre API MAps
-    #         # if XXX return True else False
-    #     else:
-    #         return True
+    def __check_elevation(self):
+        """
+        Méthode qui vérifie si le dénivelé est acceptable pour proposer un trajet en vélo selon les critères suivants:
+        Si l'utilisateur souhaite prendre en compte le dénivéle, au delà de 80m de dénivelé positif le vélo n'est pas
+        recommandé.
+        Si l'utilisateur ne souhaite pas prendre en compte le dénivelé, il n'y a pas de limite.
+        :return: True si les conditions sont vérifiées, False sinon
+        """
+        if self.__elevation and self.__elevation_bicycle.asc_elevation > 80:
+            return False
+        else:
+            return True
 
     def __compute_recommendation(self):
         """
@@ -99,7 +100,7 @@ class Trip:
             self.__recommendation = 'trip_foot'
         # Etude de l'itinéraire en vélo (ou vélib)
         # Si l'utilisateur n'est pas chargé et que les conditions météo sont bonnes, étude du trajet à vélo/vélib
-        elif not self.__bagage and self.__weather_ok:  # and self.__check_elevation == True:
+        elif not self.__bagage and self.__weather_ok and self.__elevation_ok:
             # Vérification du trajet en vélo perso
             if self.__pers_bicycle and self.__trip_bicycle.total_duration < self.__trip_transit.total_duration:
                 self.__recommendation = 'trip_bicycle'
@@ -153,9 +154,16 @@ class Trip:
             raise ValueError("Les itinéraires n'ont pas pu être calculés: problème de connexion internet ou d'adresses "
                              "mal saisies")
 
+        # Calcul du dénivelé
+        self.__elevation_bicycle.steps = self.__trip_bicycle.steps
+        self.__elevation_bicycle.start()
+        # self.__elevation_velib.start()
+        self.__elevation_bicycle.join()
+        # self.__elevation_velib.join()
+
         # Calcul de la recommandation d'itinéraire
         self.__weather_ok = self.__check_weather()
-        # self.__check_elevation
+        self.__elevation_ok = self.__check_elevation()
         self.__compute_recommendation()
 
     # Définition des getters, setters des attributs de notre classe
@@ -255,6 +263,22 @@ class Trip:
     @elevation.setter
     def elevation(self, value):
         print("You are not allowed to modify elevation by {} !".format(value))
+
+    @property
+    def pers_bicycle(self):
+        return self.__pers_bicycle
+
+    @pers_bicycle.setter
+    def pers_bicycle(self, value):
+        print("You are not allowed to modify pers_bicycle by {} !".format(value))
+
+    @property
+    def pers_car(self):
+        return self.__pers_car
+
+    @pers_car.setter
+    def pers_car(self, value):
+        print("You are not allowed to modify pers_car by {} !".format(value))
 
     @property
     def meteo(self):

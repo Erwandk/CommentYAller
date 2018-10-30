@@ -17,6 +17,8 @@ class Formulary:
         self.__pos_final = form.get('pos_final', '')
         self.__bagage = form.get('bagage', 'off')
         self.__elevation = form.get('elevation', 'off')
+        self.__pers_bicycle = form.get('pers_bicycle', 'off')
+        self.__pers_car = form.get('pers_car', 'off')
 
         self.__compute_info(info_user)
         self.__check_data = self.__check_form_data()
@@ -25,7 +27,7 @@ class Formulary:
         """
         Cette fonction checke les données envoyées via le formulaire par l'utilisateur
         """
-        if self.pos_init == "" or self.pos_init == "None%C2None" or self.pos_final == "":
+        if self.pos_init == "" or self.pos_init == "None%2CNone" or self.pos_final == "":
             return False
         else:
             return True
@@ -78,3 +80,19 @@ class Formulary:
     @elevation.setter
     def elevation(self, value):
         raise AttributeError("You are not allowed to modify elevation by {}".format(value))
+
+    @property
+    def pers_bicycle(self):
+        return self.__pers_bicycle
+
+    @pers_bicycle.setter
+    def pers_bicycle(self, value):
+        raise AttributeError("You are not allowed to modify pers_bicycle by {}".format(value))
+
+    @property
+    def pers_car(self):
+        return self.__pers_car
+
+    @pers_car.setter
+    def pers_car(self, value):
+        raise AttributeError("You are not allowed to modify pers_car by {}".format(value))
