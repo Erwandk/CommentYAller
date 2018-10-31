@@ -19,7 +19,7 @@
         <p>Pour aller de <strong>{{ trip.init_pos | format_address }}</strong>
             à <strong>{{ trip.final_pos | format_address }}</strong></p>
 
-        <p><strong>Nous vous recommandons : {{ trip.recommendation }}</strong></p>
+        <p><h3>{{ trip.recommendation }}</h3></p><br />
 
         <div class="columns">
             <div class="column is-two">
@@ -200,17 +200,23 @@
     </div>
 
 </div>
-<h3>Coordonnées GPS :</h3>
-<p>départ : lat : {{ trip.gps_init['lat'] }}, long : {{ trip.gps_init['lng'] }}</p>
-<p>arrivée : lat : {{ trip.gps_final['lat'] }}, long : {{ trip.gps_final['lng'] }}</p>
-<p>l'option bagage a pour valeur : {{ trip.bagage }}</p>
-<p>l'option elevation a pour valeur : {{ trip.elevation }}</p>
-<p>Voici le bulletin météo :</p>
+
+<h2>Coordonnées GPS:</h2>
+<p>Point de départ: ({{ trip.gps_init['lat'] }}, {{ trip.gps_init['lng'] }})</p>
+<p>Point d'arrivée: ({{ trip.gps_final['lat'] }}, {{ trip.gps_final['lng'] }})</p>
+<br />
+<h2>Options de trajet:</h2>
+<p>Bagages : {{ trip.bagage }}</p>
+<p>Prise en compte du dénivelé : {{ trip.elevation }}</p>
+<p>Vélo personnel : {{ trip.pers_bicycle }}</p>
+<p>Voiture personnelle : {{ trip.pers_car }}</p>
+<br />
+<h2>Bulletin météo :</h2>
 <ul>
-    <li>pluie : {{ trip.meteo.rain }}</li>
-    <li>temperature : {{ trip.meteo.temperature }}</li>
-    <li>neige : {{ trip.meteo.snow }}</li>
-    <li>convective : {{ trip.meteo.convective_rain }}</li>
+    <li>Précipitations : {{ trip.meteo.rain }} mm sur 3 heures</li>
+    <li>Température : {{ trip.meteo.temperature }} °C</li>
+    <li>Risque de neige : {{ trip.meteo.snow }}</li>
+    <li>Précipitations convectives : {{ trip.meteo.convective_rain }} mm sur 3 heures</li>
 </ul>
 
 <!--fonction permettant d'afficher uniquement un certain type de trajet-->

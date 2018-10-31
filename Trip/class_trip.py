@@ -20,8 +20,8 @@ class Trip:
         """
         # Définitions des attributs de la classe
         self.__user_id = user_id
-        self.__init_pos = self.__clean_str(init_pos)  # au format 'latitude'+'2%C'+'longitude' ou 'adresse'+'paris'
-        self.__final_pos = self.__clean_str(final_pos)  # au format 'latitude'+'2%C'+'longitude' ou 'adresse'+'paris'
+        self.__init_pos = self.__clean_str(init_pos)  # au format 'latitude'+'%2C'+'longitude' ou 'adresse'+'paris'
+        self.__final_pos = self.__clean_str(final_pos)  # au format 'latitude'+'%2C'+'longitude' ou 'adresse'+'paris'
         self.__bagage = True if bagage == "on" else False
         self.__elevation = True if elevation == "on" else False
         self.__pers_bicycle = True if pers_bicycle == 'on' else False
@@ -31,7 +31,7 @@ class Trip:
         self.__gps_final = dict()
         self.__weather_ok = bool()  # True si les conditions météo sont jugées décentes, False sinon
         self.__elevation_ok = bool()  # True si l'élévation est acceptable, False sinon
-        self.__recommendation = 'trip_transit'
+        self.__recommendation = str()
         self.__reco_type_trip = "transit"
 
         # Définition des différents trajets, de leur dénivelé, et de la météo (1 thread = 1 appel à une API)
@@ -70,8 +70,8 @@ class Trip:
         Risque neige = non
         :return: True si les conditions sont vérifiées, False sinon
         """
-        if self.__meteo.temperature > 8 and self.__meteo.rain < 21 and self.__meteo.convective_rain < 21:
-            # ajouter la condition sur le risque de neige
+        if self.__meteo.temperature > 8 and self.__meteo.rain < 21 and self.__meteo.convective_rain < 21 \
+                and self.__meteo.snow == 'non':
             return True
         else:
             return False
@@ -97,20 +97,36 @@ class Trip:
         # Etude de l'itinéraire à pieds
         # Pour les distances de moins d'1km sous les bonnes conditions météo, nous recommandons un trajet à pieds
         if self.__trip_foot.total_distance < 1001 and self.__weather_ok:
-            self.__recommendation = 'trip_foot'
+            self.__reco_type_trip = 'foot'
+            self.__recommendation = "Nous vous recommandons de vous rendre à destination à pieds, compte tenu de la "\
+                                    "météo clémente et de la distance à parcourir."
         # Etude de l'itinéraire en vélo (ou vélib)
         # Si l'utilisateur n'est pas chargé et que les conditions météo sont bonnes, étude du trajet à vélo/vélib
         elif not self.__bagage and self.__weather_ok and self.__elevation_ok:
             # Vérification du trajet en vélo perso
             if self.__pers_bicycle and self.__trip_bicycle.total_duration < self.__trip_transit.total_duration:
-                self.__recommendation = 'trip_bicycle'
+                self.__reco_type_trip = 'bicycle'
+                self.__recommendation = "Nous vous recommandons de vous rendre à destination avec votre vélo personnel"\
+                                        ", compte tenu de la météo clémente, du dénivelé acceptable et du gain de " \
+                                        "temps par rapport aux transports en commun."
             # Vérification du trajet en vélib
             elif not self.__pers_bicycle and self.__trip_velib.total_duration < self.__trip_transit.total_duration:
-                self.__recommendation = 'trip_velib'
+                self.__reco_type_trip = 'velib'
+                self.__recommendation = "Nous vous recommandons de vous rendre à destination en Vélib', compte tenu de"\
+                                        " la météo clémente, du dénivelé acceptable, de la disponibilité des " \
+                                        "stations à proximité de vos points de départ et d'arrivée et du gain de temps"\
+                                        " par rapport aux transports en commun."
         elif self.__pers_car and self.__trip_car.total_duration < 0.66*self.__trip_transit.total_duration:
-            self.__recommendation = 'trip_car'
+            self.__reco_type_trip = 'car'
+            self.__recommendation = "Nous vous recommandons de vous rendre à destination avec votre voiture " \
+                                    "personnelle, compte tenu du gain de temps considérable par rapport aux transports"\
+                                    " en commun."
         else:  # Dans tous les autres cas, privilégier les transports en communs
-            self.__recommendation = 'trip_transit'
+            self.__reco_type_trip = 'transit'
+            self.__recommendation = "Nous vous recommandons de vous rendre à destination en transport en commun. " \
+                                    "Malheureusement, le temps de trajet, la météo, le dénivelé ou vos bagages ne " \
+                                    "vous encouragent pas à prendre le vélo, et si vous disposez d'une voiture person" \
+                                    "nelle, celle-ci ne vous permettra pas un gain de temps de trajet considérable."
         return
 
     def __compute_trip(self):
@@ -320,9 +336,9 @@ if __name__ == '__main__':
         final_pos = '8+rue+des+morillons+paris'
         bagage = 'off'
         elevation = 'off'
-        # pers_bicycle = 'on'
-        # pers_car = 'on'
-        test = Trip(init_pos, final_pos, bagage, elevation, user_id=0)
+        pers_bicycle = 'off'
+        pers_car = 'on'
+        test = Trip(init_pos, final_pos, bagage, elevation, pers_bicycle, pers_car, user_id=0)
         print(test.check_weather)
         print(test.recommendation)
 
