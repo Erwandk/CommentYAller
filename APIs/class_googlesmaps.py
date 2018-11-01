@@ -65,7 +65,8 @@ class GoogleMaps(API):
             __e_coord = itinary[k]["end_location"]
             __travel_mode = itinary[k]["travel_mode"]
             __transit_details = "No transit"
-            steps.append((__distance, __duration, __s_coord, __e_coord, __travel_mode, __transit_details))
+            __instruction = itinary[k]["html_instructions"]
+            steps.append((__distance, __duration, __s_coord, __e_coord, __travel_mode, __transit_details,__instruction))
         return steps
 
     def get_etape(self):
@@ -147,8 +148,12 @@ class GoogleMapsTransit(GoogleMaps):
         __vehicle = itinary["transit_details"]["line"]["vehicle"]["type"]
         __short = itinary["transit_details"]["line"]["short_name"]
         __nb_stations = itinary["transit_details"]["num_stops"]
+        __instruction = "Take the <b>{} line {}</b> from <b>{} to {}</b> for {} stations".format(__vehicle, __short,
+                                                                                                 __departure_stop,
+                                                                                                 __arrival_stop,
+                                                                                                 __nb_stations)
         __s = (__distance, __duration, __s_coord, __e_coord, __travel_mode,
-               (__departure_stop, __arrival_stop, __vehicle, __short, __nb_stations))
+               (__departure_stop, __arrival_stop, __vehicle, __short, __nb_stations),__instruction)
         return __s
 
     def get_etape(self):
@@ -170,3 +175,11 @@ class GoogleMapsTransit(GoogleMaps):
     def __init__(self, __json):
         GoogleMapsWaypoints.__init__(self)
         GoogleMapsTransit.__init__(self)"""
+
+if __name__ == '__main__':
+    startcoord = "8+rue+des+morrillons+Paris"
+    endcoord = "6+rue+des+marronniers+Paris"
+    driving_mode = "transit"
+
+    test = GoogleMapsTransit(startcoord,endcoord,driving_mode,transit_mode="bus", waypoints="",user_id=2)
+    print(test.get_etape())

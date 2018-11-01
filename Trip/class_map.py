@@ -61,17 +61,20 @@ class Maps:
         # Création de la carte
         __lat_center = (self.__min_lat + self.__max_lat) / 2
         __lng_center = (self.__min_lon + self.__max_lon) / 2
-        maps = folium.Map(location=[__lat_center, __lng_center], zoom_start=15)
+        maps = folium.Map(location=[__lat_center, __lng_center],zoom_start=13)
+
+        # Pour délimiter le zoom mais léger bug
+        # maps.fit_bounds([[self.min_lat,self.min_lon],[self.max_lat,self.max_lon]])
 
         # Ajout de marqueurs initiaux, finaux ainsi que pout chaque étape
-        folium.Marker([self.__trip.gps_init["lat"], self.__trip.gps_init["lng"]], icon=folium.Icon(color="red"),
-                      popup="<b>Start</b>").add_to(maps)
+        folium.Marker([self.__trip.gps_init["lat"], self.__trip.gps_init["lng"]], icon=folium.Icon(color="green"),
+                      popup="<b>Start <br> </b>{}".format(self.__etape[0][6])).add_to(maps)
         folium.Marker([self.__trip.gps_final["lat"], self.__trip.gps_final["lng"]], icon=folium.Icon(color="red"),
                       popup="<b>End</b>").add_to(maps)
         for k in range(1, len(self.__etape)):
             folium.Marker([self.__etape[k][2]["lat"], self.__etape[k][2]["lng"]],
                           icon=folium.Icon(icon=__icone, prefix='fa'),
-                          popup="<i>Etape {}</i>".format(k)
+                          popup="<i>Etape {} <br> {}</i>".format(k,self.__etape[k][6])
                           ).add_to(maps)
 
         # Enregistrement de la carte
