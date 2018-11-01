@@ -288,7 +288,6 @@ class Transit(Thread):
         self.__compute_total_duration()
         self.__compute_total_distance()
         self.__steps_nbr = len(self.__distinct_steps)
-        print(self.__distinct_steps)
 
     def __compute_total_distance(self):
         for step in self.__steps:
@@ -301,8 +300,8 @@ class Transit(Thread):
     def __compute_distinct_steps(self):
         n = len(self.__steps)
         self.__distinct_steps[0].append(self.__steps[0])
-        __duration = 0
-        __distance = 0
+        __duration = self.__steps[0][0]
+        __distance = self.__steps[0][1]
         for x in range(1, n):
             if self.__steps[x][4] != self.__steps[x-1][4] or self.__steps[x][5] != self.__steps[x-1][5]:
                 self.__distinct_steps[-1].append((__distance, __duration))
@@ -403,6 +402,7 @@ class Velib:
         self.__arr_station = VelibStation(gps_position=self.__final_pos_dict, type='arrival')  # Station d'arrivée
 
         self.__steps = []
+        self.__distinct_steps = [[]]
         self.__total_duration = 0
         self.__total_distance = 0
 
@@ -445,6 +445,7 @@ class Velib:
         self.__steps = self.__initial_walking.steps + self.__bicycling.steps + self.__final_walking.steps
         self.__compute_total_duration()
         self.__compute_total_distance()
+        self.__compute_distinct_steps()
 
     def __compute_total_distance(self):
         for step in self.__steps:
@@ -453,6 +454,23 @@ class Velib:
     def __compute_total_duration(self):
         for step in self.__steps:
             self.__total_duration += step[1]
+
+    def __compute_distinct_steps(self):
+        n = len(self.__steps)
+        self.__distinct_steps[0].append(self.__steps[0])
+        __duration = self.__steps[0][0]
+        __distance = self.__steps[0][1]
+        for x in range(1, n):
+            if self.__steps[x][4] != self.__steps[x-1][4]:
+                self.__distinct_steps[-1].append((__distance, __duration))
+                self.__distinct_steps.append([self.__steps[x]])
+                __distance = self.__steps[x][0]
+                __duration = self.__steps[x][1]
+            else:
+                self.__distinct_steps[-1].append(self.__steps[x])
+                __distance += self.__steps[x][0]
+                __duration += self.__steps[x][1]
+        self.__distinct_steps[-1].append((__distance, __duration))
 
     @property
     def user_id(self):
@@ -564,10 +582,20 @@ class Velib:
     def final_walking(self, value):
         raise AttributeError("You are not allowed to modify final_walking by {}".format(value))
 
+    @property
+    def distinct_steps(self):
+        return self.__distinct_steps
+
+    @distinct_steps.setter
+    def distinct_steps(self, value):
+        raise AttributeError("You are not allowed to modify distinct_steps by {}".format(value))
+
 
 if __name__ == '__main__':
 
-    def main():
+    import pprint
+
+    def test_1():
         init_pos_dict = {'lat': 48.854606, 'lng': 2.277205}
         # init_pos_str = '48.854606%2C2.277205'
         init_pos_str = '6+rue+des+marronniers+paris'
@@ -580,5 +608,15 @@ if __name__ == '__main__':
         print("distance:{}".format(test.total_distance))
         print("durée:{}".format(test.total_duration))
         print("étapes:{}".format(test.steps))
+        pprint.pprint("distinct_steps {}".format(test.distinct_steps))
 
-    main()
+    test_1()
+
+    def test_2():
+        init_pos = '6+rue+des+marronniers+paris'
+        final_pos = '67+boulevard+de+picpus+parsi'
+        test = Transit(user_id=2, init_pos=init_pos, final_pos=final_pos)
+        test.start()
+        test.join()
+
+    # test_2()
