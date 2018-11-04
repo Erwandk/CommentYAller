@@ -54,7 +54,7 @@ class Trip:
         """
          Méthode statique qui transforme une chaîne de caractères avec les contraintes de l'API GoogleMaps
         """
-        __new_chaine = chaine.lower().replace(" ", "+").replace(",", "+")
+        __new_chaine = '+'.join(chaine.lower().replace(',', '').split())
         pattern = r'^[0-9]+.[0-9]+%2C[0-9]+.[0-9]+$'
         if not re.match(pattern, __new_chaine):
             if "paris" not in __new_chaine:
