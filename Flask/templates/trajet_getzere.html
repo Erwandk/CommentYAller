@@ -146,14 +146,55 @@
                 {% endfor %}
 
         </div>
+
         <div class="velib type_trip">
-            <h3>En Vélib :</h3>
-            <ul>
-                <li>duree : {{ trip.trip_velib.total_duration }} s</li>
-                <li>distance : {{ trip.trip_velib.total_distance }} m</li>
-                <li>etapes : {{ trip.trip_velib.steps }}</li>
-            </ul>
+            <h3>Pour aller à votre destination en Vélib' :</h3><br>
+                {% for step in trip.trip_velib.distinct_steps %}
+                    {% if step[0][4] == "WALKING" %}
+                        <div class="box columns">
+                            <div class="column is-two">
+                                <span class="icon">
+                                    <i class="fas fa-walking"></i>
+                                </span>
+                            </div>
+                            <div class="column is-two">
+                                <p>Marcher</p>
+                            </div>
+                            <div class="column is-two">
+                                <p>{{ step[-1][1] | format_time }}</p>
+                            </div>
+                            <div class="column is-two">
+                                <p>{{ step[-1][0] | format_dist }}</p>
+                            </div>
+                        </div><br>
+                    {% else %}
+                        <div class="box">
+                            <div class="columns">
+                                <div class="column is-two">
+                                    <span class="icon">
+                                        <i class="fas fa-bicycle"></i>
+                                    </span>
+                                </div>
+                                <div class="column is-four">
+                                    <p>Pédaler</p>
+                                </div>
+                                <div class="column is-two">
+                                    <p>{{ step[-1][1] | format_time }}</p>
+                                </div>
+                                <div class="column is-two">
+                                    <p>{{ step[-1][0] | format_dist }}</p>
+                                </div>
+                            </div>
+                            <div class="columns">
+                                <div class="column is-full">
+                                    <p>Stations de départ et d'arrivée</p>
+                                </div>
+                            </div>
+                        </div><br>
+                    {% endif %}
+                {% endfor %}
         </div>
+
     </div>
 
     <div class="column" id="carte">
