@@ -55,9 +55,8 @@ class Maps:
         __path = os.path.join(os.getcwd(), "static", "map", str(__map_name))
 
         # Icones
-        __map_icone = {"trip_foot": "male", "trip_bicycle": "bicycle", "trip_car": "car",
-                       "trip_velib": "bicycle", "trip_transit": "bus"}
-        __icone = __map_icone[self.__trip_type]
+        __map_icone = {"WALKING": "male", "BICYCLING": "bicycle", "DRIVING": "car", "TRANSIT": "bus"}
+
 
         # Création de la carte
         __lat_center = (self.__min_lat + self.__max_lat) / 2
@@ -71,6 +70,7 @@ class Maps:
         folium.Marker([self.__trip.gps_final["lat"], self.__trip.gps_final["lng"]], icon=folium.Icon(color="red"),
                       popup="<b>End</b>").add_to(maps)
         for k in range(1, len(self.__etape)):
+            __icone = __map_icone[self.__etape[k][4]]
             folium.Marker([self.__etape[k][2]["lat"], self.__etape[k][2]["lng"]],
                           icon=folium.Icon(icon=__icone, prefix='fa'),
                           popup="<i>Etape {} <br> {}</i>".format(k, self.__etape[k][6])
