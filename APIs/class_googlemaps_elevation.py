@@ -3,16 +3,22 @@
 
 __author__ = 'eke, gab, axel'
 
+# Importation de la classe mère API et des modules utilisés
 from APIs.class_api import API
 import requests
 
 
 class Elevation(API):
     """
-    API Google Maps pour connaître le dénivelé positif et négatif le long d'un chemin
+    Classe API Google Maps pour connaître le dénivelé positif et négatif le long d'un chemin
     """
 
     def __init__(self, steps, user_id=1):
+        """
+        :param steps: liste des étapes (list)
+        :param user_id: id du user (int)
+        """
+        assert isinstance(steps, list) and isinstance(user_id, int)
         API.__init__(self, api_name="elevation", url="https://maps.googleapis.com/maps/api/elevation/",
                      user_id=user_id)
         self.__steps = steps  # Liste des étapes de l'itinéraire obtenue par l'API GoogleMaps
@@ -22,6 +28,9 @@ class Elevation(API):
         self.__json = dict()
 
     def compute_elevation(self):
+        """
+        Méthode permettant de calculer l'élévation du trajet
+        """
         self.__def_path()
         self.__retrieve_data_api()
         # Calcul du dénivelé positif et négatif
@@ -32,6 +41,9 @@ class Elevation(API):
                 self.__dsc_elevation += self.__json['results'][i-1]['elevation']-self.__json['results'][i]['elevation']
 
     def __def_path(self):
+        """
+        Méthode permettant de calculer le path de l'url pour se connecter à l'API
+        """
         # ajout du point de départ
         self.__path += '{},{}'.format(self.__steps[0][2]['lat'], self.__steps[0][2]['lng'])
         # pour chaque étape, ajout du point final de l'étape
@@ -44,6 +56,9 @@ class Elevation(API):
                                  " l'API GoogleMaps Elevation.")
 
     def __retrieve_data_api(self):
+        """
+        Méthode permettant de récupérer les données de l'API
+        """
         resp = requests.get(self._url+self.__path)
         if resp.status_code != 200:
             raise NotImplementedError("Erreur {} : vous n'avez pas réussi à vous connecter à "
@@ -53,6 +68,7 @@ class Elevation(API):
             raise NotImplementedError("Requête à l'API GoogleMaps Elevation invalide. "
                                       "Vérifiez la clé ou le quota de requêtes autorisées.")
 
+    # Définition des getters et setters de la classe
     @property
     def json(self):
         return self.__json
@@ -71,7 +87,7 @@ class Elevation(API):
 
     @steps.setter
     def steps(self, value):
-        # todo : trouver l'exception à lever
+        assert isinstance(value, list)
         self.__steps = value
 
     @property

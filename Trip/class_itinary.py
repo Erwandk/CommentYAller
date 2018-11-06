@@ -348,8 +348,8 @@ class Transit(Thread):
         """
         n = len(self.__steps)
         self.__distinct_steps[0].append(self.__steps[0])
-        __duration = self.__steps[0][0]
-        __distance = self.__steps[0][1]
+        __duration = self.__steps[0][1]
+        __distance = self.__steps[0][0]
         for x in range(1, n):
             if self.__steps[x][4] != self.__steps[x-1][4] or self.__steps[x][5] != self.__steps[x-1][5]:
                 self.__distinct_steps[-1].append((__distance, __duration))
@@ -510,8 +510,8 @@ class Velib:
     def __compute_distinct_steps(self):
         n = len(self.__steps)
         self.__distinct_steps[0].append(self.__steps[0])
-        __duration = self.__steps[0][0]
-        __distance = self.__steps[0][1]
+        __duration = self.__steps[0][1]
+        __distance = self.__steps[0][0]
         for x in range(1, n):
             if self.__steps[x][4] != self.__steps[x-1][4]:
                 self.__distinct_steps[-1].append((__distance, __duration))
