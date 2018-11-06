@@ -19,7 +19,7 @@
         <p>Pour aller de <strong>{{ trip.init_pos | format_address }}</strong>
             à <strong>{{ trip.final_pos | format_address }}</strong></p>
 
-        <p><h3>{{ trip.recommendation }}</h3></p><br />
+        <p><h3>{{ trip.recommendation }}</h3></p><br>
 
         <div class="columns">
             <div class="column is-two">
@@ -35,7 +35,7 @@
                 <input id="submit4" type="submit" class="button" value="En transport" onclick="display_trip('.transit')">
             </div>
             <div class="column is-two">
-                <input id="submit5" type="submit" class="button" value="En vélib'" onclick="display_trip('.velib')">
+                <input id="submit5" type="submit" class="button" value="En Vélib'" onclick="display_trip('.velib')">
             </div>
         </div>
 
@@ -99,7 +99,8 @@
             </div>
         </div>
         <div class="transit type_trip">
-            <h3>Pour aller à votre destination en transport en commun :</h3><br>
+            <h3>Pour aller à votre destination en transport en commun :</h3>
+            <p>Durée totale : <strong>{{trip.trip_transit.total_duration | format_time}}</strong></p><br>
                 {% for step in trip.trip_transit.distinct_steps %}
                     {% if step[0][4] == "WALKING" %}
                         <div class="box columns">
@@ -148,7 +149,8 @@
         </div>
 
         <div class="velib type_trip">
-            <h3>Pour aller à votre destination en Vélib' :</h3><br>
+            <h3>Pour aller à votre destination en Vélib' :</h3>
+            <p>Durée totale : <strong>{{trip.trip_velib.total_duration | format_time}}</strong></p><br>
                 {% for step in trip.trip_velib.distinct_steps %}
                     {% if step[0][4] == "WALKING" %}
                         <div class="box columns">
