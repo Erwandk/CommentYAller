@@ -78,6 +78,7 @@ class Meteo(API, Thread):
         # Retourne les informations extraites pour un créneau horaire précis
         self.__data = resp.json()[self.__time]
 
+    # Définition des getters et setters de la classe
     @property
     def time(self):
         return self.__time

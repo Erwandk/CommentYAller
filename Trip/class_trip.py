@@ -3,6 +3,7 @@
 
 __author__ = 'eke, gab, axel'
 
+# Importation des données utiles du projet et des librairies
 from Trip.class_itinary import Foot, Bicycle, Car, Transit, Velib
 from APIs.class_meteo import Meteo
 import re
@@ -15,8 +16,18 @@ class Trip:
 
     def __init__(self, init_pos, final_pos, bagage, elevation, pers_bicycle, pers_car, user_id=0):
         """
-        Le constructeur de cette classe prend en entrée les données de position de départ et d'arrivée
+        :param init_pos: point de départ de l'utilisateur (str)
+        :param final_pos: point d'arrivée de l'utilisateur (str)
+        :param bagage: option 'bagage' du formulaire de la page principale (str)
+        :param elevation: option 'dénivelé' du formulaire de la page principale (str)
+        :param pers_bicycle: option 'vélo personnel' du formulaire de la page principale (str)
+        :param pers_car: option 'voiture personnelle' du formulaire de la page principale (str)
+        :param user_id: id du user (int)
         """
+        assert isinstance(init_pos, str) and isinstance(final_pos, str) and isinstance(bagage, str)
+        assert isinstance(elevation, str) and isinstance(pers_bicycle, str) and isinstance(pers_car, str)
+        assert isinstance(user_id, int)
+
         # Définitions des attributs de la classe
         self.__user_id = user_id
         self.__init_pos = self.__clean_str(init_pos)  # au format 'latitude'+'%2C'+'longitude' ou 'adresse'+'paris'
@@ -137,7 +148,6 @@ class Trip:
     def __compute_trip(self):
         """
         Méthode qui calcule tous les attributs du trajet.
-        :return:
         """
         # Lancement des threads d'appel aux API
         self.__meteo.start()

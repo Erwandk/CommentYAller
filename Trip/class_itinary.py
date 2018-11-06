@@ -3,11 +3,14 @@
 
 __author__ = 'eke, gab, axel'
 
+# Importation des librairies utiles
+from threading import Thread
+import re
+
+# Importation des données utiles du projet
 from APIs.class_googlesmaps import GoogleMaps, GoogleMapsTransit
 from APIs.class_velib_station import VelibStation
 from APIs.class_googlemaps_elevation import Elevation
-from threading import Thread
-import re
 
 
 class Foot(Thread):
@@ -16,6 +19,12 @@ class Foot(Thread):
     """
 
     def __init__(self, user_id, init_pos, final_pos):
+        """
+        :param user_id: id du user (int)
+        :param init_pos: point de départ du user (str)
+        :param final_pos: point d'arrivée du user (str)
+        """
+        assert isinstance(user_id, int) and isinstance(init_pos, str) and isinstance(final_pos, str)
         Thread.__init__(self)
         self.__user_id = user_id
         self.__init_pos = init_pos
@@ -27,7 +36,7 @@ class Foot(Thread):
 
     def run(self):
         """
-        Permet d'initier l'obtention des informations pour la classe
+        Fonction lancée à l'execution du thread qui permet d'initier l'obtention des informations pour la classe
         """
         self.__steps = GoogleMaps(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
                                   driving_mode="walking", transit_mode="").get_etape()
@@ -48,6 +57,7 @@ class Foot(Thread):
         for step in self.__steps:
             self.__total_duration += step[1]
 
+    # Définition des getters et setters de la classe
     @property
     def user_id(self):
         return self.__user_id
@@ -109,6 +119,12 @@ class Bicycle(Thread):
     """
 
     def __init__(self, user_id, init_pos, final_pos):
+        """
+        :param user_id: id du user (int)
+        :param init_pos: point de départ du user (str)
+        :param final_pos: point d'arrivée du user (str)
+        """
+        assert isinstance(user_id, int) and isinstance(init_pos, str) and isinstance(final_pos, str)
         Thread.__init__(self)
         self.__user_id = user_id
         self.__init_pos = init_pos
@@ -121,13 +137,13 @@ class Bicycle(Thread):
 
     def run(self):
         """
-        Permet d'initier l'obtention des informations pour la classe
+        Fonction lancée à l'execution du thread qui permet d'initier l'obtention des informations pour la classe
         """
         self.__steps = GoogleMaps(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
                                   driving_mode="bicycling", transit_mode="").get_etape()
         self.__compute_total_duration()
         self.__compute_total_distance()
-        self.__elevation.steps = self.__steps  # MAJ
+        self.__elevation.steps = self.__steps
         self.__elevation.compute_elevation()
 
     def __compute_total_distance(self):
@@ -144,6 +160,7 @@ class Bicycle(Thread):
         for step in self.__steps:
             self.__total_duration += step[1]
 
+    # Définition des getters et setters de la classe
     @property
     def user_id(self):
         return self.__user_id
@@ -213,6 +230,12 @@ class Car(Thread):
     """
 
     def __init__(self, user_id, init_pos, final_pos):
+        """
+        :param user_id: id du user (int)
+        :param init_pos: point de départ du user (str)
+        :param final_pos: point d'arrivée du user (str)
+        """
+        assert isinstance(user_id, int) and isinstance(init_pos, str) and isinstance(final_pos, str)
         Thread.__init__(self)
         self.__user_id = user_id
         self.__init_pos = init_pos
@@ -224,7 +247,7 @@ class Car(Thread):
 
     def run(self):
         """
-        Permet d'initier l'obtention des informations pour la classe
+        Fonction lancée à l'execution du thread qui permet d'initier l'obtention des informations pour la classe
         """
         self.__steps = GoogleMaps(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
                                   driving_mode="driving", transit_mode="").get_etape()
@@ -245,6 +268,7 @@ class Car(Thread):
         for step in self.__steps:
             self.__total_duration += step[1]
 
+    # Définition des getters et setters de la classe
     @property
     def user_id(self):
         return self.__user_id
@@ -306,6 +330,12 @@ class Transit(Thread):
     """
 
     def __init__(self, user_id, init_pos, final_pos):
+        """
+        :param user_id: id du user (int)
+        :param init_pos: point de départ du user (str)
+        :param final_pos: point d'arrivée du user (str)
+        """
+        assert isinstance(user_id, int) and isinstance(init_pos, str) and isinstance(final_pos, str)
         Thread.__init__(self)
         self.__user_id = user_id
         self.__init_pos = init_pos
@@ -319,7 +349,7 @@ class Transit(Thread):
 
     def run(self):
         """
-        Permet d'initier l'obtention des informations pour la classe
+        Fonction lancée à l'execution du thread qui permet d'initier l'obtention des informations pour la classe
         """
         self.__steps = GoogleMapsTransit(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
                                          driving_mode="transit", transit_mode="").get_etape()
@@ -440,6 +470,15 @@ class Velib:
     """
 
     def __init__(self, user_id, init_pos_dict, final_pos_dict, init_pos_str, final_pos_str):
+        """
+        :param user_id: id du user (int)
+        :param init_pos_dict: point de départ du user (dict)
+        :param final_pos_dict: point d'arrivée du user (dict)
+        :param init_pos_str: point de départ du user (str)
+        :param final_pos_str: point d'arrivée du user (str)
+        """
+        assert isinstance(user_id, int) and isinstance(init_pos_str, str) and isinstance(final_pos_str, str)
+        assert isinstance(init_pos_dict, dict) and isinstance(final_pos_dict, dict)
         self.__user_id = user_id
         self.__init_pos_dict = init_pos_dict  # Coord GPS au format dict{'lat':XXX; 'lng':XXX} pour l'API Vélib
         self.__final_pos_dict = final_pos_dict  # Coord GPS au format dict{'lat':XXX; 'lng':XXX} pour l'API Vélib
@@ -524,6 +563,7 @@ class Velib:
                 __duration += self.__steps[x][1]
         self.__distinct_steps[-1].append((__distance, __duration))
 
+    # Définition des getters et setters de la classe
     @property
     def user_id(self):
         return self.__user_id

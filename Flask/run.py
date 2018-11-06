@@ -3,16 +3,16 @@
 
 __author__ = 'eke, axel, gab'
 
-from user_api import secret_key
-
+# Importation des librairies
 from flask import Flask, request, render_template, url_for, redirect, send_file
 import os
 
+# Importation des données utiles du projet
+from user_api import secret_key
 from Flask.class_formulary import Formulary
 from APIs.class_InfoUser import InfoUser
 from Trip.class_trip import Trip
 from Trip.class_map import Maps
-
 
 app = Flask(__name__)
 app.secret_key = secret_key
@@ -21,7 +21,7 @@ app.secret_key = secret_key
 @app.route('/', methods=['GET', 'POST'])
 def index():
     """
-    racine de notre site web
+    racine du site web
     """
 
     if request.method == 'POST':
@@ -59,6 +59,9 @@ def trajet(pos_init, pos_final, bagage, elevation, pers_bicycle, pers_car):
 
 @app.route('/map_foot.html')
 def image_foot():
+    """
+    :return: carte du trajet à pied
+    """
     try:
         path = os.path.join('static', 'map', 'map_foot.html')
         return send_file(path, cache_timeout=0, add_etags=False)
@@ -68,6 +71,9 @@ def image_foot():
 
 @app.route('/map_bicycle.html')
 def image_bicycle():
+    """
+    :return: carte du trajet à vélo
+    """
     try:
         path = os.path.join('static', 'map', 'map_bicycle.html')
         return send_file(path, cache_timeout=0, add_etags=False)
@@ -77,6 +83,9 @@ def image_bicycle():
 
 @app.route('/map_car.html')
 def image_car():
+    """
+    :return: carte du trajet en voiture
+    """
     try:
         path = os.path.join('static', 'map', 'map_car.html')
         return send_file(path, cache_timeout=0, add_etags=False)
@@ -86,6 +95,9 @@ def image_car():
 
 @app.route('/map_velib.html')
 def image_velib():
+    """
+    :return: carte du trajet en velib
+    """
     try:
         path = os.path.join('static', 'map', 'map_velib.html')
         return send_file(path, cache_timeout=0, add_etags=False)
@@ -95,6 +107,9 @@ def image_velib():
 
 @app.route('/map_transit.html')
 def image_transit():
+    """
+    :return: carte du trajet en transport
+    """
     try:
         path = os.path.join('static', 'map', 'map_transit.html')
         return send_file(path, cache_timeout=0, add_etags=False)
@@ -104,9 +119,13 @@ def image_transit():
 
 @app.template_filter('format_duration')
 def convert_duration(second):
-    if second <30:
+    """
+    Filtre convertissant une durée (en s) dans un format plus lisible
+    """
+    assert isinstance(second, int)
+    if second < 30:
         return "0 min"
-    elif second <60:
+    elif second < 60:
         return "1 min"
     else:
         minut = second // 60
@@ -123,6 +142,10 @@ def convert_duration(second):
 
 @app.template_filter('format_dist')
 def convert_dist(meters):
+    """
+     Filtre convertissant une distance (en m) dans un format plus lisible
+    """
+    assert isinstance(meters, int)
     if meters > 1000:
         kmeters = meters // 1000
         meters = round((meters%1000) / 100)
@@ -133,9 +156,11 @@ def convert_dist(meters):
 
 @app.template_filter('format_address')
 def convert_adress(address):
-    print(address)
+    """
+     Filtre convertissant une adresse d'url (str) en un format plus lisible
+    """
     list_address = address.split('+')
-    if len(list_address)!=1:
+    if len(list_address) != 1:
         del(list_address[-1:])
     new_list_address = []
     for mot in list_address:
@@ -150,12 +175,17 @@ def convert_adress(address):
 
 @app.template_filter('round')
 def round_value(value):
+    """
+     Filtre permettant d'arrondir une valeur
+    """
     return round(value, 2)
+
 
 @app.template_filter('format_time')
 def convert_timestamp(value):
     #todo
     return value
+
 
 if __name__ == '__main__':
 

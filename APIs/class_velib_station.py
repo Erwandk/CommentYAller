@@ -3,6 +3,7 @@
 
 __author__ = 'eke, gab, axel'
 
+# Importation de la classe mère API et des modules utilisés
 from APIs.class_api import API
 from threading import Thread
 import requests
@@ -17,6 +18,11 @@ class VelibStation(Thread, API):
     """
 
     def __init__(self, gps_position, type):
+        """
+        :param gps_position: position gps de l'utilisateur (dict)
+        :param type: type de station vélib (départ-arrivée) (str)
+        """
+        assert isinstance(gps_position, dict) and isinstance(type, str)
         API.__init__(self,
                      url='https://opendata.paris.fr/api/records/1.0/search/?dataset=velib-disponibilite-en-temps-reel&rows=2000',
                      api_name='velib')
@@ -29,7 +35,7 @@ class VelibStation(Thread, API):
         self.__coord = str()  # Coord GPS au format exploitable par l'API Google Maps : 'latitude'+'%2C'+'longitude'
         self.__bikes = int()  # Nombre de vélos disponibles
         self.__docks = int()  # Nombre de places disponibles
-        self.__type = type  # Prend les valeurs 'departure' et 'arrival' pour distinguer les 2 stations de l'itinéraire
+        self.__type = type
         self.__gps_position = gps_position  # Position renseignée par l'utilisateur (point de départ ou arrivée)
 
     def __repr__(self):
@@ -182,7 +188,8 @@ class VelibStation(Thread, API):
 
     @gps_position.setter
     def gps_position(self, value):
-        # todo : lever exception si mauvais format
+        if not isinstance(value, dict):
+            raise TypeError("value should be dict, is {}".format(type(value)))
         self.__gps_position = value
 
 

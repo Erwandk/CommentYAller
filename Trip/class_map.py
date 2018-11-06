@@ -3,6 +3,7 @@
 
 __author__ = 'eke, gab, axel'
 
+# Importation des librairies
 import folium
 import numpy as np
 import os
@@ -14,10 +15,14 @@ class Maps:
     Classe représentant le trajet sur une carte, affichée dans la page des résultats
     """
 
-    __path_root = os.path.abspath(os.path.dirname(sys.argv[0])) # Correspond à CommentYAller/Flask
+    __path_root = os.path.abspath(os.path.dirname(sys.argv[0]))  # path correspondant à CommentYAller/Flask
 
     def __init__(self, trip, trip_type):
-
+        """
+        :param trip: objet trip de la classe Trip
+        :param trip_type: type de trajet (str)
+        """
+        assert isinstance(trip_type, str)
         self.__trip = trip
         self.__trip_type = trip_type
         self.__etape = Maps.__set_mode(self)
@@ -28,7 +33,7 @@ class Maps:
         self.__min_lon = min([etapes[2]["lng"] for etapes in self.__etape]+[trip.gps_final['lng']]) - 0.00025
         self.__max_lon = max([etapes[2]["lng"] for etapes in self.__etape]+[trip.gps_final['lng']]) + 0.00025
 
-        # On crée la carte et on l'enregistre
+        # Création la carte et enregistrement
         self.__get_save_map()
 
     def __set_mode(self):
@@ -81,14 +86,21 @@ class Maps:
         # Enregistrement de la carte
         maps.save(__path)
 
+    # Défintion des getters et setters de la classe
     @staticmethod
     def distance(x1, y1):
+        """
+        Méthode calculant une distance entre 2 points
+        """
         return np.sqrt((x1[0] - y1[0]) ** 2 + (x1[1] - y1[1]) ** 2)
 
     @staticmethod
     def compute_zoom(x1, y1):
+        """
+        Régression permettant de calculer le zoom de la carte
+        """
         __dist = Maps.distance(x1, y1)
-        return 15 - 31.384 * (__dist - 0.00061)
+        return 14.8 - 31.385 * (__dist - 0.00061)
 
     # Définition des getters et setters de la classe
     @property

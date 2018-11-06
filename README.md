@@ -18,6 +18,11 @@ Le projet doit se décomposer de la manière suivante :
     user_api.py
 ```
 
+Le dossier _APIs_ comprend l'ensemble des classes permettant d'extraire l'informations des APIs que nous utilisons.
+Le dossier Flask comprend l'ensemble du front et des objets y faisant référence.
+Le dossier Trip comprend l'architecture logique de notre projet.
+Le fichier user_api.py comprend les données des clés et mot de passes du projet.
+
 ### Lancement du projet
 
 _Vous devez posséder python3 pour lancer le projet._
@@ -33,4 +38,6 @@ Si l'application n'arrive pas à localiser l'adresse IP ou que celle-ci ne se tr
 
 Vous pouvez renseigner diverses informations à votre sujet et concernant vos préférences de trajets, celles-ci seront prises en compte dans la recommandation que nous vous fournirons.
 
+Sur la page des résultats, la recommandation principale est affichée. Vous pouvez cliquer sur l'un des boutons bleus pour choisir le type de trajet que vous souhaitez afficher sur la carte ainsi que les informations le concernant.
+Sur la carte, vous pouvez cliquer sur les petites icones de trajet, celles-ci peuvent vous donner des indications concernant le trajet à parcourir.
 
