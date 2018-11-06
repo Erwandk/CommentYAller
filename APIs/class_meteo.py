@@ -21,21 +21,23 @@ class Meteo(API, Thread):
                      api_name='meteo')
         self.__time = ''
         self.__data = dict()  # Json retourné par l'API
-        self.temperature = 0  # Température au sol en °C
-        self.rain = 0  # Nbr de mm de précipitation (sur un créneau de 3h)
-        self.convective_rain = 0  # Nbr de mm de précipitation convective (sur un créneau de 3h)
-        self.snow = ""  # 'oui' s'il y a un risque de neige, 'non' sinon
+        self.__temperature = 0  # Température au sol en °C
+        self.__rain = 0  # Nbr de mm de précipitation (sur un créneau de 3h)
+        self.__convective_rain = 0  # Nbr de mm de précipitation convective (sur un créneau de 3h)
+        self.__snow = ""  # 'oui' s'il y a un risque de neige, 'non' sinon
 
     def run(self):
-        self.__time = self.__set_time()
-        self.__data = self.__get_json()
-        self.temperature = round(self.__data['temperature']['sol']-273, 2)
-        self.rain = self.__data['pluie']
-        self.convective_rain = self.__data['pluie_convective']
-        self.snow = self.__data['risque_neige']
+        self.__set_time()  # affecte l'attribut self.__time
+        self.__get_json()  # affecte l'attribut self.__data
+        self.__temperature = round(self.__data['temperature']['sol']-273, 2)
+        self.__rain = self.__data['pluie']
+        self.__convective_rain = self.__data['pluie_convective']
+        self.__snow = self.__data['risque_neige']
 
-    @staticmethod
-    def __set_time():
+    def __set_time(self):
+        """
+        Méthode qui définit le créneau horaire à partir de l'heure courante, et affecte l'attribut self.__time
+        """
         t = time.localtime()
         # Date
         _date = time.strftime('20%y-%m-%d', t)
@@ -61,10 +63,12 @@ class Meteo(API, Thread):
                 _heure = str(t[3]-1) + ':00:00'
         else:
             raise ValueError("Le format de créneau horaire n'est pas valide.")
-        _dateheure = _date + ' ' + _heure
-        return _dateheure
+        self.__time = _date + ' ' + _heure
 
     def __get_json(self):
+        """
+        Méthode qui se connecte à l'API Météo et affecte la valeur de l'attribut self.__data
+        """
         # Connexion à l'API
         resp = requests.get(self.url)
         if resp.status_code != 200:
@@ -72,16 +76,53 @@ class Meteo(API, Thread):
             raise NotImplementedError(
                 "Erreur {} : vous n'avez pas réussi à vous connecter à l'url {}.".format(resp.status_code, self.url))
         # Retourne les informations extraites pour un créneau horaire précis
-        return resp.json()[self.__time]
+        self.__data = resp.json()[self.__time]
 
+    @property
+    def time(self):
+        return self.__time
 
-if __name__ == '__main__':
+    @time.setter
+    def time(self, value):
+        raise AttributeError("You are not allowed to modify time by {} !".format(value))
 
-    # Tests
-    test = Meteo()
-    test.start()
-    test.join()
-    print(test.temperature)
-    print(test.rain)
-    print(test.convective_rain)
-    print(test.snow)
+    @property
+    def data(self):
+        return self.__data
+
+    @data.setter
+    def data(self, value):
+        raise AttributeError("You are not allowed to modify data by {} !".format(value))
+
+    @property
+    def temperature(self):
+        return self.__temperature
+
+    @temperature.setter
+    def temperature(self, value):
+        raise AttributeError("You are not allowed to modify temperature by {} !".format(value))
+
+    @property
+    def rain(self):
+        return self.__rain
+
+    @rain.setter
+    def rain(self, value):
+        raise AttributeError("You are not allowed to modify rain by {} !".format(value))
+
+    @property
+    def convective_rain(self):
+        return self.__convective_rain
+
+    @convective_rain.setter
+    def convective_rain(self, value):
+        raise AttributeError("You are not allowed to modify convective_rain by {} !".format(value))
+
+    @property
+    def snow(self):
+        return self.__snow
+
+    @snow.setter
+    def snow(self, value):
+        raise AttributeError("You are not allowed to modify snow by {} !".format(value))
+
