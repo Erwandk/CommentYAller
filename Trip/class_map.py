@@ -6,12 +6,15 @@ __author__ = 'eke, gab, axel'
 import folium
 import numpy as np
 import os
+import sys
 
 
 class Maps:
     """
     Classe représentant le trajet sur une carte, affichée dans la page des résultats
     """
+
+    __path_root = os.path.abspath(os.path.dirname(sys.argv[0])) # Correspond à CommentYAller/Flask
 
     def __init__(self, trip, trip_type):
 
@@ -52,7 +55,7 @@ class Maps:
         """
 
         __map_name = "map{}.html".format(self.__trip_type[4:])
-        __path = os.path.join(os.getcwd(), "static", "map", str(__map_name))
+        __path = os.path.join(Maps.__path_root, "static", "map", str(__map_name))
 
         # Icones
         __map_icone = {"trip_foot": "male", "trip_bicycle": "bicycle", "trip_car": "car",
