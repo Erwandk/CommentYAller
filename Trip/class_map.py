@@ -4,6 +4,7 @@
 __author__ = 'eke, gab, axel'
 
 import folium
+import numpy as np
 import os
 
 
@@ -61,10 +62,8 @@ class Maps:
         # Création de la carte
         __lat_center = (self.__min_lat + self.__max_lat) / 2
         __lng_center = (self.__min_lon + self.__max_lon) / 2
-        maps = folium.Map(location=[__lat_center, __lng_center],zoom_start=13)
-
-        # Pour délimiter le zoom mais léger bug
-        # maps.fit_bounds([[self.min_lat,self.min_lon],[self.max_lat,self.max_lon]])
+        __zoom = Maps.compute_zoom([self.__min_lat, self.__min_lon], [self.__max_lat, self.__max_lon])
+        maps = folium.Map(location=[__lat_center, __lng_center], zoom_start=__zoom)
 
         # Ajout de marqueurs initiaux, finaux ainsi que pout chaque étape
         folium.Marker([self.__trip.gps_init["lat"], self.__trip.gps_init["lng"]], icon=folium.Icon(color="green"),
@@ -74,11 +73,20 @@ class Maps:
         for k in range(1, len(self.__etape)):
             folium.Marker([self.__etape[k][2]["lat"], self.__etape[k][2]["lng"]],
                           icon=folium.Icon(icon=__icone, prefix='fa'),
-                          popup="<i>Etape {} <br> {}</i>".format(k,self.__etape[k][6])
+                          popup="<i>Etape {} <br> {}</i>".format(k, self.__etape[k][6])
                           ).add_to(maps)
 
         # Enregistrement de la carte
         maps.save(__path)
+
+    @staticmethod
+    def distance(x1, y1):
+        return np.sqrt((x1[0] - y1[0]) ** 2 + (x1[1] - y1[1]) ** 2)
+
+    @staticmethod
+    def compute_zoom(x1, y1):
+        __dist = Maps.distance(x1, y1)
+        return 15 - 31.384 * (__dist - 0.00061)
 
     # Définition des getters et setters de la classe
     @property

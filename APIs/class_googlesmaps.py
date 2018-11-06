@@ -65,8 +65,12 @@ class GoogleMaps(API):
             __e_coord = itinary[k]["end_location"]
             __travel_mode = itinary[k]["travel_mode"]
             __transit_details = "No transit"
-            __instruction = itinary[k]["html_instructions"]
-            steps.append((__distance, __duration, __s_coord, __e_coord, __travel_mode, __transit_details,__instruction))
+            try:
+                __instruction = itinary[k]["html_instructions"]
+            except Exception:
+                # for last step there is no instructions
+                __instruction = ""
+            steps.append((__distance, __duration, __s_coord, __e_coord, __travel_mode, __transit_details, __instruction))
         return steps
 
     def get_etape(self):
@@ -179,7 +183,9 @@ class GoogleMapsTransit(GoogleMaps):
 if __name__ == '__main__':
     startcoord = "8+rue+des+morrillons+Paris"
     endcoord = "6+rue+des+marronniers+Paris"
-    driving_mode = "transit"
+    driving_mode = "walking"
 
-    test = GoogleMapsTransit(startcoord,endcoord,driving_mode,transit_mode="bus", waypoints="",user_id=2)
-    print(test.get_etape())
+    test = GoogleMaps(startcoord,endcoord,driving_mode,transit_mode="", waypoints="",user_id=2)
+    for k in test.get_etape():
+        print(k)
+
