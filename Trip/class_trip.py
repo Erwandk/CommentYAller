@@ -30,7 +30,8 @@ class Trip:
         self.__gps_init = dict()
         self.__gps_final = dict()
         self.__weather_ok = bool()  # True si les conditions météo sont jugées décentes, False sinon
-        self.__elevation_ok = bool()  # True si l'élévation est acceptable, False sinon
+        self.__elevation_bicycle_ok = True  # True si l'élévation est acceptable, False sinon
+        self.__elevation_velib_ok = True  # True si l'élévation est acceptable, False sinon
         self.__recommendation = str()
         self.__reco_type_trip = "transit"
 
@@ -39,12 +40,12 @@ class Trip:
         self.__meteo = Meteo()
         self.__trip_foot = Foot(self.__user_id, self.__init_pos, self.__final_pos)
         self.__trip_bicycle = Bicycle(self.__user_id, self.__init_pos, self.__final_pos)
-        self.__elevation_bicycle = Elevation(self.__trip_bicycle.steps)
+        self.__elevation_bicycle = Elevation(self.__trip_bicycle.steps)  # Dénivelé du trajet à vélo
         self.__trip_car = Car(self.__user_id, self.__init_pos, self.__final_pos)
         self.__trip_transit = Transit(self.__user_id, self.__init_pos, self.__final_pos)
         self.__trip_velib = Velib(self.__user_id, init_pos_dict=self.__gps_init, final_pos_dict=self.__gps_final,
                                   init_pos_str=self.__init_pos, final_pos_str=self.__final_pos)
-        self.__elevation_velib = Elevation(self.__trip_velib.steps)
+        self.__elevation_velib = Elevation(self.__trip_velib.steps)  # Dénivelé du trajet Vélib
 
         # Calcul des attributs du trajet
         self.__compute_trip()
@@ -72,9 +73,9 @@ class Trip:
         """
         if self.__meteo.temperature > 8 and self.__meteo.rain < 21 and self.__meteo.convective_rain < 21 \
                 and self.__meteo.snow == 'non':
-            return True
+            self.__weather_ok = True
         else:
-            return False
+            self.__weather_ok = False
 
     def __check_elevation(self):
         """
@@ -85,9 +86,9 @@ class Trip:
         :return: True si les conditions sont vérifiées, False sinon
         """
         if self.__elevation and self.__elevation_bicycle.asc_elevation > 80:
-            return False
-        else:
-            return True
+            self.__elevation_bicycle_ok = False
+        if self.__elevation and self.__elevation_velib.asc_elevation > 80:
+            self.__elevation_velib_ok = False
 
     def __compute_recommendation(self):
         """
@@ -100,29 +101,35 @@ class Trip:
             self.__recommendation = "Nous vous recommandons de vous rendre à destination à pieds, compte tenu de la "\
                                     "météo clémente et de la distance à parcourir."
         # Etude du trajet en vélo (ou vélib) si aucune recommandation n'a été précédemment trouvée
-        if not self.__recommendation and not self.__bagage and self.__weather_ok and self.__elevation_ok:
+        if not self.__recommendation and not self.__bagage and self.__weather_ok:
             # Vérification du trajet en vélo perso
-            if self.__pers_bicycle and self.__trip_bicycle.total_duration < self.__trip_transit.total_duration:
+            if self.__pers_bicycle and self.__trip_bicycle.total_duration < self.__trip_transit.total_duration and \
+                    self.__elevation_bicycle_ok:
                 self.__reco_type_trip = 'bicycle'
                 self.__recommendation = "Nous vous recommandons de vous rendre à destination avec votre vélo personnel"\
                                         ", compte tenu de la météo clémente, du dénivelé acceptable et du gain de " \
                                         "temps par rapport aux transports en commun."
             # Vérification du trajet en vélib
-            elif not self.__pers_bicycle and self.__trip_velib.total_duration < self.__trip_transit.total_duration:
+            elif not self.__pers_bicycle and self.__trip_velib.total_duration < self.__trip_transit.total_duration and \
+                    self.__elevation_velib_ok:
                 self.__reco_type_trip = 'velib'
                 self.__recommendation = "Nous vous recommandons de vous rendre à destination en Vélib', compte tenu de"\
                                         " la météo clémente, du dénivelé acceptable, de la disponibilité des " \
                                         "stations à proximité de vos points de départ et d'arrivée et du gain de temps"\
                                         " par rapport aux transports en commun."
         # Etude du trajet en voiture si l'utilisateur en dispose d'une et qu'aucune reco n'a été précédemment trouvée
+        if not self.__recommendation and self.__pers_car and self.__bagage:  # Cas avec bagage
+            self.__reco_type_trip = 'car'
+            self.__recommendation = "Nous vous recommandons de vous rendre à destination avec votre voiture " \
+                                    "personnelle, compte tenu de vos bagages."
         if not self.__recommendation and self.__pers_car and \
-                self.__trip_car.total_duration < 0.66*self.__trip_transit.total_duration:
+                self.__trip_car.total_duration < 0.66*self.__trip_transit.total_duration:  # Cas bcp + rapide en voiture
             self.__reco_type_trip = 'car'
             self.__recommendation = "Nous vous recommandons de vous rendre à destination avec votre voiture " \
                                     "personnelle, compte tenu du gain de temps considérable par rapport aux transports"\
                                     " en commun."
         # Si aucune recommandation n'a été précédemment trouvée, choisir les transports en commun
-        if not self.__recommendation:  # Dans tous les autres cas, privilégier les transports en communs
+        if not self.__recommendation:
             self.__reco_type_trip = 'transit'
             self.__recommendation = "Nous vous recommandons de vous rendre à destination en transport en commun. " \
                                     "Malheureusement, le temps de trajet, la météo, le dénivelé ou vos bagages ne " \
@@ -174,24 +181,23 @@ class Trip:
         # Calcul du dénivelé
         self.__elevation_bicycle.steps = self.__trip_bicycle.steps
         self.__elevation_bicycle.start()
-        # self.__elevation_velib.start()
+        self.__elevation_velib.start()
         self.__elevation_bicycle.join()
-        # self.__elevation_velib.join()
+        self.__elevation_velib.join()
 
         # Calcul de la recommandation d'itinéraire
-        self.__weather_ok = self.__check_weather()
-        self.__elevation_ok = self.__check_elevation()
+        self.__check_weather()
+        self.__check_elevation()
         self.__compute_recommendation()
 
     # Définition des getters, setters des attributs de notre classe
-    # TODO : Vérifier la liste des getters et setters (complète pour tous les attributs de la classe?)
     @property
     def user_id(self):
         return self.__user_id
 
     @user_id.setter
     def user_id(self, value):
-        print("You are not allowed to modify user_id by {} !".format(value))
+        raise AttributeError("You are not allowed to modify user_id by {} !".format(value))
 
     @property
     def init_pos(self):
@@ -199,7 +205,7 @@ class Trip:
 
     @init_pos.setter
     def init_pos(self, value):
-        print("You are not allowed to modify init_pos by {} !".format(value))
+        raise AttributeError("You are not allowed to modify init_pos by {} !".format(value))
 
     @property
     def final_pos(self):
@@ -207,7 +213,7 @@ class Trip:
 
     @final_pos.setter
     def final_pos(self, value):
-        print("You are not allowed to modify final_pos by {} !".format(value))
+        raise AttributeError("You are not allowed to modify final_pos by {} !".format(value))
 
     @property
     def gps_init(self):
@@ -215,7 +221,7 @@ class Trip:
 
     @gps_init.setter
     def gps_init(self, value):
-        print("You are not allowed to modify gps_init by {} !".format(value))
+        raise AttributeError("You are not allowed to modify gps_init by {} !".format(value))
 
     @property
     def gps_final(self):
@@ -223,7 +229,7 @@ class Trip:
 
     @gps_final.setter
     def gps_final(self, value):
-        print("You are not allowed to modify gps_final by {} !".format(value))
+        raise AttributeError("You are not allowed to modify gps_final by {} !".format(value))
 
     @property
     def trip_foot(self):
@@ -231,7 +237,7 @@ class Trip:
 
     @trip_foot.setter
     def trip_foot(self, value):
-        print("You are not allowed to modify trip_foot by {} !".format(value))
+        raise AttributeError("You are not allowed to modify trip_foot by {} !".format(value))
 
     @property
     def trip_bicycle(self):
@@ -239,7 +245,7 @@ class Trip:
 
     @trip_bicycle.setter
     def trip_bicycle(self, value):
-        print("You are not allowed to modify trip_bicyle by {} !".format(value))
+        raise AttributeError("You are not allowed to modify trip_bicyle by {} !".format(value))
 
     @property
     def trip_car(self):
@@ -247,7 +253,7 @@ class Trip:
 
     @trip_car.setter
     def trip_car(self, value):
-        print("You are not allowed to modify trip_car by {} !".format(value))
+        raise AttributeError("You are not allowed to modify trip_car by {} !".format(value))
 
     @property
     def trip_transit(self):
@@ -255,7 +261,7 @@ class Trip:
 
     @trip_transit.setter
     def trip_transit(self, value):
-        print("You are not allowed to modify trip_transit by {} !".format(value))
+        raise AttributeError("You are not allowed to modify trip_transit by {} !".format(value))
 
     @property
     def trip_velib(self):
@@ -263,7 +269,7 @@ class Trip:
 
     @trip_velib.setter
     def trip_velib(self, value):
-        print("You are not allowed to modify trip_velib by {} !".format(value))
+        raise AttributeError("You are not allowed to modify trip_velib by {} !".format(value))
 
     @property
     def bagage(self):
@@ -271,7 +277,7 @@ class Trip:
 
     @bagage.setter
     def bagage(self, value):
-        print("You are not allowed to modify bagage by {} !".format(value))
+        raise AttributeError("You are not allowed to modify bagage by {} !".format(value))
 
     @property
     def elevation(self):
@@ -279,7 +285,7 @@ class Trip:
 
     @elevation.setter
     def elevation(self, value):
-        print("You are not allowed to modify elevation by {} !".format(value))
+        raise AttributeError("You are not allowed to modify elevation by {} !".format(value))
 
     @property
     def pers_bicycle(self):
@@ -287,7 +293,7 @@ class Trip:
 
     @pers_bicycle.setter
     def pers_bicycle(self, value):
-        print("You are not allowed to modify pers_bicycle by {} !".format(value))
+        raise AttributeError("You are not allowed to modify pers_bicycle by {} !".format(value))
 
     @property
     def pers_car(self):
@@ -295,7 +301,7 @@ class Trip:
 
     @pers_car.setter
     def pers_car(self, value):
-        print("You are not allowed to modify pers_car by {} !".format(value))
+        raise AttributeError("You are not allowed to modify pers_car by {} !".format(value))
 
     @property
     def meteo(self):
@@ -303,11 +309,31 @@ class Trip:
 
     @meteo.setter
     def meteo(self, value):
-        print("You are not allowed to modify meteo by {} !".format(value))
+        raise AttributeError("You are not allowed to modify meteo by {} !".format(value))
 
     @property
-    def check_weather(self):
-        return self.__check_weather
+    def weather_ok(self):
+        return self.__weather_ok
+
+    @weather_ok.setter
+    def weather_ok(self, value):
+        raise AttributeError("You are not allowed to modify weather_ok by {} !".format(value))
+
+    @property
+    def elevation_bicycle_ok(self):
+        return self.__elevation_bicycle_ok
+
+    @elevation_bicycle_ok.setter
+    def elevation_bicycle_ok(self, value):
+        raise AttributeError("You are not allowed to modify elevation_bicycle_ok by {} !".format(value))
+
+    @property
+    def elevation_velib_ok(self):
+        return self.__elevation_velib_ok
+
+    @elevation_velib_ok.setter
+    def elevation_velib_ok(self, value):
+        raise AttributeError("You are not allowed to modify elevation_velib_ok by {} !".format(value))
 
     @property
     def reco_type_trip(self):
@@ -315,11 +341,7 @@ class Trip:
 
     @reco_type_trip.setter
     def reco_type_trip(self, value):
-        print("You are not allowed to modify reco_type_trip by {} !".format(value))
-
-    @check_weather.setter
-    def check_weather(self, value):
-        print("You are not allowed to modify check_weather by {} !".format(value))
+        raise AttributeError("You are not allowed to modify reco_type_trip by {} !".format(value))
 
     @property
     def recommendation(self):
@@ -327,7 +349,23 @@ class Trip:
 
     @recommendation.setter
     def recommendation(self, value):
-        print("You are not allowed to modify recommendation by {} !".format(value))
+        raise AttributeError("You are not allowed to modify recommendation by {} !".format(value))
+
+    @property
+    def elevation_bicycle(self):
+        return self.__elevation_bicycle
+
+    @elevation_bicycle.setter
+    def elevation_bicycle(self, value):
+        raise AttributeError("You are not allowed to modify elevation_bicycle by {} !".format(value))
+
+    @property
+    def elevation_velib(self):
+        return self.__elevation_velib
+
+    @elevation_velib.setter
+    def elevation_velib(self, value):
+        raise AttributeError("You are not allowed to modify elevation_velib by {} !".format(value))
 
 
 if __name__ == '__main__':
@@ -340,7 +378,7 @@ if __name__ == '__main__':
         pers_bicycle = 'off'
         pers_car = 'on'
         test = Trip(init_pos, final_pos, bagage, elevation, pers_bicycle, pers_car, user_id=0)
-        print(test.check_weather)
+        print(test.weather_ok)
         print(test.recommendation)
 
     main()
