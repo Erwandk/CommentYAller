@@ -3,18 +3,22 @@
 
 __author__ = 'eke, gab, axel'
 
+# Importation des clés des APIs
 from user_api import *
 
 
 class API:
     """
     Classe mère des autres classes APIs que nous allons créer durant le projet
-    paramètres de classes :
-    - url : correspond à l'url racine de l'api en questions
-    - user_id : correspond a l'id du user pour recuperer la cle de l'API correspondante
     """
 
     def __init__(self, url, api_name="", user_id=0):
+        """
+        :param url: url de l'api (str)
+        :param api_name: nom de l'api (str)
+        :param user_id: id du user pour récupérer la clé de l'api correspondante (int)
+        """
+        assert isinstance(url, str) and isinstance(api_name, str) and isinstance(user_id, int)
         self._url = url
         self.__api_name = api_name
         self._user_id = user_id
