@@ -3,10 +3,11 @@
 
 __author__ = 'eke, gab, axel'
 
+# Importation de la classe mère API et des modules utilisés
+from APIs.class_api import API
 import requests
 import time
 from threading import Thread
-from APIs.class_api import API
 
 
 class Meteo(API, Thread):
@@ -41,7 +42,6 @@ class Meteo(API, Thread):
         _date = time.strftime('20%y-%m-%d', t)
         # Créneau horaire
         if t[3] == 0:  # Cas entre 00h00 et 00h59 -> aller sur le créneau 22h de la veille
-            # todo : cas du premier jour du mois -> pour aller sur le créneau de la veille il faut changer de mois
             _date = time.strftime('20%y-%m-', t) + str(t[2]-1)
             _heure = '22:00:00'
         elif t[3] % 3 == 0 and t[3] != 0:  # Cas des heures suivantes : 3h, 6h, 9h, 12h, 15h, 18h, 21h
@@ -65,7 +65,9 @@ class Meteo(API, Thread):
         return _dateheure
 
     def __get_json(self):
-        # Connexion à l'API
+        """
+        Méthode récupérant les données de l'API
+        """
         resp = requests.get(self.url)
         if resp.status_code != 200:
             # This means something went wrong.
@@ -73,15 +75,3 @@ class Meteo(API, Thread):
                 "Erreur {} : vous n'avez pas réussi à vous connecter à l'url {}.".format(resp.status_code, self.url))
         # Retourne les informations extraites pour un créneau horaire précis
         return resp.json()[self.__time]
-
-
-if __name__ == '__main__':
-
-    # Tests
-    test = Meteo()
-    test.start()
-    test.join()
-    print(test.temperature)
-    print(test.rain)
-    print(test.convective_rain)
-    print(test.snow)

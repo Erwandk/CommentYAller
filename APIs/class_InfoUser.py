@@ -3,6 +3,7 @@
 
 __author__ = 'eke, gab, axel'
 
+# Importation de la classe mère API et des modules utilisés
 from APIs.class_api import API
 import socket
 import requests
@@ -12,11 +13,13 @@ import json
 class InfoUser(API):
     """
     Classe InfoUser hérite de la classe mère API, permet d'afficher les informations GPS de l'utilisateur
-    paramètres de classes :
-    - user_id : correspond à l'id du user permettant de se connecter à l'API
     """
 
     def __init__(self, user_id=0):
+        """
+        :param user_id: is de l'user (int)
+        """
+        assert isinstance(user_id, int)
         API.__init__(self, url="http://api.ipstack.com/", api_name="ipstack", user_id=user_id)
         try:
             self.__ip = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0]
@@ -36,6 +39,9 @@ class InfoUser(API):
             self.__compute_param()
 
     def __compute_param(self):
+        """
+        Méthode calculant les différents paramètres de l'IP de l'utilisateur
+        """
         __new_url = self.url + self.__ip + "?access_key=" + self.key
         r = requests.get(__new_url)
         j = json.loads(r.text)
@@ -46,6 +52,7 @@ class InfoUser(API):
         self.__lat = j['latitude']
         self.__long = j['longitude']
 
+    # Définition des getters et des setters de la classe
     @property
     def ip(self):
         return self.__ip
