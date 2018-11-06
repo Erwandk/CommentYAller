@@ -104,10 +104,12 @@ def image_transit():
 
 @app.template_filter('format_time')
 def convert_time(second):
-    if second > 60:
+    if second == 0:
+        return "0 min"
+    if second >= 60:
         minut = second // 60
         second = second % 60
-        if minut > 60:
+        if minut >= 60:
             hour = minut // 60
             minut = minut % 60
             return "{} h {} min".format(hour, minut)

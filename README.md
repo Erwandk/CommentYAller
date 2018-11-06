@@ -20,4 +20,11 @@ Le projet doit se décomposer de la manière suivante :
 
 ### Lancement du projet
 
-Pour lancer l'application web, il vous suffit de lancer le script _run.py_ situé dans le dossier _Flask_.
+_Vous devez posséder python3 pour lancer le projet._
+
+##### Etapes :
+1. Lancer le script _run.py_ dans le dossier _Flask_.
+2. Dans votre navigateur tapez _http://localhost:5000/_ ou _http://127.0.0.1:5000/_
+
+
+Vous pouvez sélectionner 'Ma position',  cela
