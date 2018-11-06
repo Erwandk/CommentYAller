@@ -57,7 +57,6 @@ class Maps:
         # Icones
         __map_icone = {"WALKING": "male", "BICYCLING": "bicycle", "DRIVING": "car", "TRANSIT": "bus"}
 
-
         # Création de la carte
         __lat_center = (self.__min_lat + self.__max_lat) / 2
         __lng_center = (self.__min_lon + self.__max_lon) / 2
