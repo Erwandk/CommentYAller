@@ -25,17 +25,25 @@ class Foot(Thread):
         self.__total_distance = 0
 
     def run(self):
+        """
+        Permet d'initier l'obtention des informations pour la classe
+        """
         self.__steps = GoogleMaps(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
-                                  driving_mode="walking", transit_mode="",
-                                  waypoints="").get_etape()
+                                  driving_mode="walking", transit_mode="").get_etape()
         self.__compute_total_duration()
         self.__compute_total_distance()
 
     def __compute_total_distance(self):
+        """
+        Calcul de la distance totale
+        """
         for step in self.__steps:
             self.__total_distance += step[0]
 
     def __compute_total_duration(self):
+        """
+        Calcul de la durée totale
+        """
         for step in self.__steps:
             self.__total_duration += step[1]
 
@@ -110,17 +118,25 @@ class Bicycle(Thread):
         self.__total_distance = 0
 
     def run(self):
+        """
+        Permet d'initier l'obtention des informations pour la classe
+        """
         self.__steps = GoogleMaps(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
-                                  driving_mode="bicycling", transit_mode="",
-                                  waypoints="").get_etape()
+                                  driving_mode="bicycling", transit_mode="").get_etape()
         self.__compute_total_duration()
         self.__compute_total_distance()
 
     def __compute_total_distance(self):
+        """
+        Calcul de la distance totale
+        """
         for step in self.__steps:
             self.__total_distance += step[0]
 
     def __compute_total_duration(self):
+        """
+        Calcul de la durée totale
+        """
         for step in self.__steps:
             self.__total_duration += step[1]
 
@@ -195,17 +211,25 @@ class Car(Thread):
         self.__total_distance = 0
 
     def run(self):
+        """
+        Permet d'initier l'obtention des informations pour la classe
+        """
         self.__steps = GoogleMaps(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
-                                  driving_mode="driving", transit_mode="",
-                                  waypoints="").get_etape()
+                                  driving_mode="driving", transit_mode="").get_etape()
         self.__compute_total_duration()
         self.__compute_total_distance()
 
     def __compute_total_distance(self):
+        """
+        Calcul de la distance totale
+        """
         for step in self.__steps:
             self.__total_distance += step[0]
 
     def __compute_total_duration(self):
+        """
+        Calcul de la durée totale
+        """
         for step in self.__steps:
             self.__total_duration += step[1]
 
@@ -282,22 +306,34 @@ class Transit(Thread):
         self.__steps_nbr = 1
 
     def run(self):
+        """
+        Permet d'initier l'obtention des informations pour la classe
+        """
         self.__steps = GoogleMapsTransit(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
-                                         driving_mode="transit", transit_mode="", waypoints="").get_etape()
+                                         driving_mode="transit", transit_mode="").get_etape()
         self.__compute_distinct_steps()
         self.__compute_total_duration()
         self.__compute_total_distance()
         self.__steps_nbr = len(self.__distinct_steps)
 
     def __compute_total_distance(self):
+        """
+        Calcul de la distance totale
+        """
         for step in self.__steps:
             self.__total_distance += step[0]
 
     def __compute_total_duration(self):
+        """
+        Calcul de la durée totale
+        """
         for step in self.__steps:
             self.__total_duration += step[1]
 
     def __compute_distinct_steps(self):
+        """
+        Calcul de la distance et durée pour chacun des différents mode de transport du trajet transit
+        """
         n = len(self.__steps)
         self.__distinct_steps[0].append(self.__steps[0])
         __duration = self.__steps[0][0]
