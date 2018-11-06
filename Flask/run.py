@@ -104,9 +104,11 @@ def image_transit():
 
 @app.template_filter('format_time')
 def convert_time(second):
-    if second == 0:
+    if second <30:
         return "0 min"
-    if second >= 60:
+    elif second <60:
+        return "1 min"
+    else:
         minut = second // 60
         second = second % 60
         if minut >= 60:
@@ -117,24 +119,24 @@ def convert_time(second):
             if second > 30:
                 minut += 1
             return "{} min".format(minut)
-    else:
-        return "{} sec".format(second)
 
 
 @app.template_filter('format_dist')
-def convert_time(meters):
+def convert_dist(meters):
     if meters > 1000:
         kmeters = meters // 1000
-        meters = meters % 1000
-        return "{} kilomètres et {} mètres".format(kmeters, meters)
+        meters = round((meters%1000) / 100)
+        return "{}.{} kilomètres".format(kmeters, meters)
     else:
         return "{} mètres".format(meters)
 
 
 @app.template_filter('format_address')
 def convert_adress(address):
+    print(address)
     list_address = address.split('+')
-    list_address.remove('paris')
+    if len(list_address)!=1:
+        del(list_address[-1:])
     new_list_address = []
     for mot in list_address:
         try:
