@@ -102,8 +102,8 @@ def image_transit():
         raise ImportError("Could not load map at 'static/map/map_transit.html'")
 
 
-@app.template_filter('format_time')
-def convert_time(second):
+@app.template_filter('format_duration')
+def convert_duration(second):
     if second <30:
         return "0 min"
     elif second <60:
@@ -152,6 +152,10 @@ def convert_adress(address):
 def round_value(value):
     return round(value, 2)
 
+@app.template_filter('format_time')
+def convert_timestamp(value):
+    #todo
+    return value
 
 if __name__ == '__main__':
 

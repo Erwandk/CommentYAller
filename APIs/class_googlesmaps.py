@@ -176,13 +176,16 @@ class GoogleMapsTransit(GoogleMaps):
         __vehicle = itinary["transit_details"]["line"]["vehicle"]["type"]
         __short = itinary["transit_details"]["line"]["short_name"]
         __nb_stations = itinary["transit_details"]["num_stops"]
+        __dep_time_stop = itinary["transit_details"]["departure_time"]["value"]
+        __arr_time_stop = itinary["transit_details"]["arrival_time"]["value"]
         __instruction = "Take the <b>{} line {}</b> from <b>{} to {}</b> for {} stations"\
             .format(__vehicle, __short, __departure_stop, __arrival_stop, __nb_stations) \
             .replace("'", " ")\
             .encode('utf-8')\
             .decode('utf-8')
         __s = (__distance, __duration, __s_coord, __e_coord, __travel_mode,
-               (__departure_stop, __arrival_stop, __vehicle, __short, __nb_stations), __instruction)
+               (__departure_stop, __arrival_stop, __vehicle, __short, __nb_stations, __dep_time_stop, __arr_time_stop),
+                __instruction)
         return __s
 
     def get_etape(self):
@@ -202,3 +205,19 @@ class GoogleMapsTransit(GoogleMaps):
             elif __itinary[k]["travel_mode"] == "TRANSIT":
                 __steps.append(GoogleMapsTransit.get_with_transit(__itinary[k]))
         return __steps
+
+
+if __name__ == '__main__':
+    import pprint
+
+    def test_1():
+        startcoord = '6+rue+des+marronniers+paris'
+        endcoord = 'gare+de+l+est+paris'
+        driving_mode = 'transit'
+        transit_mode = ''
+        user_id = 2
+        test = GoogleMapsTransit(startcoord, endcoord, driving_mode, transit_mode, user_id)
+        # test.get_etape()
+        pprint.pprint(test.get_etape())
+
+    test_1()
