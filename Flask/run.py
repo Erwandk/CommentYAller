@@ -6,6 +6,7 @@ __author__ = 'eke, axel, gab'
 # Importation des librairies
 from flask import Flask, request, render_template, url_for, redirect, send_file
 import os
+import time
 
 # Importation des données utiles du projet
 from user_api import secret_key
@@ -183,8 +184,7 @@ def round_value(value):
 
 @app.template_filter('format_time')
 def convert_timestamp(value):
-    #todo
-    return value
+    return time.strftime('%H:%M', time.localtime(value))
 
 
 if __name__ == '__main__':
