@@ -3,6 +3,7 @@
 
 __author__ = 'eke, gab, axel'
 
+# Importation de la classe mère API et des modules utilisés
 from APIs.class_api import API
 import requests
 
@@ -11,15 +12,18 @@ class GoogleMaps(API):
     """
     Class GoogleMaps héritant de la classe mère API
     Paramétrée pour appeler l'API GoogleMaps pour récupérer les différents trajets avec mode de transport sans transit
-    paramètres de classes :
-    - user_id : correspond à l'id du user permettant de se connecter à l'API
-    - startcoord : coordonnées du point de départ (GPS ou adresse)
-    - endcoord : coordonnées du point d'arrivée (GPS ou adresse)
-    - driving_mode : mode de déplacement (walking, driving...)
-    - transit_mode :
     """
 
     def __init__(self,  startcoord, endcoord, driving_mode, transit_mode, user_id=9):
+        """
+        :param startcoord: coordonnées du point de départ (GPS ou adresse) (str)
+        :param endcoord: coordonnées du point d'arrivée (GPS ou adresse) (str)
+        :param driving_mode: mode de déplacement (walking, driving...) (str)
+        :param transit_mode: mode de transport en commun (str)
+        :param user_id: id du user (int)
+        """
+        assert isinstance(startcoord, str) and isinstance(endcoord, str) and isinstance(driving_mode, str)
+        assert isinstance(transit_mode, str) and isinstance(user_id, int)
         API.__init__(self, api_name="googlemaps", url="https://maps.googleapis.com/maps/api/directions/",
                      user_id=user_id)
         self.__startcoord = startcoord
@@ -57,25 +61,26 @@ class GoogleMaps(API):
     def get_etapes(itinary):
         """
         Permet de calculer toutes les étapes pour un mode de transport unique.
-        :param itinary:
+        :param itinary: itinéraire du trajet
         :return: steps: une liste dont chaque éléments contient les informations de chacune des etapes
         """
         itinary = itinary["steps"]
         nb_steps = len(itinary)
         steps = []
-        for k in range(nb_steps):
-            __distance = itinary[k]["distance"]["value"]
-            __duration = itinary[k]["duration"]["value"]
-            __s_coord = itinary[k]["start_location"]
-            __e_coord = itinary[k]["end_location"]
-            __travel_mode = itinary[k]["travel_mode"]
+        for i in range(nb_steps):
+            __distance = itinary[i]["distance"]["value"]
+            __duration = itinary[i]["duration"]["value"]
+            __s_coord = itinary[i]["start_location"]
+            __e_coord = itinary[i]["end_location"]
+            __travel_mode = itinary[i]["travel_mode"]
             __transit_details = "No transit"
-            try:
-                __instruction = itinary[k]["html_instructions"].replace("'", " ").encode('utf-8').decode('utf-8')
-            except Exception:
+            if "html_instructions" in itinary[i]:
+                __instruction = itinary[i]["html_instructions"].replace("'", " ").encode('utf-8').decode('utf-8')
+            else:
                 # for some steps there is no instructions
                 __instruction = ""
-            steps.append((__distance, __duration, __s_coord, __e_coord, __travel_mode, __transit_details, __instruction))
+            steps.append((__distance, __duration, __s_coord, __e_coord,
+                          __travel_mode, __transit_details, __instruction))
         return steps
 
     def get_etape(self):
@@ -88,6 +93,7 @@ class GoogleMaps(API):
         __itinary = self._json["routes"][0]["legs"][0]
         return GoogleMaps.get_etapes(__itinary)
 
+    # Définition des getters et setters de la classe
     @property
     def json(self):
         return self._json
@@ -176,12 +182,12 @@ class GoogleMapsTransit(GoogleMaps):
             .encode('utf-8')\
             .decode('utf-8')
         __s = (__distance, __duration, __s_coord, __e_coord, __travel_mode,
-               (__departure_stop, __arrival_stop, __vehicle, __short, __nb_stations),__instruction)
+               (__departure_stop, __arrival_stop, __vehicle, __short, __nb_stations), __instruction)
         return __s
 
     def get_etape(self):
         """
-        Permet d'obtenir les étapes pour un trajet avec mode de transport transit (donc plusieurs sous mode de transport)
+        Permet d'obtenir les étapes pour un trajet avec mode de transport transit (transport en commun)
         :return: Liste de tuples d'information sur les étapes du trajet
         """
         self.get_json()
@@ -196,6 +202,3 @@ class GoogleMapsTransit(GoogleMaps):
             elif __itinary[k]["travel_mode"] == "TRANSIT":
                 __steps.append(GoogleMapsTransit.get_with_transit(__itinary[k]))
         return __steps
-
-
-
