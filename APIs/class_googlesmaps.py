@@ -66,9 +66,9 @@ class GoogleMaps(API):
             __travel_mode = itinary[k]["travel_mode"]
             __transit_details = "No transit"
             try:
-                __instruction = itinary[k]["html_instructions"]
+                __instruction = itinary[k]["html_instructions"].replace("'", " ").encode('utf-8').decode('utf-8')
             except Exception:
-                # for last step there is no instructions
+                # for some steps there is no instructions
                 __instruction = ""
             steps.append((__distance, __duration, __s_coord, __e_coord, __travel_mode, __transit_details, __instruction))
         return steps
@@ -152,10 +152,11 @@ class GoogleMapsTransit(GoogleMaps):
         __vehicle = itinary["transit_details"]["line"]["vehicle"]["type"]
         __short = itinary["transit_details"]["line"]["short_name"]
         __nb_stations = itinary["transit_details"]["num_stops"]
-        __instruction = "Take the <b>{} line {}</b> from <b>{} to {}</b> for {} stations".format(__vehicle, __short,
-                                                                                                 __departure_stop,
-                                                                                                 __arrival_stop,
-                                                                                                 __nb_stations)
+        __instruction = "Take the <b>{} line {}</b> from <b>{} to {}</b> for {} stations"\
+            .format(__vehicle, __short, __departure_stop, __arrival_stop, __nb_stations) \
+            .replace("'", " ")\
+            .encode('utf-8')\
+            .decode('utf-8')
         __s = (__distance, __duration, __s_coord, __e_coord, __travel_mode,
                (__departure_stop, __arrival_stop, __vehicle, __short, __nb_stations),__instruction)
         return __s
