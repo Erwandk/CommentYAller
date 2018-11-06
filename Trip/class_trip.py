@@ -5,7 +5,6 @@ __author__ = 'eke, gab, axel'
 
 from Trip.class_itinary import Foot, Bicycle, Car, Transit, Velib
 from APIs.class_meteo import Meteo
-from APIs.class_googlemaps_elevation import Elevation
 import re
 
 
@@ -40,12 +39,10 @@ class Trip:
         self.__meteo = Meteo()
         self.__trip_foot = Foot(self.__user_id, self.__init_pos, self.__final_pos)
         self.__trip_bicycle = Bicycle(self.__user_id, self.__init_pos, self.__final_pos)
-        self.__elevation_bicycle = Elevation(self.__trip_bicycle.steps)  # Dénivelé du trajet à vélo
         self.__trip_car = Car(self.__user_id, self.__init_pos, self.__final_pos)
         self.__trip_transit = Transit(self.__user_id, self.__init_pos, self.__final_pos)
         self.__trip_velib = Velib(self.__user_id, init_pos_dict=self.__gps_init, final_pos_dict=self.__gps_final,
                                   init_pos_str=self.__init_pos, final_pos_str=self.__final_pos)
-        self.__elevation_velib = Elevation(self.__trip_velib.steps)  # Dénivelé du trajet Vélib
 
         # Calcul des attributs du trajet
         self.__compute_trip()
@@ -85,9 +82,9 @@ class Trip:
         Si l'utilisateur ne souhaite pas prendre en compte le dénivelé, il n'y a pas de limite.
         :return: True si les conditions sont vérifiées, False sinon
         """
-        if self.__elevation and self.__elevation_bicycle.asc_elevation > 80:
+        if self.__elevation and self.__trip_bicycle.elevation.asc_elevation > 80:
             self.__elevation_bicycle_ok = False
-        if self.__elevation and self.__elevation_velib.asc_elevation > 80:
+        if self.__elevation and self.__trip_velib.elevation.asc_elevation > 80:
             self.__elevation_velib_ok = False
 
     def __compute_recommendation(self):
@@ -177,13 +174,6 @@ class Trip:
         if not self.__trip_velib.steps:
             raise ValueError("Les itinéraires n'ont pas pu être calculés: problème de connexion internet ou d'adresses "
                              "mal saisies")
-
-        # Calcul du dénivelé
-        self.__elevation_bicycle.steps = self.__trip_bicycle.steps
-        self.__elevation_bicycle.start()
-        self.__elevation_velib.start()
-        self.__elevation_bicycle.join()
-        self.__elevation_velib.join()
 
         # Calcul de la recommandation d'itinéraire
         self.__check_weather()
@@ -350,22 +340,6 @@ class Trip:
     @recommendation.setter
     def recommendation(self, value):
         raise AttributeError("You are not allowed to modify recommendation by {} !".format(value))
-
-    @property
-    def elevation_bicycle(self):
-        return self.__elevation_bicycle
-
-    @elevation_bicycle.setter
-    def elevation_bicycle(self, value):
-        raise AttributeError("You are not allowed to modify elevation_bicycle by {} !".format(value))
-
-    @property
-    def elevation_velib(self):
-        return self.__elevation_velib
-
-    @elevation_velib.setter
-    def elevation_velib(self, value):
-        raise AttributeError("You are not allowed to modify elevation_velib by {} !".format(value))
 
 
 if __name__ == '__main__':

@@ -4,11 +4,10 @@
 __author__ = 'eke, gab, axel'
 
 from APIs.class_api import API
-from threading import Thread
 import requests
 
 
-class Elevation(API, Thread):
+class Elevation(API):
     """
     API Google Maps pour connaître le dénivelé positif et négatif le long d'un chemin
     """
@@ -16,14 +15,13 @@ class Elevation(API, Thread):
     def __init__(self, steps, user_id=1):
         API.__init__(self, api_name="elevation", url="https://maps.googleapis.com/maps/api/elevation/",
                      user_id=user_id)
-        Thread.__init__(self)
         self.__steps = steps  # Liste des étapes de l'itinéraire obtenue par l'API GoogleMaps
         self.__path = 'json?locations='
-        self.__asc_elevation = 0  # Dénivelé positif
-        self.__dsc_elevation = 0  # Dénivelé négatif
+        self.__asc_elevation = 0  # Dénivelé positif (en m)
+        self.__dsc_elevation = 0  # Dénivelé négatif (en m)
         self.__json = dict()
 
-    def run(self):
+    def compute_elevation(self):
         self.__def_path()
         self.__retrieve_data_api()
         # Calcul du dénivelé positif et négatif
@@ -42,8 +40,8 @@ class Elevation(API, Thread):
         # finir en ajoutant la clé
         self.__path += '&key={}'.format(self._key)
         if len(self.__path) > 8192:
-            raise AttributeError("Erreur: le nbr de points GPS renseignés dépasse la limite autorisée pour la requête à "
-                                 "l'API GoogleMaps Elevation.")
+            raise AttributeError("Erreur: le nbr de points GPS renseignés dépasse la limite autorisée pour la requête à"
+                                 " l'API GoogleMaps Elevation.")
 
     def __retrieve_data_api(self):
         resp = requests.get(self._url+self.__path)
@@ -91,10 +89,6 @@ class Elevation(API, Thread):
     @dsc_elevation.setter
     def dsc_elevation(self, value):
         raise AttributeError("Your are not allowed to modify dsc_elevation by {}".format(value))
-
-
-
-
 
 
 if __name__ == '__main__':
@@ -278,8 +272,7 @@ if __name__ == '__main__':
         # final_pos = {'lat':48.854606, 'lng':2.277205}  # 6 rue des marronniers
         # init_pos = {'lat':48.854962, 'lng':2.275464}  # 31 rue des marronniers
         test = Elevation(a)
-        test.start()
-        test.join()
+        test.compute_elevation()
         print('url {}{}'.format(test.url, test.path))
         print("nombre de caractères:{}".format(len(test.url+test.path)))
         print(test.json)
