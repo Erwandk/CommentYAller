@@ -5,3 +5,5 @@
 requests
 folium
 flask
+numpy
+re
