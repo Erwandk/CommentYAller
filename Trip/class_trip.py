@@ -94,15 +94,13 @@ class Trip:
         Méthode qui calcule nos recommandations en fonction des paramètres du trajet. Le trajet de référence est
         l'itinéraire en transport en commun, auquel on compare si les autres options sont mieux.
         """
-        # Etude de l'itinéraire à pieds
-        # Pour les distances de moins d'1km sous les bonnes conditions météo, nous recommandons un trajet à pieds
+        # Etude du trajet à pieds
         if self.__trip_foot.total_distance < 1001 and self.__weather_ok:
             self.__reco_type_trip = 'foot'
             self.__recommendation = "Nous vous recommandons de vous rendre à destination à pieds, compte tenu de la "\
                                     "météo clémente et de la distance à parcourir."
-        # Etude de l'itinéraire en vélo (ou vélib)
-        # Si l'utilisateur n'est pas chargé et que les conditions météo sont bonnes, étude du trajet à vélo/vélib
-        elif not self.__bagage and self.__weather_ok and self.__elevation_ok:
+        # Etude du trajet en vélo (ou vélib) si aucune recommandation n'a été précédemment trouvée
+        if not self.__recommendation and not self.__bagage and self.__weather_ok and self.__elevation_ok:
             # Vérification du trajet en vélo perso
             if self.__pers_bicycle and self.__trip_bicycle.total_duration < self.__trip_transit.total_duration:
                 self.__reco_type_trip = 'bicycle'
@@ -116,12 +114,15 @@ class Trip:
                                         " la météo clémente, du dénivelé acceptable, de la disponibilité des " \
                                         "stations à proximité de vos points de départ et d'arrivée et du gain de temps"\
                                         " par rapport aux transports en commun."
-        elif self.__pers_car and self.__trip_car.total_duration < 0.66*self.__trip_transit.total_duration:
+        # Etude du trajet en voiture si l'utilisateur en dispose d'une et qu'aucune reco n'a été précédemment trouvée
+        if not self.__recommendation and self.__pers_car and \
+                self.__trip_car.total_duration < 0.66*self.__trip_transit.total_duration:
             self.__reco_type_trip = 'car'
             self.__recommendation = "Nous vous recommandons de vous rendre à destination avec votre voiture " \
                                     "personnelle, compte tenu du gain de temps considérable par rapport aux transports"\
                                     " en commun."
-        else:  # Dans tous les autres cas, privilégier les transports en communs
+        # Si aucune recommandation n'a été précédemment trouvée, choisir les transports en commun
+        if not self.__recommendation:  # Dans tous les autres cas, privilégier les transports en communs
             self.__reco_type_trip = 'transit'
             self.__recommendation = "Nous vous recommandons de vous rendre à destination en transport en commun. " \
                                     "Malheureusement, le temps de trajet, la météo, le dénivelé ou vos bagages ne " \
