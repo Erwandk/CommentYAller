@@ -19,7 +19,7 @@
         <p>Pour aller de <strong>{{ trip.init_pos | format_address }}</strong>
             à <strong>{{ trip.final_pos | format_address }}</strong></p>
 
-        <p><h3>{{ trip.recommendation }}</h3></p><br>
+        <p>{{ trip.recommendation }}</p><br>
 
         <div class="columns">
             <div class="column is-two">
@@ -142,7 +142,7 @@
                                     <p>{{ step[-1][1] | format_time }}</p>
                                 </div>
                                 <div class="column is-two">
-                                    <p>{{ step[-1][0] | format_dist }}</p>
+                                    <p>{{ step[0][5][4] }} arrêts</p>
                                 </div>
                             </div>
                             <div class="columns">
