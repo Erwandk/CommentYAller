@@ -198,12 +198,4 @@ class GoogleMapsTransit(GoogleMaps):
         return __steps
 
 
-if __name__ == '__main__':
-    startcoord = "8+rue+des+morrillons+Paris"
-    endcoord = "6+rue+des+marronniers+Paris"
-    driving_mode = "walking"
-
-    test = GoogleMaps(startcoord, endcoord, driving_mode, transit_mode="", user_id=2)
-    for k in test.get_etape():
-        print(k)
 
