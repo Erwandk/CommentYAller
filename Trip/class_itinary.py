@@ -5,6 +5,7 @@ __author__ = 'eke, gab, axel'
 
 from APIs.class_googlesmaps import GoogleMaps, GoogleMapsTransit
 from APIs.class_velib_station import VelibStation
+from APIs.class_googlemaps_elevation import Elevation
 from threading import Thread
 import re
 
@@ -25,17 +26,25 @@ class Foot(Thread):
         self.__total_distance = 0
 
     def run(self):
+        """
+        Permet d'initier l'obtention des informations pour la classe
+        """
         self.__steps = GoogleMaps(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
-                                  driving_mode="walking", transit_mode="",
-                                  waypoints="").get_etape()
+                                  driving_mode="walking", transit_mode="").get_etape()
         self.__compute_total_duration()
         self.__compute_total_distance()
 
     def __compute_total_distance(self):
+        """
+        Calcul de la distance totale
+        """
         for step in self.__steps:
             self.__total_distance += step[0]
 
     def __compute_total_duration(self):
+        """
+        Calcul de la durée totale
+        """
         for step in self.__steps:
             self.__total_duration += step[1]
 
@@ -108,19 +117,30 @@ class Bicycle(Thread):
         self.__steps = []
         self.__total_duration = 0
         self.__total_distance = 0
+        self.__elevation = Elevation(self.__steps)  # Dénivelé
 
     def run(self):
+        """
+        Permet d'initier l'obtention des informations pour la classe
+        """
         self.__steps = GoogleMaps(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
-                                  driving_mode="bicycling", transit_mode="",
-                                  waypoints="").get_etape()
+                                  driving_mode="bicycling", transit_mode="").get_etape()
         self.__compute_total_duration()
         self.__compute_total_distance()
+        self.__elevation.steps = self.__steps  # MAJ
+        self.__elevation.compute_elevation()
 
     def __compute_total_distance(self):
+        """
+        Calcul de la distance totale
+        """
         for step in self.__steps:
             self.__total_distance += step[0]
 
     def __compute_total_duration(self):
+        """
+        Calcul de la durée totale
+        """
         for step in self.__steps:
             self.__total_duration += step[1]
 
@@ -178,6 +198,14 @@ class Bicycle(Thread):
     def steps(self, value):
         raise AttributeError("You are not allowed to modify steps by {}".format(value))
 
+    @property
+    def elevation(self):
+        return self.__elevation
+
+    @elevation.setter
+    def elevation(self, value):
+        raise AttributeError("You are not allowed to modify elevation by {}".format(value))
+
 
 class Car(Thread):
     """
@@ -195,17 +223,25 @@ class Car(Thread):
         self.__total_distance = 0
 
     def run(self):
+        """
+        Permet d'initier l'obtention des informations pour la classe
+        """
         self.__steps = GoogleMaps(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
-                                  driving_mode="driving", transit_mode="",
-                                  waypoints="").get_etape()
+                                  driving_mode="driving", transit_mode="").get_etape()
         self.__compute_total_duration()
         self.__compute_total_distance()
 
     def __compute_total_distance(self):
+        """
+        Calcul de la distance totale
+        """
         for step in self.__steps:
             self.__total_distance += step[0]
 
     def __compute_total_duration(self):
+        """
+        Calcul de la durée totale
+        """
         for step in self.__steps:
             self.__total_duration += step[1]
 
@@ -282,22 +318,34 @@ class Transit(Thread):
         self.__steps_nbr = 1
 
     def run(self):
+        """
+        Permet d'initier l'obtention des informations pour la classe
+        """
         self.__steps = GoogleMapsTransit(user_id=self.__user_id, startcoord=self.__init_pos, endcoord=self.__final_pos,
-                                         driving_mode="transit", transit_mode="", waypoints="").get_etape()
+                                         driving_mode="transit", transit_mode="").get_etape()
         self.__compute_distinct_steps()
         self.__compute_total_duration()
         self.__compute_total_distance()
         self.__steps_nbr = len(self.__distinct_steps)
 
     def __compute_total_distance(self):
+        """
+        Calcul de la distance totale
+        """
         for step in self.__steps:
             self.__total_distance += step[0]
 
     def __compute_total_duration(self):
+        """
+        Calcul de la durée totale
+        """
         for step in self.__steps:
             self.__total_duration += step[1]
 
     def __compute_distinct_steps(self):
+        """
+        Calcul de la distance et durée pour chacun des différents mode de transport du trajet transit
+        """
         n = len(self.__steps)
         self.__distinct_steps[0].append(self.__steps[0])
         __duration = self.__steps[0][0]
@@ -416,6 +464,8 @@ class Velib:
         self.__final_walking = Foot(user_id=self.user_id, init_pos=self.__arr_station.coord,
                                     final_pos=self.__final_pos_str)
 
+        self.__elevation = Elevation(self.__bicycling.steps)  # Dénivelé
+
     def compute_itinary(self):
         # Lancement des threads de l'API Vélib
         self.__dep_station.start()
@@ -441,11 +491,13 @@ class Velib:
         self.__bicycling.join()
         self.__final_walking.join()
 
-        # Calcul des caractéristiques de l'itinéraire (étapes, distance, durée)
+        # Calcul des caractéristiques de l'itinéraire (étapes, distance, durée, dénivelé)
         self.__steps = self.__initial_walking.steps + self.__bicycling.steps + self.__final_walking.steps
         self.__compute_total_duration()
         self.__compute_total_distance()
         self.__compute_distinct_steps()
+        self.__elevation.steps = self.__bicycling.steps  # MAJ de la liste d'étapes qui vient d'être calculée
+        self.__elevation.compute_elevation()
 
     def __compute_total_distance(self):
         for step in self.__steps:
@@ -589,6 +641,14 @@ class Velib:
     @distinct_steps.setter
     def distinct_steps(self, value):
         raise AttributeError("You are not allowed to modify distinct_steps by {}".format(value))
+
+    @property
+    def elevation(self):
+        return self.__elevation
+
+    @elevation.setter
+    def elevation(self, value):
+        raise AttributeError("You are not allowed to modify elevation by {}".format(value))
 
 
 if __name__ == '__main__':

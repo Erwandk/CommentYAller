@@ -144,6 +144,11 @@ def convert_adress(address):
     return new_address
 
 
+@app.template_filter('round')
+def round_value(value):
+    return round(value, 2)
+
+
 if __name__ == '__main__':
 
     app.run(debug=True, port=5000)
