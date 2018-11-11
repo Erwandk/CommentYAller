@@ -62,7 +62,7 @@ class GoogleMaps(API):
         """
         Permet de calculer toutes les étapes pour un mode de transport unique.
         :param itinary: itinéraire du trajet
-        :return: steps: une liste dont chaque éléments contient les informations de chacune des etapes
+        :return: steps: une liste dont chaque élément contient les informations de chacune des étapes.
         """
         itinary = itinary["steps"]
         nb_steps = len(itinary)
@@ -86,7 +86,7 @@ class GoogleMaps(API):
     def get_etape(self):
         """
         Permet d'obtenir les étapes pour un trajet avec un seul mode de transport.
-        :return: liste d'étape du trajet
+        :return: liste d'étapes du trajet
         """
         self.get_json()
         assert self._driving_mode != "transit"
@@ -185,7 +185,7 @@ class GoogleMapsTransit(GoogleMaps):
             .decode('utf-8')
         __s = (__distance, __duration, __s_coord, __e_coord, __travel_mode,
                (__departure_stop, __arrival_stop, __vehicle, __short, __nb_stations, __dep_time_stop, __arr_time_stop),
-                __instruction)
+               __instruction)
         return __s
 
     def get_etape(self):
@@ -205,19 +205,3 @@ class GoogleMapsTransit(GoogleMaps):
             elif __itinary[k]["travel_mode"] == "TRANSIT":
                 __steps.append(GoogleMapsTransit.get_with_transit(__itinary[k]))
         return __steps
-
-
-if __name__ == '__main__':
-    import pprint
-
-    def test_1():
-        startcoord = '6+rue+des+marronniers+paris'
-        endcoord = 'gare+de+l+est+paris'
-        driving_mode = 'transit'
-        transit_mode = ''
-        user_id = 2
-        test = GoogleMapsTransit(startcoord, endcoord, driving_mode, transit_mode, user_id)
-        # test.get_etape()
-        pprint.pprint(test.get_etape())
-
-    test_1()
