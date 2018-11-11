@@ -108,6 +108,19 @@ class Trip:
             self.__reco_type_trip = 'foot'
             self.__recommendation = "Nous vous recommandons de vous rendre à destination à pieds, compte tenu de la "\
                                     "météo clémente et de la distance à parcourir."
+        # Etude du trajet en voiture si aucune recommandation n'a été trouvée précédemment
+        if not self.__recommendation and self.__pers_car and self.__bagage:  # Cas avec bagage
+            self.__reco_type_trip = 'car'
+            self.__recommendation = "Nous vous recommandons de vous rendre à destination avec votre voiture " \
+                                    "personnelle, compte tenu de vos bagages."
+        if not self.__recommendation and self.__pers_car and \
+                self.__trip_car.total_duration < 0.66*self.__trip_transit.total_duration and \
+                self.__trip_car.total_duration < 0.66*self.__trip_velib.total_duration and \
+                (not self.__pers_bicycle or self.__trip_car.total_duration < 0.66*self.__trip_bicycle.total_duration):
+            self.__reco_type_trip = 'car'
+            self.__recommendation = "Nous vous recommandons de vous rendre à destination avec votre voiture " \
+                                    "personnelle, compte tenu du gain de temps considérable par rapport aux autres"\
+                                    " moyens de transport."
         # Etude du trajet en vélo (ou vélib) si aucune recommandation n'a été précédemment trouvée
         if not self.__recommendation and not self.__bagage and self.__weather_ok:
             # Vérification du trajet en vélo perso
@@ -125,17 +138,6 @@ class Trip:
                                         " la météo clémente, du dénivelé acceptable, de la disponibilité des " \
                                         "stations à proximité de vos points de départ et d'arrivée et du gain de temps"\
                                         " par rapport aux transports en commun."
-        # Etude du trajet en voiture si l'utilisateur en dispose d'une et qu'aucune reco n'a été précédemment trouvée
-        if not self.__recommendation and self.__pers_car and self.__bagage:  # Cas avec bagage
-            self.__reco_type_trip = 'car'
-            self.__recommendation = "Nous vous recommandons de vous rendre à destination avec votre voiture " \
-                                    "personnelle, compte tenu de vos bagages."
-        if not self.__recommendation and self.__pers_car and \
-                self.__trip_car.total_duration < 0.66*self.__trip_transit.total_duration:  # Cas bcp + rapide en voiture
-            self.__reco_type_trip = 'car'
-            self.__recommendation = "Nous vous recommandons de vous rendre à destination avec votre voiture " \
-                                    "personnelle, compte tenu du gain de temps considérable par rapport aux transports"\
-                                    " en commun."
         # Si aucune recommandation n'a été précédemment trouvée, choisir les transports en commun
         if not self.__recommendation:
             self.__reco_type_trip = 'transit'
