@@ -29,8 +29,8 @@ Le projet doit se décomposer de la manière suivante :
 ```
 
 - Le dossier _APIs_ comprend l'ensemble des classes permettant d'extraire l'informations des APIs que nous utilisons.
-- Le dossier Flask comprend l'ensemble du front et des objets y faisant référence.
-- Le dossier Trip comprend l'architecture logique de notre projet.
+- Le dossier _Flask_ comprend l'ensemble du front et des objets y faisant référence.
+- Le dossier _Trip_ comprend l'architecture logique de notre projet.
 - Le fichier user_api.py comprend les données des clés et mot de passes du projet.
 
 ### Fonctionnement
