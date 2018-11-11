@@ -9,14 +9,14 @@ import os
 import sys
 import time
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), "..")))
+
 # Importation des données utiles du projet
 from user_api import secret_key
 from Flask.class_formulary import Formulary
 from APIs.class_InfoUser import InfoUser
 from Trip.class_trip import Trip
 from Trip.class_map import Maps
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), "..")))
 
 
 app = Flask(__name__)
