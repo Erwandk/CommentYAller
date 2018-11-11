@@ -57,6 +57,11 @@
 
         <input id="submit0" type="submit" class="button" value="C'est parti">
     </form>
+
+    {% if err != "" %}
+        <br>
+        <font color="red">{{ err }}</font>
+    {% endif %}
 </div>
 
 {% endblock %}

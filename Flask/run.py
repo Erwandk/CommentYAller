@@ -27,22 +27,23 @@ def index():
     """
     racine du site web
     """
+    err = ""
 
     if request.method == 'POST':
         info_user = InfoUser()
         form = Formulary(request.form, info_user)
         if not form.check_data:
             if form.pos_init == "None%2CNone":
-                print(u'La position GPS de l utilisateur est introuvable', 'error')
+                err = 'La position GPS de l utilisateur est introuvable'
             else:
-                print(u'Les données envoyées sont incorrectes', 'error')
-            return render_template('main_getzere.html')
+                err = 'Les données envoyées sont incorrectes'
+            return render_template('main_getzere.html', err=err)
         return redirect(url_for('trajet', pos_init=form.pos_init, pos_final=form.pos_final,
                                 bagage=form.bagage, elevation=form.elevation, pers_bicycle=form.pers_bicycle,
                                 pers_car=form.pers_car))
 
     elif request.method == 'GET':
-        return render_template('main_getzere.html')
+        return render_template('main_getzere.html', err=err)
 
     else:
         raise NotImplementedError("This method is not implemented !")
