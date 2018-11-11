@@ -6,7 +6,10 @@ __author__ = 'eke, axel, gab'
 # Importation des librairies
 from flask import Flask, request, render_template, url_for, redirect, send_file
 import os
+import sys
 import time
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), "..")))
 
 # Importation des données utiles du projet
 from user_api import secret_key
@@ -189,4 +192,4 @@ def convert_timestamp(value):
 
 if __name__ == '__main__':
 
-    app.run(debug=True, port=5000)
+    app.run(port=5000)
