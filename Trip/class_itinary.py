@@ -485,8 +485,10 @@ class Velib:
         self.__init_pos_str = init_pos_str  # Coord GPS au format 'latitude'+'2%C'+'longitude' pour l'API GoogleMaps
         self.__final_pos_str = final_pos_str  # Coord GPS au format 'latitude'+'2%C'+'longitude' pour l'API GoogleMaps
 
-        self.__dep_station = VelibStation(gps_position=self.__init_pos_dict, station_type='departure')  # Station de départ
-        self.__arr_station = VelibStation(gps_position=self.__final_pos_dict, station_type='arrival')  # Station d'arrivée
+        self.__dep_station = VelibStation(gps_position=self.__init_pos_dict, station_type='departure')
+        # Station de départ
+        self.__arr_station = VelibStation(gps_position=self.__final_pos_dict, station_type='arrival')
+        # Station d'arrivée
 
         self.__steps = []
         self.__distinct_steps = [[]]
