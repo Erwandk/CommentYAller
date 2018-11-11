@@ -350,19 +350,3 @@ class Trip:
     @recommendation.setter
     def recommendation(self, value):
         raise AttributeError("You are not allowed to modify recommendation by {} !".format(value))
-
-
-if __name__ == '__main__':
-
-    def main():
-        init_pos = '6+rue+des+marronniers+paris'
-        final_pos = '8+rue+des+morillons+paris'
-        bagage = 'off'
-        elevation = 'off'
-        pers_bicycle = 'off'
-        pers_car = 'on'
-        test = Trip(init_pos, final_pos, bagage, elevation, pers_bicycle, pers_car, user_id=0)
-        print(test.weather_ok)
-        print(test.recommendation)
-
-    main()

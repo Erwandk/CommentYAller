@@ -17,14 +17,15 @@ class VelibStation(Thread, API):
     temps réel. Rq : pas de calcul d'itinéraire pour du non temps réel (car pas d'infos sur les vélos et places)
     """
 
-    def __init__(self, gps_position, type):
+    def __init__(self, gps_position, station_type):
         """
         :param gps_position: position gps de l'utilisateur (dict)
-        :param type: type de station vélib (départ-arrivée) (str)
+        :param station_type: type de station vélib (départ-arrivée) (str)
         """
-        assert isinstance(gps_position, dict) and isinstance(type, str)
+        assert isinstance(gps_position, dict) and isinstance(station_type, str)
         API.__init__(self,
-                     url='https://opendata.paris.fr/api/records/1.0/search/?dataset=velib-disponibilite-en-temps-reel&rows=2000',
+                     url="https://opendata.paris.fr/api/records/1.0/search/?dataset=velib-disponibilite-en-temps-reel"
+                         "&rows=2000",
                      api_name='velib')
         Thread.__init__(self)
         self.__list = list()  # Liste des stations Vélib pourvues de coordonnées GPS avec leurs infos temps réel
@@ -35,7 +36,7 @@ class VelibStation(Thread, API):
         self.__coord = str()  # Coord GPS au format exploitable par l'API Google Maps : 'latitude'+'%2C'+'longitude'
         self.__bikes = int()  # Nombre de vélos disponibles
         self.__docks = int()  # Nombre de places disponibles
-        self.__type = type
+        self.__type = station_type
         self.__gps_position = gps_position  # Position renseignée par l'utilisateur (point de départ ou arrivée)
 
     def __repr__(self):
@@ -191,11 +192,3 @@ class VelibStation(Thread, API):
         if not isinstance(value, dict):
             raise TypeError("value should be dict, is {}".format(type(value)))
         self.__gps_position = value
-
-
-if __name__ == '__main__':
-    coord = {'lat': 48.834269, 'lng': 2.296338}
-    Test = VelibStation(coord, 'departure')
-    Test.start()
-    Test.join()
-    print(Test)

@@ -485,8 +485,8 @@ class Velib:
         self.__init_pos_str = init_pos_str  # Coord GPS au format 'latitude'+'2%C'+'longitude' pour l'API GoogleMaps
         self.__final_pos_str = final_pos_str  # Coord GPS au format 'latitude'+'2%C'+'longitude' pour l'API GoogleMaps
 
-        self.__dep_station = VelibStation(gps_position=self.__init_pos_dict, type='departure')  # Station de départ
-        self.__arr_station = VelibStation(gps_position=self.__final_pos_dict, type='arrival')  # Station d'arrivée
+        self.__dep_station = VelibStation(gps_position=self.__init_pos_dict, station_type='departure')  # Station de départ
+        self.__arr_station = VelibStation(gps_position=self.__final_pos_dict, station_type='arrival')  # Station d'arrivée
 
         self.__steps = []
         self.__distinct_steps = [[]]
@@ -689,34 +689,3 @@ class Velib:
     @elevation.setter
     def elevation(self, value):
         raise AttributeError("You are not allowed to modify elevation by {}".format(value))
-
-
-if __name__ == '__main__':
-
-    import pprint
-
-    def test_1():
-        init_pos_dict = {'lat': 48.854606, 'lng': 2.277205}
-        # init_pos_str = '48.854606%2C2.277205'
-        init_pos_str = '6+rue+des+marronniers+paris'
-        final_pos_dict = {'lat': 48.83411, 'lng': 2.29628}
-        # final_pos_str = '48.83411%2C2.29628'
-        final_pos_str = '8+rue+des+morillons+paris'
-        test = Velib(user_id=1, init_pos_dict=init_pos_dict, init_pos_str=init_pos_str, final_pos_dict=final_pos_dict,
-                     final_pos_str=final_pos_str)
-        test.compute_itinary()
-        print("distance:{}".format(test.total_distance))
-        print("durée:{}".format(test.total_duration))
-        print("étapes:{}".format(test.steps))
-        pprint.pprint("distinct_steps {}".format(test.distinct_steps))
-
-    test_1()
-
-    def test_2():
-        init_pos = '6+rue+des+marronniers+paris'
-        final_pos = '67+boulevard+de+picpus+parsi'
-        test = Transit(user_id=2, init_pos=init_pos, final_pos=final_pos)
-        test.start()
-        test.join()
-
-    # test_2()

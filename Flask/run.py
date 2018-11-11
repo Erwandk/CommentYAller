@@ -152,7 +152,7 @@ def convert_dist(meters):
     assert isinstance(meters, int)
     if meters > 1000:
         kmeters = meters // 1000
-        meters = round((meters%1000) / 100)
+        meters = round((meters % 1000) / 100)
         return "{}.{} kilomètres".format(kmeters, meters)
     else:
         return "{} mètres".format(meters)
